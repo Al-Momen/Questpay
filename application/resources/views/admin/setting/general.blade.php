@@ -42,8 +42,10 @@
                                     <label> @lang('Site Base Color')</label>
                                     <div class="form-group color--select position-relative">
                                         <div class="colorInputWrapper">
-                                            <input class="form-control colorPicker" type='text' value="{{ gs('base_color') }}">
-                                            <input class="form-control colorCode" name="base_color" type="text" value="{{ gs('base_color') }}">
+                                            <input class="form-control colorPicker" type='text'
+                                                value="{{ gs('base_color') }}">
+                                            <input class="form-control colorCode" name="base_color" type="text"
+                                                value="{{ gs('base_color') }}">
                                         </div>
                                     </div>
                                 </div>
@@ -51,12 +53,25 @@
                                     <label> @lang('Site Secondary Color')</label>
                                     <div class="form-group color--select position-relative">
                                         <div class="colorInputWrapper">
-                                            <input class="form-control colorPicker" type='text' value="{{ gs('secondary_color') }}">
-                                            <input class="form-control colorCode" name="secondary_color" type="text" value="{{ gs('secondary_color') }}">
+                                            <input class="form-control colorPicker" type='text'
+                                                value="{{ gs('secondary_color') }}">
+                                            <input class="form-control colorCode" name="secondary_color" type="text"
+                                                value="{{ gs('secondary_color') }}">
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-12 col-xs-12">
+                                    <label> @lang('Open AI Key')</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" name="open_ai_key"
+                                         value="{{ $general->open_ai_key }}"
+                                            placeholder="@lang('Open AI Secret Key')">
+                                    </div>
+                                </div>
                             </div>
+
+
+
                             <div class="row">
                                 <div class="col text-end">
                                     <button type="submit" class="btn btn--primary">@lang('Save Changes')</button>
@@ -72,63 +87,72 @@
                                 <div class="form-group col-12 d-flex justify-content-between align-items-center">
                                     <label class="fw--500 mb-0">@lang('User Registration')</label>
                                     <label class="switch m-0">
-                                        <input type="checkbox" class="toggle-switch" name="registration" {{ $general->registration ? 'checked' : null }}>
+                                        <input type="checkbox" class="toggle-switch" name="registration"
+                                            {{ $general->registration ? 'checked' : null }}>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                                 <div class="form-group col-12 d-flex justify-content-between align-items-center">
                                     <label class="fw--500 mb-0">@lang('Email Verification')</label>
                                     <label class="switch m-0">
-                                        <input type="checkbox" class="toggle-switch" name="ev" {{ $general->ev ? 'checked' : null }}>
+                                        <input type="checkbox" class="toggle-switch" name="ev"
+                                            {{ $general->ev ? 'checked' : null }}>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                                 <div class="form-group col-12 d-flex justify-content-between align-items-center">
                                     <label class="fw--500 mb-0">@lang('Email Notification')</label>
                                     <label class="switch m-0">
-                                        <input type="checkbox" class="toggle-switch" name="en" {{ $general->en ? 'checked' : null }}>
+                                        <input type="checkbox" class="toggle-switch" name="en"
+                                            {{ $general->en ? 'checked' : null }}>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                                 <div class="form-group col-12 d-flex justify-content-between align-items-center">
                                     <label class="fw--500 mb-0">@lang('Mobile Verification')</label>
                                     <label class="switch m-0">
-                                        <input type="checkbox" class="toggle-switch" name="sv" {{ $general->sv ? 'checked' : null }}>
+                                        <input type="checkbox" class="toggle-switch" name="sv"
+                                            {{ $general->sv ? 'checked' : null }}>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                                 <div class="form-group col-12 d-flex justify-content-between align-items-center">
                                     <label class="fw--500 mb-0">@lang('SMS Notification')</label>
                                     <label class="switch m-0">
-                                        <input type="checkbox" class="toggle-switch" name="sn" {{ $general->sn ? 'checked' : null }}>
+                                        <input type="checkbox" class="toggle-switch" name="sn"
+                                            {{ $general->sn ? 'checked' : null }}>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                                 <div class="form-group col-12 d-flex justify-content-between align-items-center">
                                     <label class="fw--500 mb-0">@lang('Terms & Condition')</label>
                                     <label class="switch m-0">
-                                        <input type="checkbox" class="toggle-switch" name="agree" {{ $general->agree ? 'checked' : null }}>
+                                        <input type="checkbox" class="toggle-switch" name="agree"
+                                            {{ $general->agree ? 'checked' : null }}>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                                 <div class="form-group col-12 d-flex justify-content-between align-items-center">
                                     <label class="fw--500 mb-0">@lang('KYC Verification')</label>
                                     <label class="switch m-0">
-                                        <input type="checkbox" class="toggle-switch" name="kv" {{ $general->kv ? 'checked' : null }}>
+                                        <input type="checkbox" class="toggle-switch" name="kv"
+                                            {{ $general->kv ? 'checked' : null }}>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                                 <div class="form-group col-12 d-flex justify-content-between align-items-center">
                                     <label class="fw--500 mb-0">@lang('Secure Password')</label>
                                     <label class="switch m-0">
-                                        <input type="checkbox" class="toggle-switch" name="secure_password" {{ $general->secure_password ? 'checked' : null }}>
+                                        <input type="checkbox" class="toggle-switch" name="secure_password"
+                                            {{ $general->secure_password ? 'checked' : null }}>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                                 <div class="form-group col-12 d-flex justify-content-between align-items-center mb-0">
                                     <label class="fw--500 mb-0">@lang('Force SSL')</label>
                                     <label class="switch m-0">
-                                        <input type="checkbox" class="toggle-switch" name="force_ssl" {{ $general->force_ssl ? 'checked' : null }}>
+                                        <input type="checkbox" class="toggle-switch" name="force_ssl"
+                                            {{ $general->force_ssl ? 'checked' : null }}>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -143,12 +167,12 @@
 
 @push('script-lib')
     <script src="{{ asset('assets/admin/js/spectrum.js') }}"></script>
-    <script src="{{asset('assets/common/js/select2.min.js')}}"></script>
+    <script src="{{ asset('assets/common/js/select2.min.js') }}"></script>
 @endpush
 
 @push('style-lib')
     <link rel="stylesheet" href="{{ asset('assets/admin/css/spectrum.css') }}">
-    <link rel="stylesheet" href="{{asset('assets/common/css/select2.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/common/css/select2.min.css') }}">
 @endpush
 
 @push('script')
