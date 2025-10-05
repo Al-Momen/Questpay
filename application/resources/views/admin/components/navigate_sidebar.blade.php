@@ -10,12 +10,7 @@
             </a>
         </li>
 
-        <li>
-            <a href="{{ route('admin.frontend.templates') }}" class="{{ menuActive('admin.frontend.templates') }} d-flex align-items-center justify-content-start gap-2">
-                <i class="fa-solid fa-layer-group"></i>
-                <h6>@lang('Manage Themes')</h6>
-            </a>
-        </li>
+       
 
         <li>
             <a href="{{ route('admin.setting.logo.icon') }}" class="{{ menuActive('admin.setting.logo.icon') }} d-flex align-items-center justify-content-start gap-2">
