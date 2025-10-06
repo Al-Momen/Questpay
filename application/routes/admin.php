@@ -164,6 +164,7 @@ Route::middleware(['admin'])->group(function () {
             Route::post('generate', 'generate')->name('generate');
             Route::post('update/{id}', 'update')->name('update');
             Route::post('status/{id}', 'status')->name('status');
+            Route::get('details/{id}', 'details')->name('details');
     });
 
 

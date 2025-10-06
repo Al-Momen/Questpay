@@ -8,6 +8,7 @@ use App\Constants\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class SurveyController extends Controller
 {
@@ -30,7 +31,7 @@ class SurveyController extends Controller
                 break;
         }
         if ($search) {
-            $query->searchable(['month']);
+            $query->searchable(['title']);
         }
         $surveys = $query->paginate(getPaginate());
         $pageTitle = ucfirst($status) . ' Surveys';
@@ -49,14 +50,14 @@ class SurveyController extends Controller
         $apiKey = gs()->open_ai_key;
 
         $response = $this->generateSurveyJson($apiKey, $prompt);
-     
+
         return response()->json($response);
     }
 
     protected function generateSurveyJson($apiKey, $prompt, $model = 'gpt-4o-mini', $temperature = 0.4)
     {
         $client = new Client();
-           $messages = [
+        $messages = [
             [
                 "role" => "system",
                 "content" => "You are a professional survey generator. Use question types: mcq_single, mcq_multiple, both multiple-choice (single/multiple) and written written_textarea, written_input. Always respond with valid JSON only with valid JSON in the following exact schema. Do NOT change key names or structure. 
@@ -153,5 +154,70 @@ class SurveyController extends Controller
                 'data' => null
             ];
         }
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->input('survey');
+        $validator = Validator::make($data, [
+            'title' => 'required|string|max:255',
+            'questions' => 'required|array|min:1',
+            'questions.*.id' => 'required|integer|distinct',
+            'questions.*.type' => 'required|in:mcq_single,mcq_multiple,written_input,written_textarea',
+            'questions.*.question' => 'required|string',
+            'questions.*.options' => 'sometimes|array|min:2',
+            'questions.*.options.*' => 'string'
+        ]);
+
+        // MCQ questions must have options
+        foreach ($data['questions'] ?? [] as $q) {
+            if (in_array($q['type'], ['mcq_single', 'mcq_multiple']) && empty($q['options'])) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => "Question ID {$q['id']} must have at least 2 options."
+                ], 422);
+            }
+        }
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+        
+        $survey            = new Survey();
+        $survey->title     = $data['title'];
+        $survey->form_data = $data;
+        $survey->status    = Status::SURVEY_ENABLE;
+        $survey->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Survey form data saved successfully.'
+        ]);
+    }
+
+    public function details($id)
+    {
+        $survey = Survey::where('id', $id)->first();
+        if (!$survey) {
+            $notify[] = ['error', 'Survey Not Found'];
+            return back()->withNotify($notify);
+        }
+   
+        $pageTitle = 'Survey Details';
+        return view('Admin::survey.details', compact('pageTitle', 'survey'));
+    }
+
+
+
+    public function status($id)
+    {
+        $survey = Survey::findOrFail($id);
+        $survey->status = $survey->status == 1 ? 0 : 1;
+        $survey->save();
+        $notify[] = ['success', 'Survey Status has been updated successfully'];
+        return back()->withNotify($notify);
     }
 }

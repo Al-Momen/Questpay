@@ -119,21 +119,7 @@
                                     </li>
                                 @endadminHas
 
-                                @adminHas('payment-method')
-                                    <li class="sidebar-menu-item {{ menuActive('admin.gateway.automatic.index') }}">
-                                        <a class="nav-link" href="{{ route('admin.gateway.automatic.index') }}">
-                                            <i class="menu-icon fa-solid fa-circle"></i>
-                                            <span class="menu-title"> @lang('Automatic Gateways')</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="sidebar-menu-item {{ menuActive('admin.gateway.manual.index') }}">
-                                        <a class="nav-link" href="{{ route('admin.gateway.manual.index') }}">
-                                            <i class="menu-icon fa-solid fa-circle"></i>
-                                            <span class="menu-title"> @lang('Manual Gateways')</span>
-                                        </a>
-                                    </li>
-                                @endadminHas
+                            
                             </ul>
                         </div>
                     </li>
