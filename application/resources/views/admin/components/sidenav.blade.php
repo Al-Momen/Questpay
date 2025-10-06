@@ -2,8 +2,8 @@
     <button class="res-sidebar-close-btn"><i class="fa-solid fa-xmark"></i></button>
     <div class="sidebar__inner">
         <div class="sidebar__logo">
-            <a href="{{ route('admin.dashboard') }}" class="sidebar__main-logo"><img
-                    src="{{ siteLogo() }}" alt="@lang('image')"></a>
+            <a href="{{ route('admin.dashboard') }}" class="sidebar__main-logo"><img src="{{ siteLogo() }}"
+                    alt="@lang('image')"></a>
         </div>
 
         <div class="sidebar__menu-wrapper">
@@ -102,8 +102,46 @@
                     </li>
                 @endadminHasAny
 
+                @adminHasAny(['survey-management'])
+                    <li class="sidebar-menu-item sidebar-dropdown {{ menuActive(['admin.survey.*']) }}">
+                        <a href="javascript:void(0)" class="{{ menuActive(['admin.survey.*'], 3) }}">
+                            <i class="menu-icon fa-solid fa-square-poll-vertical"></i>
+                            <span class="menu-title">@lang('Survey')</span>
+                        </a>
+                        <div class="sidebar-submenu {{ menuActive(['admin.survey.*'], 2) }} ">
+                            <ul>
+                                @adminHas('survey-management')
+                                    <li class="sidebar-menu-item {{ menuActive('admin.survey.index') }}">
+                                        <a class="nav-link" href="{{ route('admin.survey.index') }}">
+                                            <i class="menu-icon fa-solid fa-circle"></i>
+                                            <span class="menu-title"> @lang('All Survey')</span>
+                                        </a>
+                                    </li>
+                                @endadminHas
+
+                                @adminHas('payment-method')
+                                    <li class="sidebar-menu-item {{ menuActive('admin.gateway.automatic.index') }}">
+                                        <a class="nav-link" href="{{ route('admin.gateway.automatic.index') }}">
+                                            <i class="menu-icon fa-solid fa-circle"></i>
+                                            <span class="menu-title"> @lang('Automatic Gateways')</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="sidebar-menu-item {{ menuActive('admin.gateway.manual.index') }}">
+                                        <a class="nav-link" href="{{ route('admin.gateway.manual.index') }}">
+                                            <i class="menu-icon fa-solid fa-circle"></i>
+                                            <span class="menu-title"> @lang('Manual Gateways')</span>
+                                        </a>
+                                    </li>
+                                @endadminHas
+                            </ul>
+                        </div>
+                    </li>
+                @endadminHasAny
+
                 @adminHasAny(['deposit-management', 'payment-method'])
-                    <li class="sidebar-menu-item sidebar-dropdown {{ menuActive(['admin.deposit.*', 'admin.gateway.*']) }}">
+                    <li
+                        class="sidebar-menu-item sidebar-dropdown {{ menuActive(['admin.deposit.*', 'admin.gateway.*']) }}">
                         <a href="javascript:void(0)" class="{{ menuActive(['admin.deposit.*', 'admin.gateway.*'], 3) }}">
                             <i class="menu-icon fa-solid fa-dollar-sign"></i>
                             <span class="menu-title">@lang('Payments')</span>
@@ -195,8 +233,7 @@
                         </a>
                         <div class="sidebar-submenu {{ menuActive('admin.report.*', 2) }} ">
                             <ul>
-                                <li
-                                    class="sidebar-menu-item {{ menuActive(['admin.report.transaction']) }}">
+                                <li class="sidebar-menu-item {{ menuActive(['admin.report.transaction']) }}">
                                     <a class="nav-link" href="{{ route('admin.report.transaction') }}">
                                         <i class="menu-icon fa-solid fa-circle"></i>
                                         <span class="menu-title"> @lang('Transactions')</span>
@@ -307,7 +344,7 @@
                 <li class="sidebar-menu-item">
                     <span class="nav-link admin__version">
                         <i class="menu-icon fa-solid fa-code-branch"></i>
-                         <span class="menu-title">@lang('Panel') {{ sysInfo()['admin_version'] }}</span>
+                        <span class="menu-title">@lang('Panel') {{ sysInfo()['admin_version'] }}</span>
                     </span>
                 </li>
 

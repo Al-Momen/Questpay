@@ -167,7 +167,6 @@
         "use strict"
         var formGenerator = new FormGenerator();
     </script>
-
     <script src="{{ asset('assets/common/js/form_actions.js') }}"></script>
 @endpush
 
