@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use App\Models\GeneralSetting;
 use App\Lib\GoogleAuthenticator;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
 
 
 function slug($string)
@@ -452,6 +453,24 @@ function siteFavicon()
 {
     $version = '?v=' . gs('updated_at');
     return getImage(getFilePath('logoIcon') . '/favicon.png') . $version;
+}
+
+
+if (!function_exists('isGuestRoute')) {
+    function isPageRoute(): bool
+    {
+        $guestRoutes = [
+            'user.login',
+            'user.register',
+            'user.password.request',
+            'user.password.reset',
+            'user.authorization',
+            'user.data',
+            'user.password.update',
+            'user.password.code.verify'
+        ];
+        return Route::is($guestRoutes);
+    }
 }
 
 

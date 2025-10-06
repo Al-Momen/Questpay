@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="{{ config('app.locale') }}" itemscope itemtype="http://schema.org/WebPage">
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -8,88 +9,67 @@
     @include('includes.seo')
     <!-- Bootstrap CSS -->
     <link href="{{ asset('assets/common/css/bootstrap.min.css') }}" rel="stylesheet">
-
     <link href="{{ asset('assets/common/css/all.min.css') }}" rel="stylesheet">
-
-
-    <link rel="stylesheet" href="{{asset('assets/common/css/line-awesome.min.css')}}"/>
-
-    <link rel="stylesheet" href="{{asset($activeTemplateTrue.'css/custom.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/common/css/line-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset($activeTemplateTrue . 'css/swiper-bundle.min.css') }}">
+    <link rel="stylesheet" href="{{ asset($activeTemplateTrue . 'css/custom.css') }}">
+    <link rel="stylesheet" href="{{ asset($activeTemplateTrue . 'css/main.css') }}">
+    @stack('style')
     @stack('style-lib')
-    <link rel="stylesheet" href="{{ asset($activeTemplateTrue.'css/color.php') }}?color={{ $general->base_color }}&secondColor={{ $general->secondary_color }}">
+    <link rel="stylesheet"
+        href="{{ asset($activeTemplateTrue . 'css/color.php') }}?color={{ $general->base_color }}&secondColor={{ $general->secondary_color }}">
 </head>
+
 <body>
-@stack('fbComment')
 
-@yield('content')
+    @include('Template::components.loader')
 
-@php
-    $cookie = App\Models\Frontend::where('data_keys','cookie.data')->first();
-@endphp
-@if(($cookie->data_values->status == 1) && !\Cookie::get('gdpr_cookie'))
-    <!-- cookies dark version start -->
-    <div class="cookies-card text-center hide">
-      <div class="cookies-card__icon bg--base">
-        <i class="fa-solid fa-cookie-bite"></i>
-      </div>
-      <p class="mt-4 cookies-card__content">{{ $cookie->data_values->short_desc }} <a href="{{ route('cookie.policy') }}" target="_blank">@lang('learn more')</a></p>
-      <div class="cookies-card__btn mt-4">
-        <a href="javascript:void(0)" class="btn btn--base w-100 policy">@lang('Allow')</a>
-      </div>
-    </div>
-  <!-- cookies dark version end -->
-  @endif
+    @if (!isPageRoute())
+        @include('Template::components.header')
+    @endif
 
+    <main>
+        @yield('content')
+    </main>
 
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="{{asset('assets/common/js/jquery-3.7.1.min.js')}}"></script>
-  <script src="{{asset('assets/common/js/bootstrap.bundle.min.js')}}"></script>
+    @if (!isPageRoute())
+        @include('Template::components.footer')
+    @endif
+    
+    @include('Template::components.cookie')
 
-@stack('script-lib')
+    <script src="{{ asset('assets/common/js/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset('assets/common/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset($activeTemplateTrue . 'js/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset($activeTemplateTrue . 'js/odometer.min.js') }}"></script>
+    <script src="{{ asset($activeTemplateTrue . 'js/main.js') }}"></script>
 
-@stack('script')
+    @stack('script-lib')
+    @stack('script')
+    @include('includes.notify')
+    @include('includes.plugins')
 
-@include('includes.plugins')
-
-@include('includes.notify')
-
-
-<script>
-    (function ($) {
-        "use strict";
-        $(".langSel").on("change", function() {
-            window.location.href = "{{route('home')}}/change/"+$(this).val() ;
-        });
-
-
-        $('.policy').on('click',function(){
-            $.get('{{route('cookie.accept')}}', function(response){
-                $('.cookies-card').addClass('d-none');
+    <script>
+        (function($) {
+            "use strict";
+            $(document).on('click', '.lang-change', function() {
+                const lang = $(this).data('lang');
+                window.location.href = "{{ route('home') }}/change/" + lang;
             });
-        });
 
-        setTimeout(function(){
-            $('.cookies-card').removeClass('hide')
-        },2000);
+            $('.policy').on('click', function() {
+                $.get('{{ route('cookie.accept') }}', function(response) {
+                    $('.cookies-card').addClass('d-none');
+                });
+            });
 
-        var inputElements = $('[type=text],select,textarea');
-        $.each(inputElements, function (index, element) {
-            element = $(element);
-            element.closest('.form-group').find('label').attr('for',element.attr('name'));
-            element.attr('id',element.attr('name'))
-        });
+            setTimeout(function() {
+                $('.cookies-card').removeClass('hide')
+            }, 2000);
 
-        $.each($('input, select, textarea'), function (i, element) {
-
-            if (element.hasAttribute('required')) {
-                $(element).closest('.form-group').find('label').addClass('required');
-            }
-
-        });
-
-    })(jQuery);
-</script>
+        })(jQuery);
+    </script>
 
 </body>
+
 </html>
