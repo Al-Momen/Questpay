@@ -21,12 +21,13 @@
 </head>
 
 <body>
-    @include('Template::components.loader')
+    {{-- @include('Template::components.loader') --}}
     @if (!isPageRoute())
         @include('Template::components.header')
     @endif
 
     <main>
+
         @yield('content')
     </main>
 

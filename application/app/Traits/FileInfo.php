@@ -72,6 +72,13 @@ trait FileInfo
             'path'      => 'assets/images/language',
             'size'      => '50x50',
         ];
+        $data['language'] = [
+            'path'      => 'assets/images/language',
+            'size'      => '50x50',
+        ];
+          $data['banner'] = [
+            'path'      => 'assets/images/frontend/banner/',
+        ];
         $data['blog'] = [
             'path'      => 'assets/images/frontend/blog',
             'size'      => '728x465',

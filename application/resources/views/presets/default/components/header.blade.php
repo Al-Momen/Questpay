@@ -3,12 +3,18 @@
     $socialIcons = getContent('social_icon.element', false);
     $currentLang = $languages->firstWhere('code', session('lang', 'en'));
     $pages = App\Models\Menu::with(['items', 'menuItems'])
-        ->where('slug', 'header-menu')
+        ->where('code', 'header_menu')
         ->first();
-    $userGuard = auth('web');
-    $editorialGuard = auth('editorial');
 @endphp
 
+
+<!-- ==================== Scroll to Top Start ==================== -->
+<a class="scroll-top"><i class="fas fa-angle-double-up"></i></a>
+<!-- ==================== Scroll to Top End ==================== -->
+
+<!--==========================  Overlay Start  ==========================-->
+<div class="overlay"></div>
+<!--==========================  Overlay End  ==========================-->
 
 <!--==========================  Offcanvas Section Start  ==========================-->
 <div class="offcanvas__area">
@@ -26,7 +32,7 @@
                         <div class="language__item">
                             <img src="{{ getImage(getFilePath('language') . '/' . $currentLang->image ?? '', getFileSize('language')) }}"
                                 alt="@lang('image')">
-                            <p>{{ Str::upper($currentLang->name) }}</p>
+                            <p>{{ ucfirst($currentLang->name) }}</p>
                         </div>
                     </div>
                     <ul class="dropdown-menu">
@@ -35,7 +41,7 @@
                                 <div class="language__item dropdown-item lang-change">
                                     <img src="{{ getImage(getFilePath('language') . '/' . $language->image ?? '', getFileSize('language')) }}"
                                         alt="@lang('flag-image')">
-                                    <p>{{ Str::upper($language->name) }}</p>
+                                    <p>{{ ucfirst($language->name) }}</p>
                                 </div>
                             </li>
                         @endforeach
@@ -108,7 +114,7 @@
                                 <div class="language__item">
                                     <img src="{{ getImage(getFilePath('language') . '/' . $currentLang->image ?? '', getFileSize('language')) }}"
                                         alt="@lang('image')">
-                                    <p>{{ Str::upper($currentLang->name) }}</p>
+                                    <p>{{ ucfirst($currentLang->name) }}</p>
                                 </div>
                             </div>
                             <ul class="dropdown-menu">
@@ -117,7 +123,7 @@
                                         <div class="language__item dropdown-item lang-change">
                                             <img src="{{ getImage(getFilePath('language') . '/' . $language->image ?? '', getFileSize('language')) }}"
                                                 alt="@lang('flag-image')">
-                                            <p>{{ Str::upper($language->name) }}</p>
+                                            <p>{{ ucfirst($language->name) }}</p>
                                         </div>
                                     </li>
                                 @endforeach
@@ -125,7 +131,7 @@
                         </div>
                         <div class="header__login">
                             @auth
-                                <a href="{{ route('user.home') }}" >@lang('Dashboard')</a>
+                                <a href="{{ route('user.home') }}">@lang('Dashboard')</a>
                                 <a href="{{ route('user.logout') }}">@lang('Logout')</a>
                             @endauth
                             @guest

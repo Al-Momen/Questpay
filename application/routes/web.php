@@ -21,6 +21,8 @@ Route::controller('SiteController')->group(function () {
     Route::post('/contact', 'contactSubmit');
     Route::get('/change/{lang?}', 'changeLanguage')->name('lang');
 
+    Route::post('/subscribe', 'subscribe')->name('subscribe');
+
     Route::get('cookie-policy', 'cookiePolicy')->name('cookie.policy');
 
     Route::get('/cookie/accept', 'cookieAccept')->name('cookie.accept');
@@ -28,6 +30,8 @@ Route::controller('SiteController')->group(function () {
     Route::get('blog/{slug}/{id}', 'blogDetails')->name('blog.details');
 
     Route::get('policy/{slug}/{id}', 'policyPages')->name('policy.pages');
+
+
 
     Route::get('placeholder-image/{size}', 'placeholderImage')->name('placeholder.image');
     Route::get('maintenance-mode','maintenance')->withoutMiddleware('maintenance')->name('maintenance');

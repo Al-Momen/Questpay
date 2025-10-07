@@ -1,11 +1,5 @@
-<!--==================== Preloader Start ====================-->
-<div class="preloader">
-    <span class="loader"></span>
-</div>
-<!--==================== Preloader End ====================-->
-
-
-
-
-
-
+   <!--==================== Preloader Start ====================-->
+    <div class="preloader">
+        <div class="loader__text" data-text="wStacks"></div>
+    </div>
+    <!--==================== Preloader End ====================-->

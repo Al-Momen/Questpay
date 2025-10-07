@@ -2,21 +2,15 @@
     $contactSection = getContent('contact_us.content', true);
     $socialIcons = getContent('social_icon.element', false);
     $companyLinks = App\Models\Menu::with(['items', 'menuItems'])
-        ->where('slug', 'company-link')
+        ->where('code', 'company_link')
         ->first();
     $quickLinks = App\Models\Menu::with(['items', 'menuItems'])
-        ->where('slug', 'quick-link')
+        ->where('code', 'quick_link')
         ->first();
     $policyLinks = getContent('policy_pages.element', false, null, true);
     $subscriptionSectionContent = getContent('subscribe.content', true);
 @endphp
-<!-- ==================== Scroll to Top Start ==================== -->
-<a class="scroll-top"><i class="fas fa-angle-double-up"></i></a>
-<!-- ==================== Scroll to Top End ==================== -->
 
-<!--==========================  Overlay Start  ==========================-->
-<div class="overlay"></div>
-<!--==========================  Overlay End  ==========================-->
 <!--================================= footer section start =================================-->
 <footer class="footer mt-120">
     <div class="container">
@@ -24,7 +18,7 @@
             <div class="col-lg-3">
                 <div class="footer-items">
                     <a href="{{ route('home') }}" class="footer-logo">
-                        <img src="{{ getImage(getFilePath('logoIcon') . '/logo_dark.png', '?' . time()) }}"
+                        <img src="{{ getImage(getFilePath('logoIcon') . '/logo_white.png', '?' . time()) }}"
                             alt="@lang('logo')"></a>
                     <p class="footer-desc">{{ __($contactSection->data_values->short_details) }}</p>
                     <ul class="social-list mb-4 z--9 position-relative social__icon">

@@ -4,10 +4,31 @@
         "no_selection": true,
         "name": "Banner Section",
         "content": {
+            "contributor_text": "text",
+            "contributor_number": "text",
             "heading": "text",
-            "subheading": "text"
+            "sub_heading": "text",
+            "button_text": "text",
+             "images": {
+                "left_image": {
+                    "size": "428x293"
+                },
+                "right_image": {
+                    "size": "445x335"
+                }
+            }
+        },
+         "element": {
+            "images": {
+                "contributor_image": {
+                    "size": "22x22"
+                }
+            },
+            "modal": true
         }
     },
+
+
     "browse_topic": {
         "builder": true,
         "no_selection": false,
@@ -143,11 +164,10 @@
     },
     "subscribe": {
         "builder": true,
+           "no_selection": true,
         "name": "Subscribe Section",
         "content": {
-            "heading": "text",
-            "subheading": "text",
-            "soical_icon": "icon"
+            "heading": "text"
         }
     },
     "social_icon": {
