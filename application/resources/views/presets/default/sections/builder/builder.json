@@ -9,7 +9,7 @@
             "heading": "text",
             "sub_heading": "text",
             "button_text": "text",
-             "images": {
+            "images": {
                 "left_image": {
                     "size": "428x293"
                 },
@@ -18,7 +18,7 @@
                 }
             }
         },
-         "element": {
+        "element": {
             "images": {
                 "contributor_image": {
                     "size": "22x22"
@@ -28,114 +28,108 @@
         }
     },
 
-
-    "browse_topic": {
+    "brand": {
         "builder": true,
         "no_selection": false,
-        "name": "Banner Section",
+        "name": "Brand Section",
         "content": {
             "heading": "text"
-        }
-    },
-    "feature": {
-        "builder": true,
-        "name": "Feature Section",
-        "content": {
-            "heading": "text",
-            "subheading": "text"
         },
         "element": {
-            "title": "text",
-            "description": "textarea",
-            "feature_icon": "icon",
+            "images": {
+                "brand_image": {
+                    "size": "120x40"
+                }
+            },
             "modal": true
         }
     },
+
     "about": {
         "builder": true,
-        "name": "About Us",
+        "name": "About Section",
         "content": {
-            "images": {
-                "background_image": {
-                    "size": "500x500",
-                    "thumb": "100x100"
-                },
-                "about_image": {
-                    "size": "500x500",
-                    "thumb": "100x100"
-                }
-            },
+            "title": "text",
             "heading": "text",
             "subheading": "text",
-            "description": "textarea",
-            "about_icon": "icon"
-        }
-    },
-    "about_dark": {
-        "builder": false,
-        "name": "About Us Dark",
-        "content": []
-    },
-    "service": {
-        "builder": true,
-        "name": "Service Section",
-        "content": {
-            "select": {
-                "name": "trx_type",
-                "options": {
-                    "deposit": "Deposit",
-                    "withdraw": "Withdraw"
+            "counter_text": "text",
+            "counter_number": "text",
+            "button_text": "text",
+            "images": {
+                "image": {
+                    "size": "505x470"
                 }
-            },
-            "heading": "text",
-            "subheading": "text"
+            }
         },
         "element": {
-            "select": {
-                "name": "trx_type",
-                "options": {
-                    "deposit": "Deposit",
-                    "withdraw": "Withdraw"
-                }
-            },
-            "service_icon": "icon",
-            "title": "text",
-            "description": "textarea",
-            "modal": false
-        }
-    },
-    "counter": {
-        "builder": true,
-        "name": "Counter Section",
-        "content": {
-            "heading": "text",
-            "subheading": "text"
-        },
-        "element": {
-            "title": "text",
+            "button_text": "text",
+            "short_description": "text",
+            "feature": "text",
             "counter_digit": "text",
-            "sub_title": "text",
-            "counter_icon": "icon",
-            "counter_icon_2": "icon",
             "modal": true
         }
     },
-    "policy_pages": {
-        "builder": false,
-        "no_selection": true,
-        "name": "Policy Pages",
-        "element": {
-            "title": "text",
-            "details": "textarea-rich",
-            "modal": false
+
+    "information": {
+        "builder": true,
+        "name": "Information Section",
+        "content": {
+            "images": {
+                "left_image": {
+                    "size": "635x500"
+                },
+                "right_image": {
+                    "size": "650x810"
+                }
+            },
+            "left_heading": "text",
+            "left_subheading": "text",
+            "left_button_text": "text",
+            "left_button_url": "url",
+            "right_heading": "text",
+            "right_subheading": "text",
+            "right_button_text": "text",
+            "right_button_url": "url"
         }
     },
+
+    "work": {
+        "builder": true,
+        "name": "How It Work Section",
+        "content": {
+            "title": "text",
+            "heading": "text",
+            "subheading": "text"
+        },
+        "element": {
+            "images": {
+                "image": {
+                    "size": "44x44"
+                }
+            },
+            "title": "text",
+            "subheading": "text",
+            "modal": true
+        }
+    },
+
     "faq": {
         "builder": true,
         "name": "FAQ Section",
         "content": {
+            "images": {
+                "image": {
+                    "size": "400x625"
+                },
+                "support_image": {
+                    "size": "65x65"
+                }
+            },
+            "title": "text",
             "heading": "text",
-            "subheading": "text"
+            "subheading": "text",
+            "support_hour": "text",
+            "support_text": "text"
         },
         "element": {
             "question": "text",
@@ -143,9 +137,32 @@
             "modal": false
         }
     },
+
+    "testimonial": {
+        "builder": true,
+        "name": "Testimonial Section",
+        "content": {
+            "title": "text",
+            "heading": "text",
+            "subheading": "text"
+        },
+        "element": {
+            "images": {
+                "image": {
+                    "size": "200x320"
+                }
+            },
+            "name": "text",
+            "location": "text",
+            "short_description": "textarea",
+            "rating_number": "number",
+            "modal": false
+        }
+    },
+
     "blog": {
         "builder": true,
-        "name": "Blog Section",
+        "name": "blog Section",
         "content": {
             "heading": "text",
             "subheading": "text"
@@ -162,14 +179,7 @@
             "modal": false
         }
     },
-    "subscribe": {
-        "builder": true,
-           "no_selection": true,
-        "name": "Subscribe Section",
-        "content": {
-            "heading": "text"
-        }
-    },
+
     "social_icon": {
         "builder": true,
         "no_selection": true,
@@ -194,71 +204,6 @@
             "latitude": "text",
             "longitude": "text",
             "website_footer": "textarea-rich"
-        }
-    },
-    "test_section": {
-        "builder": true,
-        "name": "Test Section",
-        "content": {
-            "select": {
-                "name": "trx_type",
-                "options": {
-                    "deposit": "Deposit",
-                    "withdraw": "Withdraw"
-                }
-            },
-            "images": {
-                "background_image": {
-                    "size": "1920x1280"
-                },
-                "banner_image": {
-                    "size": "1920x1280"
-                },
-                "banner_image_2": {
-                    "size": "1920x1280"
-                }
-            },
-            "heading": "text",
-            "subheading": "text",
-            "description": "textarea-rich"
-        },
-        "element": {
-            "select": {
-                "name": "trx_type",
-                "options": {
-                    "deposit": "Deposit",
-                    "withdraw": "Withdraw"
-                }
-            },
-            "images": {
-                "background_image": {
-                    "size": "1920x1280"
-                },
-                "banner_image": {
-                    "size": "1920x1280"
-                },
-                "banner_image_2": {
-                    "size": "1920x1280"
-                }
-            },
-            "heading": "text",
-            "subheading": "text",
-            "description": "textarea-rich",
-            "modal": true
-        }
-    },
-    "custom_banktransfer": {
-        "builder": true,
-        "name": "Custom Section",
-        "content": {
-            "textarea": "textarea-rich"
-        }
-    },
-    "custom_banktransfer__test": {
-        "builder": true,
-        "name": "Custom Section test",
-        "content": {
-            "textarea": "textarea-rich"
         }
     }
 }
