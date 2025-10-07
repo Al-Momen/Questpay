@@ -307,7 +307,7 @@
                 success: function(response) {
                     console.log("Survey saved successfully:", response);
                     if (response.status === "success") {
-                        // window.location.href = "{{ route('admin.survey.index') }}";
+                        window.location.href = "{{ route('admin.survey.index') }}";
                         notify('success', response.message);
                         return;
                     } else {

@@ -10,6 +10,35 @@ class Survey extends Model
         'form_data' => 'array'
     ];
 
+    public function author()
+    {
+        return $this->morphTo();
+    }
+
+
+    public function getAuthorNameAttribute()
+    {
+        if (!$this->author) {
+            return null;
+        }
+
+        if ($this->author_type === \App\Models\Admin::class) {
+            return [
+                'author_name' => $this->author->name ?? null,
+                'author_type' => 'Super Admin'
+            ];
+        }
+
+        if ($this->author_type === \App\Models\User::class) {
+            return [
+                'author_name' => $this->author->fullname ?? null,
+                'author_type' => 'User'
+            ];
+        }
+
+        return null;
+    }
+
 
     public function statusBadge($status)
     {

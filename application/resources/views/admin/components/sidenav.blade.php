@@ -103,12 +103,12 @@
                 @endadminHasAny
 
                 @adminHasAny(['survey-management'])
-                    <li class="sidebar-menu-item sidebar-dropdown {{ menuActive(['admin.survey.*']) }}">
-                        <a href="javascript:void(0)" class="{{ menuActive(['admin.survey.*'], 3) }}">
+                    <li class="sidebar-menu-item sidebar-dropdown {{ menuActive(['admin.survey.*','admin.plan.*']) }}">
+                        <a href="javascript:void(0)" class="{{ menuActive(['admin.survey.*','admin.plan.*'], 3) }}">
                             <i class="menu-icon fa-solid fa-square-poll-vertical"></i>
                             <span class="menu-title">@lang('Survey')</span>
                         </a>
-                        <div class="sidebar-submenu {{ menuActive(['admin.survey.*'], 2) }} ">
+                        <div class="sidebar-submenu {{ menuActive(['admin.survey.*','admin.plan.*'], 2) }} ">
                             <ul>
                                 @adminHas('survey-management')
                                     <li class="sidebar-menu-item {{ menuActive('admin.survey.index') }}">
@@ -119,6 +119,14 @@
                                     </li>
                                 @endadminHas
 
+                                @adminHas('plan-management')
+                                    <li class="sidebar-menu-item {{ menuActive('admin.plan.index') }}">
+                                        <a class="nav-link" href="{{ route('admin.plan.index') }}">
+                                            <i class="menu-icon fa-solid fa-circle"></i>
+                                            <span class="menu-title"> @lang('All Plan')</span>
+                                        </a>
+                                    </li>
+                                @endadminHas
                             
                             </ul>
                         </div>

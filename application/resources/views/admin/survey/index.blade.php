@@ -35,6 +35,8 @@
                             <thead>
                                 <tr>
                                     <th>@lang('SI')</th>
+                                    <th>@lang('Author Name')</th>
+                                    <th>@lang('Author Type')</th>
                                     <th>@lang('Title')</th>
                                     <th>@lang('Created-At')</th>
                                     <th>@lang('Status')</th>
@@ -45,6 +47,8 @@
                                 @forelse($surveys as $item)
                                     <tr>
                                         <td>#{{ $loop->iteration }}</td>
+                                        <td>{{ $item->authorName['author_name'] }}</td>
+                                        <td>{{ $item->authorName['author_type'] }}</td>
                                         <td>{{ $item->title }}</td>
                                         <td>{{ showDateTime($item->created_at) }}</td>
                                         <td>
@@ -95,7 +99,6 @@
 
     <x-confirmation-modal></x-confirmation-modal>
 @endsection
-
 
 @push('script')
     <script>

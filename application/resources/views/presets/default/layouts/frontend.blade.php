@@ -21,9 +21,7 @@
 </head>
 
 <body>
-
     @include('Template::components.loader')
-
     @if (!isPageRoute())
         @include('Template::components.header')
     @endif

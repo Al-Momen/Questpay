@@ -13,6 +13,9 @@ class Status{
     const SURVEY_ENABLE  = 1;
     const SURVEY_DISABLE = 0;
 
+    const PLAN_ENABLE  = 1;
+    const PLAN_DISABLE = 0;
+
     const VERIFIED   = 1;
     const UNVERIFIED = 0;
 

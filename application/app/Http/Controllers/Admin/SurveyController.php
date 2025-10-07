@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Admin;
 use App\Models\Survey;
 use GuzzleHttp\Client;
 use App\Constants\Status;
@@ -33,8 +34,9 @@ class SurveyController extends Controller
         if ($search) {
             $query->searchable(['title']);
         }
-        $surveys = $query->paginate(getPaginate());
+        $surveys = $query->with('author')->paginate(getPaginate());
         $pageTitle = ucfirst($status) . ' Surveys';
+       
         return view('Admin::survey.index', compact('surveys', 'pageTitle'));
     }
 
@@ -186,10 +188,12 @@ class SurveyController extends Controller
             ], 422);
         }
         
-        $survey            = new Survey();
-        $survey->title     = $data['title'];
-        $survey->form_data = $data;
-        $survey->status    = Status::SURVEY_ENABLE;
+        $survey              = new Survey();
+        $survey->author_id   = auth('admin')->id();
+        $survey->author_type = Admin::class;
+        $survey->title       = $data['title'];
+        $survey->form_data   = $data;
+        $survey->status      = Status::SURVEY_ENABLE;
         $survey->save();
 
         return response()->json([
