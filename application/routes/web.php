@@ -24,14 +24,12 @@ Route::controller('SiteController')->group(function () {
     Route::post('/subscribe', 'subscribe')->name('subscribe');
 
     Route::get('cookie-policy', 'cookiePolicy')->name('cookie.policy');
-
     Route::get('/cookie/accept', 'cookieAccept')->name('cookie.accept');
 
+    Route::get('blog', 'blog')->name('blog');
     Route::get('blog/{slug}/{id}', 'blogDetails')->name('blog.details');
 
     Route::get('policy/{slug}/{id}', 'policyPages')->name('policy.pages');
-
-
 
     Route::get('placeholder-image/{size}', 'placeholderImage')->name('placeholder.image');
     Route::get('maintenance-mode','maintenance')->withoutMiddleware('maintenance')->name('maintenance');

@@ -26,15 +26,18 @@
         @include('Template::components.header')
     @endif
 
-    <main>
+    @if (request()->route()->uri != '/' && !isPageRoute())
+        @include('Template::components.breadcrumb')
+    @endif
 
+    <main>
         @yield('content')
     </main>
 
     @if (!isPageRoute())
         @include('Template::components.footer')
     @endif
-    
+
     @include('Template::components.cookie')
 
     <script src="{{ asset('assets/common/js/jquery-3.7.1.min.js') }}"></script>

@@ -98,9 +98,7 @@ trait FileInfo
             'path'      => 'assets/images/frontend/testimonial/',
         ];
         $data['blog'] = [
-            'path'      => 'assets/images/frontend/blog',
-            'size'      => '728x465',
-            'thumb'     => '120x80',
+            'path'      => 'assets/images/frontend/blog/',
         ];
         return $data;
     }

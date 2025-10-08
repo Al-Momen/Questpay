@@ -162,19 +162,22 @@
 
     "blog": {
         "builder": true,
-        "name": "blog Section",
+        "name": "Blog Section",
         "content": {
+            "top_heading": "text",
             "heading": "text",
-            "subheading": "text"
+            "short_description": "text",
+            "button_text": "text"
         },
         "element": {
             "images": {
                 "blog_image": {
-                    "size": "728x465",
-                    "thumb": "120x80"
+                    "size": "850x550",
+                    "thumb": "360x230"
                 }
             },
             "title": "text",
+            "quote": "textarea",
             "description": "textarea-rich",
             "modal": false
         }
@@ -189,6 +192,16 @@
             "social_icon": "icon",
             "url": "text",
             "modal": true
+        }
+    },
+    "policy_pages": {
+        "builder": false,
+        "no_selection": true,
+        "name": "Policy Pages",
+        "element": {
+            "title": "text",
+            "details": "textarea-rich",
+            "modal": false
         }
     },
     "contact_us": {
