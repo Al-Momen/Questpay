@@ -209,11 +209,15 @@
         "no_selection": true,
         "name": "Contact Us",
         "content": {
-            "title": "text",
+            "top_heading": "text",
+            "heading": "text",
+            "short_description": "text",
+            "button_text": "text",
             "short_details": "text",
             "email_address": "text",
             "contact_details": "text",
             "contact_number": "text",
+            "support_number": "text",
             "latitude": "text",
             "longitude": "text",
             "website_footer": "textarea-rich"

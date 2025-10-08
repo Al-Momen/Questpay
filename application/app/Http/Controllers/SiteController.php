@@ -59,7 +59,8 @@ class SiteController extends Controller
     public function contact()
     {
         $pageTitle = "Contact Us";
-        return view('Template::contact', compact('pageTitle'));
+         $sections = Page::where('slug', 'contact')->first();
+        return view('Template::contact', compact('pageTitle', 'sections'));
     }
 
 

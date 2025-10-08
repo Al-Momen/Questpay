@@ -18,7 +18,7 @@
                          @endif
                      </h3>
                  </a>
-                 <p class="news-desc">8
+                 <p class="news-desc">
                      @if (strlen(__(strip_tags($item->data_values->description))) > 80)
                          {{ strLimit(__(strip_tags($item->data_values->description)), 80) }}
                      @else

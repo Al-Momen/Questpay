@@ -43,6 +43,7 @@
     <script src="{{ asset('assets/common/js/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('assets/common/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset($activeTemplateTrue . 'js/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset($activeTemplateTrue . 'js/scrollreveal.min.js') }}"></script>
     <script src="{{ asset($activeTemplateTrue . 'js/odometer.min.js') }}"></script>
     <script src="{{ asset($activeTemplateTrue . 'js/main.js') }}"></script>
 
