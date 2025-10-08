@@ -97,6 +97,9 @@ trait FileInfo
         $data['shape'] = [
             'path'      => 'assets/images/frontend/shape/',
         ];
+        $data['error'] = [
+            'path'      => 'assets/images/frontend/error/',
+        ];
         $data['contact'] = [
             'path'      => 'assets/images/frontend/contact/',
         ];

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> {{ $general->siteName(__('404')) }}</title>
@@ -30,8 +31,8 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="error__main py-60">
-                            <img src="{{getImage(getFilePath('error').'500.png')}}" alt="@lang('error-image')">
-                            <h3 class="error-text">@lang('Internal server error temporarily unavailable.')</h3>
+                            <img src="{{getImage(getFilePath('error').'404.png')}}" alt="@lang('error-image')">
+                            <h3 class="error-text">@lang('Whoops! Something Went Wrong')</h3>
                             <a href="{{ route('home') }}" class="btn btn--base">@lang('Back to Home')</a>
                         </div>
                     </div>
@@ -43,4 +44,3 @@
 </body>
 
 </html>
-

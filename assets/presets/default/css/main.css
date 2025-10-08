@@ -5773,13 +5773,13 @@ input[type="number"] {
 
 .sign-up__items {
   background: #f0fbf6;
-  height: 100%;
   padding: 97px 112px;
   position: relative;
   overflow: hidden;
   max-width: 700px;
   margin: 0 0 0 auto;
   z-index: 3;
+  height: 100vh;
 }
 
 @media screen and (max-width: 1599px) {
@@ -5846,9 +5846,7 @@ input[type="number"] {
   color: hsl(var(--black) / 0.6);
 }
 
-.sign-up__social {
-  margin-bottom: 50px;
-}
+
 
 @media screen and (max-width: 767px) {
   .sign-up__social {

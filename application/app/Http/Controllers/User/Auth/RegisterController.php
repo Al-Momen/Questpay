@@ -48,6 +48,7 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+   ;
         $general = gs();
         $passwordValidation = Password::min(6);
         if ($general->secure_password) {
@@ -197,6 +198,7 @@ class RegisterController extends Controller
             $exist['type'] = 'email';
         }
         if ($request->mobile) {
+
             $exist['data'] = User::where('mobile',$request->mobile)->exists();
             $exist['type'] = 'mobile';
         }

@@ -1,7 +1,6 @@
 @if($seo)
     @php
         $blogDetailsRoute = Route::is('blog.details');
-
         $title = $general->siteName(__($pageTitle));
         $description = $seo->description;
         $image = getImage(getFilePath('seo') .'/'. $seo->image);
@@ -18,6 +17,7 @@
             $socialDescription = $description;
         }
     @endphp
+    <meta name="mobile-web-app-capable" content="yes">
 
     <meta name="title" content="{{ __($title) }}">
     <meta name="description" content="{{ __($description) }}">

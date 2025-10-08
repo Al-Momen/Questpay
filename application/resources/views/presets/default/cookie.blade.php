@@ -7,7 +7,6 @@
         <div class="container">
             <div class="privacy-policy__items">
                 <div class="privacy-policy__content mb-60">
-     
                     <div class="wyg">
                         @php
                             echo $cookie->data_values->description;

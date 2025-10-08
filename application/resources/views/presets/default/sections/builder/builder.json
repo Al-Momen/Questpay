@@ -51,7 +51,7 @@
         "content": {
             "title": "text",
             "heading": "text",
-            "subheading": "text",
+            "subheading": "textarea",
             "counter_text": "text",
             "counter_number": "text",
             "button_text": "text",
@@ -62,10 +62,7 @@
             }
         },
         "element": {
-            "button_text": "text",
-            "short_description": "text",
             "feature": "text",
-            "counter_digit": "text",
             "modal": true
         }
     },

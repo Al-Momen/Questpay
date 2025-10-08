@@ -55,11 +55,19 @@ class SiteController extends Controller
         return view('Template::blog_details', compact('blog', 'pageTitle', 'latests'));
     }
 
+    public function about()
+    {
+        $pageTitle = "About Us";
+        $sections = Page::where('slug', 'about')->first();
+        return view('Template::about', compact('pageTitle', 'sections'));
+
+    }
+
 
     public function contact()
     {
         $pageTitle = "Contact Us";
-         $sections = Page::where('slug', 'contact')->first();
+        $sections = Page::where('slug', 'contact')->first();
         return view('Template::contact', compact('pageTitle', 'sections'));
     }
 
