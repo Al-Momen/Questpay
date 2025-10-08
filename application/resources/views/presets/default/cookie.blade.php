@@ -1,50 +1,21 @@
-@extends($activeTemplate.'layouts.frontend')
+@extends($activeTemplate . 'layouts.frontend')
 @section('content')
-
-
-    <section class="container py-5">
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="section-title">{{ __($pageTitle) }}</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="wyg">
-                            @php
-                                echo $cookie->data_values->description
-                            @endphp
-                        </div>
+    <!--==========================  privacy-policy Section Start  ==========================-->
+    <div class="privacy-policy pt-120">
+        <div class="privacy-policy__shape1"> </div>
+        <div class="privacy-policy__shape2"></div>
+        <div class="container">
+            <div class="privacy-policy__items">
+                <div class="privacy-policy__content mb-60">
+     
+                    <div class="wyg">
+                        @php
+                            echo $cookie->data_values->description;
+                        @endphp
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
-
+    <!--==========================  privacy-policy Section End  ==========================-->
 @endsection
-
-@push('style')
-<style>
-    .wyg h1, h2, h3, h4{
-        color:#383838;
-    }
-    .wyg strong{
-        color:#383838
-    }
-    .wyg p{
-        color: #666666
-    }
-    .wyg ul{
-        margin-left: 40px
-    }
-    .wyg ul li{
-        list-style-type: disc;
-        color: #666666
-    }
-    .section-title{
-        font-size: 30px;
-        margin-bottom: 0;
-    }
-</style>
-@endpush
