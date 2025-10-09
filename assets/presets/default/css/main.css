@@ -5771,6 +5771,57 @@ input[type="number"] {
   }
 }
 
+.custom--card {
+  background: #f0fbf6;
+  position: relative;
+  overflow: hidden;
+  max-width: 100%;
+  margin: 0;
+  z-index: 3;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sign-up__wapper {
+  max-width: 600px;
+  margin: auto;
+  border: 1px solid hsl(var(--base));
+  padding: 28px;
+  border-radius: 12px;
+}
+
+@media screen and (max-width: 1599px) {
+  .custom--card {
+    max-width: 100% !important;
+    padding: 97px 42px;
+    margin: 0 auto;
+  }
+}
+
+@media screen and (max-width: 1399px) {
+  .custom--card {
+    max-width: 100% !important;
+    padding: 97px 42px;
+    margin: 0 auto;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .custom--card {
+    max-width: 100% !important;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 424px) {
+  .custom--card {
+    padding: 70px 20px;
+  }
+}
+
 .sign-up__items {
   background: #f0fbf6;
   padding: 97px 112px;
@@ -5845,8 +5896,6 @@ input[type="number"] {
   background-color: hsl(var(--white));
   color: hsl(var(--black) / 0.6);
 }
-
-
 
 @media screen and (max-width: 767px) {
   .sign-up__social {

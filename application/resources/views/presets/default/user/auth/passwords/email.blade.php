@@ -1,36 +1,33 @@
-@extends($activeTemplate.'layouts.frontend')
+@extends($activeTemplate . 'layouts.frontend')
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-7 col-xl-5">
-            <div class="text-end">
-                <a href="{{ route('home') }}" class="fw--500 home-link"> <i class="fa-solid fa-arrow-left-long"></i>
-                    @lang('Go to Home')</a>
+    <div class="custom--card">
+        <div class="sign-up__wapper">
+            <div class="wrap">
+                <div class="section-heading mb-2">
+                    <h2 class="section-heading__title sign-up__title title-animation">{{ __($pageTitle) }}</h2>
+                    <p class="section-heading__desc title-animation">
+                        @lang('To recover your account please provide your email or username to find your account.')
+                    </p>
+                </div>
             </div>
-            <div class="card custom--card">
-                <div class="card-header">
-                    <h5 class="card-title">{{ __($pageTitle) }}</h5>
+            <div class="sign-up__forms">
+                <div class="sign-up__shape">
+                    <img src="{{ getImage(getFilePath('shape') . 'breadcrumb-shape.png') }}" alt="@lang('sign-up__shape')">
                 </div>
-                <div class="card-body">
-                    <div class="mb-4">
-                        <p>@lang('To recover your account please provide your email or username to find your account.')
-                        </p>
+                <form method="POST" action="{{ route('user.password.email') }}">
+                    @csrf
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" name="value"
+                                value="{{ old('value') }}" id="usernameInput" required autofocus="off" placeholder="@lang('Email or Username')">
+                            <label for="usernameInput">@lang('Email or Username')</label>
+                        </div>
                     </div>
-                    <form method="POST" action="{{ route('user.password.email') }}">
-                        @csrf
-                        <div class="form-group">
-                            <label class="form-label">@lang('Email or Username')</label>
-                            <input type="text" class="form-control form--control" name="value"
-                                value="{{ old('value') }}" required autofocus="off">
-                        </div>
-
-                        <div class="form-group">
-                            <button type="submit" class="btn btn--base w-100">@lang('Save')</button>
-                        </div>
-                    </form>
-                </div>
+                  <div class="form--check__btn mt-4">
+                        <button type="submit" class="hero-button btn btn--base w--100">@lang('Submit')</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
 @endsection

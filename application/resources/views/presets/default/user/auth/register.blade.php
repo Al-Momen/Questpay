@@ -178,6 +178,7 @@
                     <p class="sign-up__links mt-4">@lang('You have any account?')
                         <a class="sign-in__text text--base text--underline"
                             href="{{ route('user.login') }}">@lang('Sign In')</a>
+                            
                     </p>
                 </div>
             </div>

@@ -1,10 +1,13 @@
 @php
+
+    $hmenu = App\Models\Menu::where('code', 'header_menu')->first();
+    $pages = $hmenu ? $hmenu->items()->get() : [];
+
+
     $languages = App\Models\Language::all();
     $socialIcons = getContent('social_icon.element', false);
     $currentLang = $languages->firstWhere('code', session('lang', 'en'));
-    $pages = App\Models\Menu::with(['items', 'menuItems'])
-        ->where('code', 'header_menu')
-        ->first();
+
 @endphp
 
 
@@ -60,7 +63,7 @@
         </div>
         <div class="offcanvas__menu">
             <ul>
-                @foreach ($pages->items as $k => $data)
+                @foreach ($pages as $k => $data)
                     @if ($data->link_type == 2)
                         <li>
                             <a href="{{ $data->url ?? '' }}" target="_blank">{{ __($data->title) }}</a>
@@ -93,7 +96,7 @@
                     </div>
                     <div class="header__menu">
                         <ul>
-                            @foreach ($pages->items as $k => $data)
+                            @foreach ($pages as $k => $data)
                                 @if ($data->link_type == 2)
                                     <li>
                                         <a href="{{ $data->url ?? '' }}" target="_blank">{{ __($data->title) }}</a>
