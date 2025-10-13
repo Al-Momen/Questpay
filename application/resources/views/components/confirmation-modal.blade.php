@@ -1,3 +1,16 @@
+@php
+    $currentRoute = Route::currentRouteName();
+    $activeClass = '';
+    $canceledClass = '';
+
+    if (Str::startsWith($currentRoute, 'admin.')) {
+        $activeClass = 'btn--sm btn--primary';
+        $canceledClass = 'btn--sm btn--secondary';
+    } else {
+        $activeClass = 'btn--base btn--md';
+        $canceledClass = 'btn--dark btn--md text--black';
+    }
+@endphp
 <div id="confirmationModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -12,8 +25,9 @@
                     <p class="question"></p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn--dark" data-bs-dismiss="modal">@lang('No')</button>
-                    <button type="submit" class="btn btn--primary">@lang('Yes')</button>
+                    <button type="button" class="btn {{ $canceledClass }}"
+                        data-bs-dismiss="modal">@lang('No')</button>
+                    <button type="submit" class="btn {{ $activeClass }}">@lang('Yes')</button>
                 </div>
             </form>
         </div>
@@ -21,50 +35,16 @@
 </div>
 
 @push('script')
-
-<script>
-    (function ($) {
-        "use strict";
-        $(document).on('click','.confirmationBtn', function () {
-            var modal   = $('#confirmationModal');
-            let data    = $(this).data();
-            modal.find('.question').text(`${data.question}`);
-            modal.find('form').attr('action', `${data.action}`);
-            modal.modal('show');
-        });
-
-        $(document).on('change', '.confirmationBtn', function (e) {
-            e.preventDefault();
-
-            let checkbox = $(this);
-            let isChecked = checkbox.is(':checked');
-
-            // Revert the state until confirmed
-            checkbox.prop('checked', !isChecked);
-
-            var modal = $('#confirmationModal');
-            let data = checkbox.data();
-
-            modal.find('.question').text(`${data.question}`);
-            modal.find('form').attr('action', `${data.action}`);
-
-            // Save the clicked checkbox reference inside modal
-            modal.data('checkbox', checkbox);
-            modal.data('checked', isChecked);
-
-            modal.modal('show');
-        });
-
-
-        $('#confirmationModal form').on('submit', function (e) {
-            let modal = $('#confirmationModal');
-            let checkbox = modal.data('checkbox');
-            let shouldBeChecked = modal.data('checked');
-
-            checkbox.prop('checked', shouldBeChecked);
-
-            return true;
-        });
-    })(jQuery);
-</script>
+    <script>
+        (function($) {
+            "use strict";
+            $(document).on('click', '.confirmationBtn', function() {
+                var modal = $('#confirmationModal');
+                let data = $(this).data();
+                modal.find('.question').text(`${data.question}`);
+                modal.find('form').attr('action', `${data.action}`);
+                modal.modal('show');
+            });
+        })(jQuery);
+    </script>
 @endpush

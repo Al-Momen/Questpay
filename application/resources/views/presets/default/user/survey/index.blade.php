@@ -1,0 +1,89 @@
+@extends($activeTemplate . 'layouts.master')
+@section('content')
+    <div class="survey-list pt-120">
+        <div class="container">
+            <div class="survey-list__main">
+                @include('Template::components.user.top_header')
+                <div class="row justify-content-between">
+                    <div class="col-lg-3">
+                        <form action="">
+                            <div class="form-floating">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="search" value="{{ request()->search }}"
+                                        placeholder="@lang('Search TRX')">
+                                    <span class="input-group-text">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-3 text-end">
+                        <a href="{{ route('user.survey.create') }}" class="btn btn--md btn--base">@lang('Add New')</a>
+                    </div>
+                </div>
+                <div class="dashboard-table card mt-4">
+                    <div class="dashboard-table__items">
+                        <table class="table table--responsive--md">
+                            <thead>
+                                <tr>
+                                    <th>@lang('SI')</th>
+                                    <th>@lang('Author')</th>
+                                    <th>@lang('Title')</th>
+                                    <th>@lang('Survey People')</th>
+                                    <th>@lang('Survey Money')</th>
+                                    <th>@lang('Total Question')</th>
+                                    <th>@lang('Created-At')</th>
+                                    <th>@lang('Status')</th>
+                                    <th>@lang('Action')</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($surveys as $item)
+                                    <tr>
+                                        <td>#{{ $loop->iteration }}</td>
+                                        <td>{{ $item->authorName['author_name'] }} ({{ $item->authorName['author_type'] }})
+                                        </td>
+                                        <td>{{ $item->title }}</td>
+                                        <td>{{ $item->survey_people }}</td>
+                                        <td>{{ $general->cur_sym . $item->survey_money }}</td>
+                                        <td>{{ $item->total_question }}</td>
+                                        <td>{{ showDateTime($item->created_at, 'M d, Y') }}</td>
+                                        <td>
+                                            @php
+                                                echo $item->statusBadge($item->status);
+                                            @endphp
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center justify-content-end gap-2">
+                                                <a href="{{ route('admin.survey.details', $item->id) }}" class="btn btn-sm"
+                                                    title="@lang('View')">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </a>
+                                                <div class="form-group mb-0">
+                                                    <label class="switch m-0" title="@lang($item->status ? 'Disable' : 'Enable')">
+                                                        <input type="checkbox" class="toggle-switch confirmationBtn"
+                                                            data-question="@lang('Are you sure to change this survey status?')"
+                                                            data-action="{{ route('user.survey.status', $item->id) }}"
+                                                            @checked($item->status)>
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td class="text-center" colspan="100%">{{ __($emptyMessage) }}</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    {{ $surveys->links() }}
+                </div>
+            </div>
+        </div>
+    </div>
+     <x-confirmation-modal></x-confirmation-modal>
+@endsection

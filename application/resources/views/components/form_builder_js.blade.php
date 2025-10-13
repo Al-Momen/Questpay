@@ -1,3 +1,24 @@
+@php
+    $currentRoute = Route::currentRouteName();
+    $addButtonClass = '';
+    $canceledBtnClass = '';
+
+    if (Str::startsWith($currentRoute, 'admin.')) {
+        $addButtonClass = 'btn btn-sm btn-outline-primary';
+        $canceledBtnClass = 'btn btn-sm btn-outline-danger';
+        $surveyGenerateRoute = route('admin.survey.generate');
+        $surveyStoreRoute = route('admin.survey.store');
+        $surveyIndexRoute = route('admin.survey.index');
+    } else {
+        $addButtonClass = 'btn btn-outline--base';
+        $canceledBtnClass = 'btn btn-outline--danger';
+
+        $surveyGenerateRoute = route('user.survey.generate');
+        $surveyStoreRoute = route('user.survey.store');
+        $surveyIndexRoute = route('user.survey.index');
+    }
+@endphp
+
 <script>
     $(function() {
         'use strict';
@@ -30,7 +51,7 @@
             promptInput.val("");
             appendMessage("<i class='fa fa-spinner fa-spin'></i> AI is generating survey...", "ai");
             $.ajax({
-                url: "{{ route('admin.survey.generate') }}",
+                url: "{{ $surveyGenerateRoute }}",
                 method: "POST",
                 data: {
                     _token: "{{ csrf_token() }}",
@@ -148,7 +169,7 @@
                         <div class="d-flex mb-2 option-item">
                             <input type="text" class="form-control option-input" value="${opt}">
                             ${ind > 0 ? `
-                                <button type="button" class="btn btn-sm btn-outline-danger ms-2 remove-option">
+                                <button type="button" class="{{ $canceledBtnClass }} ms-2 remove-option">
                                     <i class="fa fa-times"></i>
                                 </button>` : ''}
                         </div>
@@ -157,7 +178,7 @@
 
             optionsDiv.append(optionsList);
             optionsDiv.append(`
-                    <button type="button" class="btn btn-sm btn-outline-primary add-option">
+                    <button type="button" class="{{ $addButtonClass }} add-option">
                         <i class="fa fa-plus"></i> Add Option
                     </button>
                 `);
@@ -211,7 +232,7 @@
             return `
                     <div class="d-flex mb-2 option-item">
                         <input type="text" class="form-control option-input" placeholder="New Option">
-                        <button type="button" class="btn btn-sm btn-outline-danger ms-2 remove-option">
+                        <button type="button" class="{{ $canceledBtnClass }} ms-2 remove-option">
                             <i class="fa fa-times"></i>
                         </button>
                     </div>
@@ -311,7 +332,7 @@
             const surveyMoney = $('input[name=survey_money]').val();
             const totalQuestion = $('input[name=total_question]').val();
             $.ajax({
-                url: "{{ route('admin.survey.store') }}",
+                url: "{{ $surveyStoreRoute }}",
                 type: "POST",
                 data: {
                     _token: "{{ csrf_token() }}",
@@ -321,9 +342,9 @@
                     survey: surveyData,
                 },
                 success: function(response) {
-                    console.log("Survey saved successfully:", response);
+                    
                     if (response.status === "success") {
-                        window.location.href = "{{ route('admin.survey.index') }}";
+                        window.location.href = "{{ $surveyIndexRoute }}";
                         notify('success', response.message);
                         return;
                     } else {
@@ -336,7 +357,7 @@
                         let errors = xhr.responseJSON.errors;
                         $.each(errors, function(field, messages) {
                             $.each(messages, function(index, message) {
-                                console.log(field + ': ' + message);
+                                
                                 notify('error', message);
                             });
                         });

@@ -5,14 +5,14 @@
     <div class="dashboard-header__items d-flex justify-content-between align-items-center flex-wrap">
         <div class="dashboard-menu">
             <ul class=" dashboard-menu__items d-flex flex-wrap">
-                <li><a href="{{ route('user.home') }}"></span>@lang('Dashboard')</a></li>
-                <li><a href="survey-list.html">@lang('Survey List')</a></li>
-                <li><a href="{{ route('user.withdraw') }}">@lang('Withdraw')</a></li>
-                <li><a href="{{ route('user.withdraw.history') }}">@lang('Withdraw History')</a></li>
-                <li><a href="{{ route('user.deposit') }}">@lang('Deposit')</a></li>
-                <li><a href="{{ route('user.deposit.history') }}">@lang('Payment History')</a></li>
-                <li><a href="{{ route('user.transactions') }}">@lang('Transactions')</a></li>
-                <li><a href="{{ route('ticket') }}">@lang('Support Tickets')</a></li>
+                <li><a href="{{ route('user.home') }}" class="{{ Route::is('user.home') ? 'active' : '' }}"></span>@lang('Dashboard')</a></li>
+                <li><a href="{{route('user.survey.index')}}" class="{{ Route::is('user.survey.index') ? 'active' : '' }}">@lang('Survey List')</a></li>
+                <li><a href="{{ route('user.withdraw') }}" class="{{ Route::is('user.withdraw') ? 'active' : '' }}">@lang('Withdraw')</a></li>
+                <li><a href="{{ route('user.withdraw.history') }}" class="{{ Route::is('user.withdraw.history')? 'active' : '' }}">@lang('Withdraw History')</a></li>
+                <li><a href="{{ route('user.deposit') }}" class="{{ Route::is('user.deposit')? 'active' : '' }}">@lang('Deposit')</a></li>
+                <li><a href="{{ route('user.deposit.history') }}" class="{{ Route::is('user.deposit.history')? 'active' : '' }}">@lang('Payment History')</a></li>
+                <li><a href="{{ route('user.transactions') }}" class="{{ Route::is('user.transactions')? 'active' : '' }}">@lang('Transactions')</a></li>
+                <li><a href="{{ route('ticket') }}" class="{{ Route::is('ticket')? 'active' : '' }}">@lang('Support Tickets')</a></li>
             </ul>
         </div>
         <div class="profile-info d-flex gap--20">

@@ -35,9 +35,11 @@
                             <thead>
                                 <tr>
                                     <th>@lang('SI')</th>
-                                    <th>@lang('Author Name')</th>
-                                    <th>@lang('Author Type')</th>
+                                    <th>@lang('Author')</th>
                                     <th>@lang('Title')</th>
+                                    <th>@lang('Survey People')</th>
+                                    <th>@lang('Survey Money')</th>
+                                    <th>@lang('Total Question')</th>
                                     <th>@lang('Created-At')</th>
                                     <th>@lang('Status')</th>
                                     <th>@lang('Action')</th>
@@ -47,10 +49,13 @@
                                 @forelse($surveys as $item)
                                     <tr>
                                         <td>#{{ $loop->iteration }}</td>
-                                        <td>{{ $item->authorName['author_name'] }}</td>
-                                        <td>{{ $item->authorName['author_type'] }}</td>
+                                        <td>{{ $item->authorName['author_name'] }} ({{ $item->authorName['author_type'] }})</td>
+                                   
                                         <td>{{ $item->title }}</td>
-                                        <td>{{ showDateTime($item->created_at) }}</td>
+                                        <td>{{ $item->survey_people	 }}</td>
+                                        <td>{{ $general->cur_sym. $item->survey_money }}</td>
+                                        <td>{{  $item->total_question }}</td>
+                                        <td>{{ showDateTime($item->created_at,'M d, Y') }}</td>
                                         <td>
                                             @php
                                                 echo $item->statusBadge($item->status);
@@ -75,7 +80,6 @@
                                         </td>
                                     </tr>
                                 @empty
-
                                     <tr>
                                         <td class="text-muted text-center" colspan="100%">{{ __($emptyMessage) }}</td>
                                     </tr>

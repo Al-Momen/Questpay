@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\User;
 
-use App\Models\Admin;
+use App\Models\User;
 use App\Models\Survey;
 use GuzzleHttp\Client;
 use App\Constants\Status;
@@ -17,7 +17,7 @@ class SurveyController extends Controller
     {
         $status = $request->get('status', 'all');
         $search = $request->get('search');
-        $query = Survey::latest();
+        $query = Survey::where('author_id', auth()->id())->where('author_type', User::class)->latest();
         switch ($status) {
             case 'disable':
                 $query->where('status', Status::SURVEY_DISABLE);
@@ -36,14 +36,13 @@ class SurveyController extends Controller
         }
         $surveys = $query->with('author')->paginate(getPaginate());
         $pageTitle = ucfirst($status) . ' Surveys';
-
-        return view('Admin::survey.index', compact('surveys', 'pageTitle'));
+        return view('UserTemplate::survey.index', compact('surveys', 'pageTitle'));
     }
 
     public function create()
     {
-        $pageTitle = 'Create New Survey';
-        return view('Admin::survey.create', compact('pageTitle'));
+        $pageTitle = 'New Survey Create';
+        return view('UserTemplate::survey.create', compact('pageTitle'));
     }
 
     public function generate(Request $request)
@@ -158,13 +157,14 @@ class SurveyController extends Controller
         }
     }
 
+
     public function store(Request $request)
     {
         $data      = $request->except('_token');
         $validator = Validator::make($data, [
-            'survey_people'         => 'required|numeric|min:1',
-            'survey_money'          => 'required|numeric|min:0.01|regex:/^\d+(\.\d{1,2})?$/',
-            'total_question'        => 'required|numeric|min:1',
+            'survey_people'                => 'required|numeric|min:1',
+            'survey_money'                 => 'required|numeric|min:0.01|regex:/^\d+(\.\d{1,2})?$/',
+            'total_question'               => 'required|numeric|min:1',
             'survey.title'                 => 'required|string|max:255',
             'survey.questions'             => 'required|array|min:1',
             'survey.questions.*.id'        => 'required|integer|distinct',
@@ -199,8 +199,8 @@ class SurveyController extends Controller
         }
 
         $survey                 = new Survey();
-        $survey->author_id      = auth('admin')->id();
-        $survey->author_type    = Admin::class;
+        $survey->author_id      = auth()->id();
+        $survey->author_type    = User::class;
         $survey->title          = $data['survey']['title'];
         $survey->form_data      = $data['survey'];
         $survey->survey_people  = $request->survey_people;
@@ -223,7 +223,7 @@ class SurveyController extends Controller
             return back()->withNotify($notify);
         }
         $pageTitle = 'Survey Details';
-        return view('Admin::survey.details', compact('pageTitle', 'survey'));
+        return view('UserTemplate::survey.details', compact('pageTitle', 'survey'));
     }
 
 

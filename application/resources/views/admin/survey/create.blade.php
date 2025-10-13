@@ -48,10 +48,9 @@
 
                     {{-- Prompt Input --}}
                     <div class="mt-4">
-                        <div class="form-group position-relative">
+                        <div class="form-group text-end">
                             <textarea id="prompts" class="form-control form--control" rows="3" placeholder="@lang('Write a prompt to generate survey...')"></textarea>
-                            <button type="button" class="btn btn--primary position-absolute"
-                                style="right: 10px; bottom: 10px;" id="generateBtn">
+                            <button type="button" class="btn btn--primary mt-2" id="generateBtn">
                                 <i class="fa-solid fa-paper-plane"></i> @lang('Generate')
                             </button>
                         </div>
