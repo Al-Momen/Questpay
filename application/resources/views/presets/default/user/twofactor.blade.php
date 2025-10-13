@@ -1,115 +1,100 @@
-@extends($activeTemplate.'layouts.master')
+@extends($activeTemplate . 'layouts.master')
 @section('content')
-<div class="container">
-    <div class="row justify-content-center gy-4">
+    <!--==========================  two-factor Section Start  ==========================-->
+    <div class="two-factor-section">
+        <div class="container">
+            @include('Template::components.user.top_header')
+            <div class="row g-4">
+                @if (!auth()->user()->ts)
+                    <div class="col-lg-4">
+                        <div class="card p-4">
+                            <div class="card-header pt-0">
+                                <h5 class="card-title fs--20 fw--600">@lang('Two Factor Authenticator')</h5>
+                            </div>
+                            <div class="card-body px-0 pb-0">
+                                <div class="two__factor__info ">
+                                    <p class="fs-14 fw--500 mb-4">
+                                        @lang('Use the QR code or setup key on your Google Authenticator app to add your account.')
+                                    </p>
+                                    <div class="text-center qr-code">
+                                        <img src="{{ $qrCodeUrl }}"alt="@lang('QR Code')">
+                                    </div>
 
-        @if(!auth()->user()->ts)
-        <div class="col-md-6">
-            <div class="card custom--card">
-                <div class="card-header">
-                    <h5 class="card-title">@lang('Add Your Account')</h5>
-                </div>
-
-                <div class="card-body">
-                    <h6 class="mb-3">
-                        @lang('Use the QR code or setup key on your Google Authenticator app to add your account. ')
-                    </h6>
-
-                    <div class="form-group mx-auto text-center">
-                        <img class="mx-auto" src="{{$qrCodeUrl}}">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">@lang('Setup Key')</label>
-                        <div class="input-group">
-                            <input type="text" name="key" value="{{$secret}}"
-                                class="form-control form--control referralURL" readonly>
-                            <button type="button" class="input-group-text copytext" id="copyBoard"> <i
-                                    class="fa fa-copy"></i> </button>
+                                </div>
+                                <div class="two__factor__key">
+                                    <label class="form-label">@lang('Setup Key')</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control referralURL" value="{{ $secret }}" readonly="" id="key">
+                                        <button class="input-group-text copytext" id="copyBoard">
+                                            <i class="fa-solid fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <label><i class="fa fa-info-circle"></i> @lang('Help')</label>
-                    <p>@lang('Google Authenticator is a multifactor app for mobile devices. It generates timed codes
-                        used during the 2-step verification process. To use Google Authenticator, install the Google
-                        Authenticator application on your mobile device.') <a class="text--base"
-                            href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en"
-                            target="_blank">@lang('Download')</a></p>
-                </div>
-            </div>
-        </div>
-
-        @endif
-
-        <div class="col-md-6">
-
-            @if(auth()->user()->ts)
-            <div class="card custom--card">
-                <div class="card-header">
-                    <h5 class="card-title">@lang('Disable 2FA Security')</h5>
-                </div>
-                <form action="{{route('user.twofactor.disable')}}" method="POST">
-                    <div class="card-body">
-                        @csrf
-                        <input type="hidden" name="key" value="{{$secret}}">
-                        <div class="form-group">
-                            <label class="form-label">@lang('Google Authenticatior OTP')</label>
-                            <input type="text" class="form-control form--control" name="code" required>
+                @endif
+                <div class="col-lg-8">
+                    @if (auth()->user()->ts)
+                        <div class="card p-4">
+                            <div class="card-header pt-0">
+                                <h5 class="card-title">@lang('Disable 2FA Security')</h5>
+                            </div>
+                            <div class="card-body px-0 pb-0">
+                                <form action="{{ route('user.twofactor.disable') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="key" value="{{ $secret }}">
+                                    <div class="two__factor__form">
+                                        <label class="form-label required" for="code">@lang('Google Authenticator OTP')</label>
+                                        <input class="form-control" type="text" name="code" required=""
+                                            id="code" placeholder="@lang('Enter OTP')">
+                                        <button type="submit" class="btn btn--base w-100 mt-3">@lang('Submit')</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn--base w-100">@lang('Save')</button>
-                    </div>
-                </form>
-            </div>
-            @else
-            <div class="card custom--card">
-                <div class="card-header">
-                    <h5 class="card-title">@lang('Enable 2FA Security')</h5>
-                </div>
-                <form action="{{ route('user.twofactor.enable') }}" method="POST">
-                    <div class="card-body">
-                        @csrf
-                        <input type="hidden" name="key" value="{{$secret}}">
-                        <div class="form-group">
-                            <label class="form-label">@lang('Google Authenticatior OTP')</label>
-                            <input type="text" class="form-control form--control" name="code" required>
+                    @else
+                        <div class="card p-4">
+                            <div class="card-header pt-0">
+                                <h5 class="card-title">@lang('Enable 2FA Security')</h5>
+                            </div>
+                            <div class="card-body px-0 pb-0">
+                                <form action="{{ route('user.twofactor.enable') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="key" value="{{ $secret }}">
+
+                                    <div class="two__factor__form">
+                                        <label class="form-label required" for="code">@lang('Google Authenticator OTP')</label>
+                                        <input class="form-control" type="text" name="code" required=""
+                                            id="code" placeholder="@lang('Enter OTP')">
+                                        <button type="submit" class="btn btn--base w-100 mt-3">@lang('Submit')</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn--base w-100">@lang('Save')</button>
-                    </div>
-                </form>
+                    @endif
+                </div>
             </div>
-            @endif
         </div>
     </div>
-</div>
-
+    <!--==========================  two-factor Section End  ==========================-->
 @endsection
 
-@push('style')
-<style>
-    .copied::after {
-        background-color: #{{ $general->base_color }
-    }
-
-    ;
-    }
-</style>
-@endpush
-
 @push('script')
-<script>
-    (function ($) {
-        "use strict";
-        $('#copyBoard').on('click', function () {
-            var copyText = document.getElementsByClassName("referralURL");
-            copyText = copyText[0];
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);
-            /*For mobile devices*/
-            document.execCommand("copy");
-            copyText.blur();
-            this.classList.add('copied');
-            setTimeout(() => this.classList.remove('copied'), 1500);
-        });
-    })(jQuery);
-</script>
+    <script>
+        (function($) {
+            "use strict";
+            $('#copyBoard').on('click', function() {
+                var copyText = document.getElementsByClassName("referralURL");
+                copyText = copyText[0];
+                copyText.select();
+                copyText.setSelectionRange(0, 99999);
+                /*For mobile devices*/
+                document.execCommand("copy");
+                copyText.blur();
+                this.classList.add('copied');
+                setTimeout(() => this.classList.remove('copied'), 1500);
+            });
+        })(jQuery);
+    </script>
 @endpush

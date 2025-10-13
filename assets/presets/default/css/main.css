@@ -6810,3 +6810,19 @@ ul.cookie-list {
     font-size: 14px;
   }
 }
+
+
+.ticket__single {
+  background-color: hsl(var(--base) / 0.06);
+  padding: 24px;
+}
+
+.ticket__single.user__ticket {
+  background-color: hsl(var(--black) / 0.06);
+}
+
+.ticket__single p span {
+  font-weight: 600;
+  color: hsl(var(--base));
+}
+

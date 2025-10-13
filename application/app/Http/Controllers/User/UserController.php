@@ -37,7 +37,7 @@ class UserController extends Controller
         $secret = $ga->createSecret();
         $qrCodeUrl = $ga->getQRCodeGoogleUrl($user->username . '@' . $general->site_name, $secret);
         $pageTitle = '2FA Setting';
-        return view('UserTemplate::twofactor', compact('pageTitle', 'secret', 'qrCodeUrl'));
+        return view('UserTemplate::twofactor', compact('pageTitle', 'secret', 'qrCodeUrl','user'));
     }
 
     public function create2fa(Request $request)

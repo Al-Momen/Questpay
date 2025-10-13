@@ -9,7 +9,6 @@ class TicketController extends Controller
     use SupportTicketManager;
 
 
-
     public function __construct()
     {
         $this->activeTemplate = activeTemplate();

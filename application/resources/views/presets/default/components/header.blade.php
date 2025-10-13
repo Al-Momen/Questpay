@@ -135,7 +135,6 @@
                         <div class="header__login">
                             @auth
                                 <a href="{{ route('user.home') }}">@lang('Dashboard')</a>
-                                <a href="{{ route('user.logout') }}">@lang('Logout')</a>
                             @endauth
                             @guest
                                 <a href="{{ route('user.login') }}">@lang('Sign in')</a>
