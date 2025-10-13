@@ -36,7 +36,7 @@ class SurveyController extends Controller
         }
         $surveys = $query->with('author')->paginate(getPaginate());
         $pageTitle = ucfirst($status) . ' Surveys';
-       
+
         return view('Admin::survey.index', compact('surveys', 'pageTitle'));
     }
 
@@ -160,15 +160,18 @@ class SurveyController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->input('survey');
+        $data      = $request->except('_token');
         $validator = Validator::make($data, [
-            'title' => 'required|string|max:255',
-            'questions' => 'required|array|min:1',
-            'questions.*.id' => 'required|integer|distinct',
-            'questions.*.type' => 'required|in:mcq_single,mcq_multiple,written_input,written_textarea',
-            'questions.*.question' => 'required|string',
-            'questions.*.options' => 'sometimes|array|min:2',
-            'questions.*.options.*' => 'string'
+            'survey_people'         => 'required|numeric|min:1',
+            'survey_money'          => 'required|numeric|min:0.01|regex:/^\d+(\.\d{1,2})?$/',
+            'total_question'        => 'required|numeric|min:1',
+            'survey.title'                 => 'required|string|max:255',
+            'survey.questions'             => 'required|array|min:1',
+            'survey.questions.*.id'        => 'required|integer|distinct',
+            'survey.questions.*.type'      => 'required|in:mcq_single,mcq_multiple,written_input,written_textarea',
+            'survey.questions.*.question'  => 'required|string',
+            'survey.questions.*.options'   => 'sometimes|array|min:2',
+            'survey.questions.*.options.*' => 'string'
         ]);
 
         // MCQ questions must have options
@@ -181,19 +184,29 @@ class SurveyController extends Controller
             }
         }
 
+        if (count($request["survey"]['questions']) < 0) {
+            return response()->json([
+                'status' => 'error',
+                'message' => "Question must have at least 1."
+            ], 422);
+        }
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
                 'errors' => $validator->errors()
             ], 422);
         }
-        
-        $survey              = new Survey();
-        $survey->author_id   = auth('admin')->id();
-        $survey->author_type = Admin::class;
-        $survey->title       = $data['title'];
-        $survey->form_data   = $data;
-        $survey->status      = Status::SURVEY_ENABLE;
+
+        $survey                 = new Survey();
+        $survey->author_id      = auth('admin')->id();
+        $survey->author_type    = Admin::class;
+        $survey->title          = $data['survey']['title'];
+        $survey->form_data      = $data['survey'];
+        $survey->survey_people  = $request->survey_people;
+        $survey->survey_money   = $request->survey_money;
+        $survey->total_question = count($request["survey"]['questions']);
+        $survey->status         = Status::SURVEY_ENABLE;
         $survey->save();
 
         return response()->json([
@@ -209,7 +222,7 @@ class SurveyController extends Controller
             $notify[] = ['error', 'Survey Not Found'];
             return back()->withNotify($notify);
         }
-   
+
         $pageTitle = 'Survey Details';
         return view('Admin::survey.details', compact('pageTitle', 'survey'));
     }

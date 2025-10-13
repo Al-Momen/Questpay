@@ -118,9 +118,6 @@ class LoginController extends Controller
     }
 
 
-
-
-
     public function authenticated(Request $request, $user)
     {
         $user->tv = $user->ts == 1 ? 0 : 1;

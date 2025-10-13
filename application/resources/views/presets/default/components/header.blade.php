@@ -1,13 +1,10 @@
 @php
-
     $hmenu = App\Models\Menu::where('code', 'header_menu')->first();
     $pages = $hmenu ? $hmenu->items()->get() : [];
-
 
     $languages = App\Models\Language::all();
     $socialIcons = getContent('social_icon.element', false);
     $currentLang = $languages->firstWhere('code', session('lang', 'en'));
-
 @endphp
 
 

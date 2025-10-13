@@ -1,6 +1,39 @@
 @extends('admin.layouts.app')
 @section('panel')
     <div class="row">
+        <div class="col-lg-12">
+            <div class="card br--solid radius--base bg--white mb-4 shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="mb-3">@lang('Survey Information')</h4>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="survey_money" class="form-label">@lang('Number of People Survey Access')</label>
+                                <input type="number" name="survey_people" id="survey_people"
+                                    value="{{ old('survey_people') }}" class="form-control mb-4"
+                                    placeholder="@lang('How many people get access to this survey question?')" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="survey_money" class="form-label">@lang('Per Question (Cent)')</label>
+                                <input type="number" name="survey_money" id="survey_money" step="any" min="0"
+                                    value="{{ old('survey_money') }}" class="form-control mb-4"
+                                    placeholder="@lang('How many cents does a user get per question answered?')" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="total_question" class="form-label">@lang('Total Questions')</label>
+                                <input type="number" name="total_question" id="total_question"
+                                    value="{{ old('total_question') }}" class="form-control mb-4"
+                                    placeholder="@lang('How many cents does a user get per question answered?')" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-lg-5">
             <div class="card br--solid radius--base bg--white mb-4 shadow-sm">
                 <div class="card-body p-4">

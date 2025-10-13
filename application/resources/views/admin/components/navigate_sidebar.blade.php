@@ -10,7 +10,6 @@
             </a>
         </li>
 
-       
 
         <li>
             <a href="{{ route('admin.setting.logo.icon') }}" class="{{ menuActive('admin.setting.logo.icon') }} d-flex align-items-center justify-content-start gap-2">
@@ -81,7 +80,6 @@
             </a>
         </li>
         @endadminHas
-
     </ul>
 </div>
 @endadminHasAny

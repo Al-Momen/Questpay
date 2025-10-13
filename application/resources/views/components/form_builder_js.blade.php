@@ -75,11 +75,13 @@
                 container.html("<div class='alert alert-danger'>Invalid survey data.</div>");
                 return;
             }
-
             isNeededRenderSurveyTitle(container, survey.title);
+
             survey.questions.forEach((q) => {
                 container.append(renderQuestion(q));
             });
+
+            updateTotalQuestionCount();
         }
 
         // Render Survey Title
@@ -188,6 +190,7 @@
             // Re-index remaining questions
             reindexQuestions();
             toggleSaveButton();
+            updateTotalQuestionCount();
         });
 
         //  Question Type Change Event
@@ -219,7 +222,6 @@
         function toggleSaveButton() {
             const saveBtn = $("#saveSurveyBtn");
             const container = $("#surveyFormContainer");
-
             if ($("#surveyFormContainer .question-item").length === 0) {
                 saveBtn.addClass("d-none"); // hide
                 container.empty();
@@ -246,6 +248,7 @@
             };
 
             $(".question-item").each(function(index) {
+
                 const q = {
                     id: index + 1,
                     type: $(this).find(".question-type").val(),
@@ -280,6 +283,7 @@
             // Render new question and append
             container.append(renderQuestion(newQuestion, container.find(".question-item").length));
             toggleSaveButton();
+            updateTotalQuestionCount();
         });
 
         function defaultText() {
@@ -294,14 +298,26 @@
             }
         }
 
+        function updateTotalQuestionCount() {
+            const total = $(".question-item").length;
+            $('input[name=total_question]').val(total);
+
+        }
+
         // Save Survey Event json
         $("#saveSurveyBtn").on("click", function() {
             const surveyData = collectSurveyData();
+            const surveyPeople = $('input[name=survey_people]').val();
+            const surveyMoney = $('input[name=survey_money]').val();
+            const totalQuestion = $('input[name=total_question]').val();
             $.ajax({
                 url: "{{ route('admin.survey.store') }}",
                 type: "POST",
                 data: {
                     _token: "{{ csrf_token() }}",
+                    survey_people: surveyPeople,
+                    survey_money: surveyMoney,
+                    total_question: totalQuestion,
                     survey: surveyData,
                 },
                 success: function(response) {
@@ -313,13 +329,23 @@
                     } else {
                         notify('error', response.message);
                     }
+
                 },
                 error: function(xhr) {
-                    notify('error', "Error saving survey:", xhr.responseText);
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        let errors = xhr.responseJSON.errors;
+                        $.each(errors, function(field, messages) {
+                            $.each(messages, function(index, message) {
+                                console.log(field + ': ' + message);
+                                notify('error', message);
+                            });
+                        });
+                    } else {
+                        notify('error', "Something went wrong. Please try again.");
+                    }
                 }
             });
         });
-
 
         $("#surveyFormContainer").sortable({
             handle: ".drag-handle",

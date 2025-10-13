@@ -7,10 +7,8 @@
             <ul class=" dashboard-menu__items d-flex flex-wrap">
                 <li><a href="{{ route('user.home') }}"></span>@lang('Dashboard')</a></li>
                 <li><a href="survey-list.html">@lang('Survey List')</a></li>
-                <li><a href="survey-activity.html">@lang('Survey Activity')</a></li>
-                <li><a href="pricing.html">Pricing</a></li>
-                <li><a href="subscription.html">Subscription</a></li>
                 <li><a href="{{ route('user.withdraw') }}">@lang('Withdraw')</a></li>
+                <li><a href="{{ route('user.withdraw.history') }}">@lang('Withdraw History')</a></li>
                 <li><a href="{{ route('user.deposit') }}">@lang('Deposit')</a></li>
                 <li><a href="{{ route('user.deposit.history') }}">@lang('Payment History')</a></li>
                 <li><a href="{{ route('user.transactions') }}">@lang('Transactions')</a></li>
