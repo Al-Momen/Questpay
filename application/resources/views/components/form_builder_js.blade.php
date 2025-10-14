@@ -58,7 +58,11 @@
                     prompt: prompt,
                 },
                 success: function(res) {
-                    chatMessages.find(".fa-spinner").closest("div").remove();
+                    if (res.data == null && res.status == 'error') {
+                        chatMessages.find(".fa-spinner").closest("div").remove();
+                        notify('error', res.message);
+                        return false;
+                    }
 
                     // Render the survey form
                     if (typeof renderSurveyForm === "function") {
@@ -67,6 +71,7 @@
                         console.error("renderSurveyForm is not defined!");
                     }
 
+                    chatMessages.find(".fa-spinner").closest("div").remove();
                     try {
                         const jsonStr = JSON.stringify(res.data || res, null, 4);
                         appendMessage(`<pre class="m-0"><code>${jsonStr}</code></pre>`, "ai");
@@ -84,7 +89,11 @@
         //  Generate Button Click
         generateBtn.on("click", function() {
             const prompt = promptInput.val();
-            generateSurvey(prompt);
+            @if ($general->credit_cost_per_prompt > auth()->user()->credit)
+                notify('error', 'You do not have enough credits.');
+            @else
+                generateSurvey(prompt);
+            @endif
         });
 
         //  Main Render Survey
@@ -342,7 +351,6 @@
                     survey: surveyData,
                 },
                 success: function(response) {
-                    
                     if (response.status === "success") {
                         window.location.href = "{{ $surveyIndexRoute }}";
                         notify('success', response.message);
@@ -357,7 +365,7 @@
                         let errors = xhr.responseJSON.errors;
                         $.each(errors, function(field, messages) {
                             $.each(messages, function(index, message) {
-                                
+
                                 notify('error', message);
                             });
                         });

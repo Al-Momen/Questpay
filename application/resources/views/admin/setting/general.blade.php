@@ -60,19 +60,27 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12 col-xs-12">
-                                    <label> @lang('Per Credit Price')</label>
+                                <div class="col-md-6 col-xs-6">
+                                    <label class="required"> @lang('Per Credit Price')</label>
                                     <div class="input-group">
                                         <input type="number" class="form-control" step="any" name="per_credit_price"
-                                            value="{{ $general->per_credit_price }}" placeholder="@lang('Per Credit Price')">
-                                        <span class="input-group-text bg--primary text--white">{{ $general->cur_text }}</span>
+                                            value="{{ $general->per_credit_price }}" placeholder="@lang('Per Credit Price')" required>
+                                        <span
+                                            class="input-group-text bg--primary text--white">{{ $general->cur_text }}</span>
                                     </div>
                                 </div>
+
+                                <div class="col-md-6 col-xs-6">
+                                    <label class="required"> @lang('Credit Cost per Prompt')</label>
+                                    <input type="number" class="form-control" step="1" min="1" name="credit_cost_per_prompt"
+                                        value="{{ $general->credit_cost_per_prompt }}" placeholder="@lang('Per Credit')" required>
+                                </div>
+
                                 <div class="col-md-12 col-xs-12">
-                                    <label> @lang('Open AI Key')</label>
+                                    <label class="required"> @lang('Open AI Key')</label>
                                     <div class="input-group mb-3">
                                         <input type="text" class="form-control" name="open_ai_key"
-                                            value="{{ $general->open_ai_key }}" placeholder="@lang('Open AI Secret Key')">
+                                            value="{{ $general->open_ai_key }}" placeholder="@lang('Open AI Secret Key')" required>
                                     </div>
                                 </div>
                             </div>

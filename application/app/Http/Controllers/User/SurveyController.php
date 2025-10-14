@@ -50,7 +50,22 @@ class SurveyController extends Controller
         $prompt = $request->input('prompt');
         $apiKey = gs()->open_ai_key;
 
+        if (gs()->credit_cost_per_prompt > auth()->user()->credit) {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You do not have enough credits.',
+                'data' => null
+            ]);
+        }
+
         $response = $this->generateSurveyJson($apiKey, $prompt);
+
+        if($response['status'] == 'success'){
+            $user = auth()->user();
+            $user->credit -= gs()->credit_cost_per_prompt;
+            $user->save();
+        }
 
         return response()->json($response);
     }
@@ -138,7 +153,7 @@ class SurveyController extends Controller
                 return [
                     'status' => 'error',
                     'message' => 'Invalid JSON format received.',
-                    'data' => $content // raw text for debugging
+                    'data' => $content 
                 ];
             }
 
@@ -156,7 +171,6 @@ class SurveyController extends Controller
             ];
         }
     }
-
 
     public function store(Request $request)
     {

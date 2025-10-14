@@ -1,6 +1,5 @@
 @extends($activeTemplate . 'layouts.master')
 @section('content')
-
     <div class="profile-section">
         <div class="container">
             @include('Template::components.user.top_header')
@@ -50,7 +49,24 @@
                 <div class="row g-4 justify-content-center">
                     <div class="col-lg-6">
                         <div class="profile__wrap card p-4">
-                            <h4 class="mb-3">@lang('AI Survey Generator')</h4>
+                            <div class="d-flex align-items-center">
+                                <h4 class="mb-0">@lang('AI Survey Generator')</h4>
+                                <span>
+                                    (@lang('Credit Cost per Prompt'): {{ $general->credit_cost_per_prompt }})
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span>@lang('Your current credit is'): {{ auth()->user()->credit }}.</span>
+
+                                @if ($general->credit_cost_per_prompt > auth()->user()->credit)
+                                    <span class="text-danger">
+                                        @lang('You do not have enough credits.')
+                                    </span>
+                                    <a href="{{ route('user.credit.purchase') }}" class="btn btn--base btn--sm w-25">
+                                        @lang('Buy Credits')
+                                    </a>
+                                @endif
+                            </div>
                             <div class="row g-4">
                                 <div class="col-sm-12">
                                     <div class="chat-box border rounded p-3 bg-light" id="chatContainer">
@@ -61,9 +77,11 @@
                                     </div>
                                     <div class="form-group text-end mt-4">
                                         <textarea id="prompts" class="form-control" rows="3" placeholder="@lang('Write a prompt to generate survey...')"></textarea>
-                                        <button type="button" class="btn btn--primary mt-2" id="generateBtn">
-                                            <i class="fa-solid fa-paper-plane"></i> @lang('Generate')
-                                        </button>
+                                        @if ($general->credit_cost_per_prompt < auth()->user()->credit)
+                                            <button type="button" class="btn btn--primary mt-2" id="generateBtn">
+                                                <i class="fa-solid fa-paper-plane"></i> @lang('Generate')
+                                            </button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -76,7 +94,7 @@
                                     <div class="profile__wrap card p-4">
                                         <div class="row g-4">
                                             <div class="col-sm-12">
-                                                     <div class="text-center defaultChatMessage">@lang('Create a set of questions')</div>
+                                                <div class="text-center defaultChatMessage">@lang('Create a set of questions')</div>
                                                 <div id="surveyFormContainer" class="question-list"></div>
                                                 <div class="text-end">
                                                     <button type="button" class="btn btn-outline--base w-25 mt-3"
