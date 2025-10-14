@@ -75,11 +75,11 @@ class DepositController extends Controller
 
     public function approve($id)
     {
-        $deposit = Deposit::where('id', $id)->where('status', Status::PAYMENT_PENDING)->firstOrFail();
+        $deposit = Deposit::with('survey')->where('id', $id)->where('status', Status::PAYMENT_PENDING)->firstOrFail();
 
         PaymentController::userDataUpdate($deposit, true);
 
-        $type      = $deposit->is_credit_purchase ? 'Credit Purchase' : 'Deposit';
+        $type = $deposit->survey_id ? 'Survey Payment' : ($deposit->is_credit_purchase ? 'Credit Payment' : 'Deposit Payment');
         $notify[] = ['success', "{$type} request approved successfully"];
 
         return to_route('admin.deposit.log')->withNotify($notify);
@@ -97,27 +97,29 @@ class DepositController extends Controller
         $deposit->status = Status::PAYMENT_REJECT;
         $deposit->save();
 
-        $type = $deposit->is_credit_purchase ? 'Credit Purchase' : 'Deposit';
+        $type = $deposit->survey_id ? 'Survey Payment' : ($deposit->is_credit_purchase ? 'Credit Payment' : 'Deposit Payment');
 
         $notifyData = [
-            'method_name' => $deposit->gatewayCurrency()->name,
-            'method_currency' => $deposit->method_currency,
-            'method_amount' => showAmount($deposit->final_amo),
-            'amount' => showAmount($deposit->amount),
-            'charge' => showAmount($deposit->charge),
-            'rate' => showAmount($deposit->rate),
+            'method_name'       => $deposit->gatewayCurrency()->name,
+            'method_currency'   => $deposit->method_currency,
+            'method_amount'     => showAmount($deposit->final_amo),
+            'amount'            => showAmount($deposit->amount),
+            'charge'            => showAmount($deposit->charge),
+            'rate'              => showAmount($deposit->rate),
             'rejection_message' => $request->message
         ];
 
 
-        if ($deposit->journal_submit_paper_id && $deposit->journalSubmitPaper) {
+        if ($deposit->is_credit_purchase) {
             $notifyData['number_of_credit'] = $deposit->number_of_credit;
             notify($deposit->user, 'CREDIT_PAYMENT_REJECT', $notifyData);
+        } elseif ($deposit->survey_id) {
+            $notifyData['trx'] = $deposit->trx;
+            notify($deposit->user, 'SURVEY_PAYMENT_REJECT', $notifyData);
         } else {
             $notifyData['trx'] = $deposit->trx;
             notify($deposit->user, 'DEPOSIT_REJECT', $notifyData);
         }
-
 
         $notify[] = ['success', "{$type} request rejected successfully"];
         return  to_route('admin.deposit.log')->withNotify($notify);

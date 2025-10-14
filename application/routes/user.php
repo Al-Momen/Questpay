@@ -108,9 +108,12 @@ Route::middleware('auth')->name('user.')->group(function () {
 
         // Payment
         Route::middleware('registration.complete')->controller('Gateway\PaymentController')->group(function () {
-            Route::get('credit-purchase-index', 'index')->name("credit.index");
             Route::get('credit-purchase', 'creditPurchase')->name("credit.purchase");
             Route::post('credit/insert', 'creditInsert')->name("credit.insert");
+
+            Route::get('survey-payment', 'surveyPayment')->name("survey.payment");
+            Route::post('store-survey-payment', 'storeSurveyPayment')->name("store.survey.payment");
+
             Route::any('deposit', 'deposit')->name('deposit');
             Route::post('deposit/insert', 'depositInsert')->name('deposit.insert');
             Route::get('deposit/confirm', 'depositConfirm')->name('deposit.confirm');

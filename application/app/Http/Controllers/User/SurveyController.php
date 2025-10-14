@@ -42,6 +42,7 @@ class SurveyController extends Controller
     public function create()
     {
         $pageTitle = 'New Survey Create';
+        session()->forget('survey_data');
         return view('UserTemplate::survey.create', compact('pageTitle'));
     }
 
@@ -212,16 +213,16 @@ class SurveyController extends Controller
             ], 422);
         }
 
-        $survey                 = new Survey();
-        $survey->author_id      = auth()->id();
-        $survey->author_type    = User::class;
-        $survey->title          = $data['survey']['title'];
-        $survey->form_data      = $data['survey'];
-        $survey->survey_people  = $request->survey_people;
-        $survey->survey_money   = $request->survey_money;
-        $survey->total_question = count($request["survey"]['questions']);
-        $survey->status         = Status::SURVEY_ENABLE;
-        $survey->save();
+         session()->put('survey_data', [
+            'survey_people'  => $request->input('survey_people'),
+            'survey_money'   => $request->input('survey_money'),
+            'total_question' => isset($data['survey']['questions']) ? count($data['survey']['questions']) : 0,
+            'title'          => $data['survey']['title'] ?? null,
+            'form_data'      => $data['survey'] ?? [],
+        ]);
+         
+
+        
 
         return response()->json([
             'status' => 'success',

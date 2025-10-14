@@ -12,10 +12,9 @@
     } else {
         $addButtonClass = 'btn btn-outline--base';
         $canceledBtnClass = 'btn btn-outline--danger';
-
         $surveyGenerateRoute = route('user.survey.generate');
         $surveyStoreRoute = route('user.survey.store');
-        $surveyIndexRoute = route('user.survey.index');
+        $surveyIndexRoute = route('user.survey.payment');
     }
 @endphp
 
@@ -353,7 +352,7 @@
                 success: function(response) {
                     if (response.status === "success") {
                         window.location.href = "{{ $surveyIndexRoute }}";
-                        notify('success', response.message);
+                        sessionStorage.setItem('success_message', response.message);
                         return;
                     } else {
                         notify('error', response.message);

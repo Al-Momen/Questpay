@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Gateway;
 
 use App\Models\User;
+use App\Models\Survey;
 use App\Models\Deposit;
 use App\Constants\Status;
 use App\Lib\FormProcessor;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\GatewayCurrency;
+use App\Models\UserNotification;
 use App\Models\AdminNotification;
 use App\Http\Controllers\Controller;
-use App\Models\UserNotification;
 
 class PaymentController extends Controller
 {
@@ -39,42 +40,7 @@ class PaymentController extends Controller
         $totalAmount = $request->credit_purchase * gs()->per_credit_price;
         $user = auth()->user();
         if ($request->gateway == 'balance') {
-
-        
-            // check balance
-            if ($user->balance < $totalAmount) {
-                $notify[] = ['error', 'Insufficient Balance'];
-                return back()->withNotify($notify);
-            }
-
-            // less user balance
-            $user->balance -= $totalAmount;
-            $user->credit += $request->credit_purchase;
-            $user->save();
-
-
-            $trx                       = getTrx();
-            $transaction               = new Transaction();
-            $transaction->user_id      = $user->id;
-            $transaction->amount       = $totalAmount;
-            $transaction->post_balance = $user->balance;
-            $transaction->post_credit  = $user->credit;
-            $transaction->charge       = 0;
-            $transaction->trx_type     = '-';
-            $transaction->details      = 'Balance with Purchase Credit';
-            $transaction->trx          = $trx;
-            $transaction->remark       = 'Credit Purchase';
-            $transaction->save();
-
-            $userNotification = new UserNotification();
-            $userNotification->user_id   = $user->id;
-            $userNotification->title     = 'Balance with Purchase Credit';
-            $userNotification->click_url = urlPath('user.transactions', ['search' => $transaction->trx]);
-            $userNotification->save();
-
-
-            $notify[] = ['success', 'Credit Purchase successfully'];
-            return to_route('user.transactions')->withNotify($notify);
+            return $this->handleBalanceCreditPurchase($user, $request->credit_purchase, $totalAmount);
         } else {
             $gate = GatewayCurrency::whereHas('method', function ($gate) {
                 $gate->where('status', Status::ENABLE);
@@ -90,26 +56,110 @@ class PaymentController extends Controller
             }
 
 
-            $charge = $gate->fixed_charge + ($totalAmount * $gate->percent_charge / 100);
-            $payable = $totalAmount + $charge;
+            $charge    = $gate->fixed_charge + ($totalAmount * $gate->percent_charge / 100);
+            $payable   = $totalAmount + $charge;
             $final_amo = $payable * $gate->rate;
 
-            $data = new Deposit();
-            $data->user_id = $user->id;
-            $data->method_code = $gate->method_code;
-            $data->method_currency = strtoupper($gate->currency);
-            $data->amount = $totalAmount;
-            $data->charge = $charge;
-            $data->rate = $gate->rate;
-            $data->final_amo = $final_amo;
+            $data                     = new Deposit();
+            $data->user_id            = $user->id;
+            $data->method_code        = $gate->method_code;
+            $data->method_currency    = strtoupper($gate->currency);
+            $data->amount             = $totalAmount;
+            $data->charge             = $charge;
+            $data->rate               = $gate->rate;
+            $data->final_amo          = $final_amo;
             $data->is_credit_purchase = 1;
-            $data->number_of_credit = $request->credit_purchase;
-            $data->btc_amo = 0;
-            $data->btc_wallet = "";
-            $data->trx = getTrx();
-            $data->try = 0;
-            $data->status = 0;
+            $data->number_of_credit   = $request->credit_purchase;
+            $data->btc_amo            = 0;
+            $data->btc_wallet         = "";
+            $data->trx                = getTrx();
+            $data->try                = 0;
+            $data->status             = 0;
             $data->save();
+            session()->put('Track', $data->trx);
+            return to_route('user.deposit.confirm');
+        }
+    }
+
+    public function surveyPayment()
+    {
+        $pageTitle = 'Survey Payment';
+        $user = User::where('id', auth()->id())->first();
+        $gatewayCurrency = GatewayCurrency::whereHas('method', function ($gate) {
+            $gate->where('status', 1);
+        })->with('method')->orderby('method_code')->get();
+        $surveyData = session()->get('survey_data');
+
+        if (!$surveyData) {
+            $notify[] = ['error', 'Session expired please Try again'];
+            return to_route('user.survey.create')->withNotify($notify);
+        }
+        $totalAmount = $surveyData['survey_people'] * $surveyData['survey_money'] * $surveyData['total_question'];
+
+        return view('UserTemplate::payment.survey_payment', compact('gatewayCurrency', 'pageTitle', 'user', 'surveyData', 'totalAmount'));
+    }
+
+    public function storeSurveyPayment(Request $request)
+    {
+        $request->validate([
+            'amount'          => 'required|numeric|gt:0',
+            'method_code'     => 'nullable|required_unless:gateway,balance',
+            'currency'        => 'nullable|required_unless:gateway,balance',
+            'gateway'         => 'required'
+        ]);
+
+        $user = auth()->user();
+        $surveyData = session()->get('survey_data');
+        $totalAmount = $surveyData['survey_people'] * $surveyData['survey_money'] * $surveyData['total_question'];
+
+        if ($request->gateway == 'balance') {
+            return $this->handleBalanceSurveyPayment($user, $surveyData, $totalAmount);
+        } else {
+            $gate = GatewayCurrency::whereHas('method', function ($gate) {
+                $gate->where('status', Status::ENABLE);
+            })->where('method_code', $request->method_code)->where('currency', $request->currency)->first();
+            if (!$gate) {
+                $notify[] = ['error', 'Invalid gateway'];
+                return back()->withNotify($notify);
+            }
+
+            if ($gate->min_amount > $totalAmount || $gate->max_amount < $totalAmount) {
+                $notify[] = ['error', 'Please follow deposit limit'];
+                return back()->withNotify($notify);
+            }
+
+            $charge = $gate->fixed_charge + ($request->amount * $gate->percent_charge / 100);
+            $payable = $request->amount + $charge;
+            $final_amo = $payable * $gate->rate;
+
+            $survey                 = new Survey();
+            $survey->author_id      = auth()->id();
+            $survey->author_type    = User::class;
+            $survey->title          = $surveyData['title'];
+            $survey->form_data      = $surveyData['form_data'];
+            $survey->survey_people  = $surveyData['survey_people'];
+            $survey->survey_money   = $surveyData['survey_money'];
+            $survey->total_question = $surveyData['total_question'];
+            $survey->status         = Status::SURVEY_INITIAL;
+            $survey->save();
+
+
+            $data                  = new Deposit();
+            $data->user_id         = $user->id;
+            $data->survey_id       = $survey->id;
+            $data->method_code     = $gate->method_code;
+            $data->method_currency = strtoupper($gate->currency);
+            $data->amount          = $totalAmount;
+            $data->charge          = $charge;
+            $data->rate            = $gate->rate;
+            $data->final_amo       = $final_amo;
+            $data->btc_amo         = 0;
+            $data->btc_wallet      = "";
+            $data->trx             = getTrx();
+            $data->try             = 0;
+            $data->status          = 0;
+            $data->save();
+            session()->forget('survey_data');
             session()->put('Track', $data->trx);
             return to_route('user.deposit.confirm');
         }
@@ -154,19 +204,19 @@ class PaymentController extends Controller
         $payable = $request->amount + $charge;
         $final_amo = $payable * $gate->rate;
 
-        $data = new Deposit();
-        $data->user_id = $user->id;
-        $data->method_code = $gate->method_code;
+        $data                  = new Deposit();
+        $data->user_id         = $user->id;
+        $data->method_code     = $gate->method_code;
         $data->method_currency = strtoupper($gate->currency);
-        $data->amount = $request->amount;
-        $data->charge = $charge;
-        $data->rate = $gate->rate;
-        $data->final_amo = $final_amo;
-        $data->btc_amo = 0;
-        $data->btc_wallet = "";
-        $data->trx = getTrx();
-        $data->try = 0;
-        $data->status = 0;
+        $data->amount          = $request->amount;
+        $data->charge          = $charge;
+        $data->rate            = $gate->rate;
+        $data->final_amo       = $final_amo;
+        $data->btc_amo         = 0;
+        $data->btc_wallet      = "";
+        $data->trx             = getTrx();
+        $data->try             = 0;
+        $data->status          = 0;
         $data->save();
         session()->put('Track', $data->trx);
         return to_route('user.deposit.confirm');
@@ -203,8 +253,9 @@ class PaymentController extends Controller
             $deposit->btc_wallet = $data->session->id;
             $deposit->save();
         }
+        $type = $deposit->survey_id ? 'Survey Payment' : ($deposit->is_credit_purchase ? 'Credit Payment' : 'Deposit Payment');
 
-        $pageTitle = 'Payment Confirm';
+        $pageTitle = $type;
         return view($this->activeTemplate . $data->view, compact('data', 'pageTitle', 'deposit'));
     }
 
@@ -217,7 +268,7 @@ class PaymentController extends Controller
             return to_route(gatewayRedirectUrl());
         }
         if ($data->method_code > 999) {
-            $pageTitle = $data->is_credit_purchase ? 'Credit Purchase Confirm' : 'Payment Confirm';
+            $pageTitle = $data->survey_id ? 'Survey Payment' : ($data->is_credit_purchase ? 'Credit Payment' : 'Deposit Payment');
             $method = $data->gatewayCurrency();
             $gateway = $method->method;
             return view($this->activeTemplate . 'user.payment.manual', compact('data', 'pageTitle', 'method', 'gateway'));
@@ -246,9 +297,11 @@ class PaymentController extends Controller
         $data->status = Status::PAYMENT_PENDING;
         $data->save();
 
+        $type = $data->survey_id ? 'Survey Payment' : ($data->is_credit_purchase ? 'Credit Payment' : 'Deposit Payment');
+
         $adminNotification = new AdminNotification();
         $adminNotification->user_id = $data->user->id;
-        $adminNotification->title = ($data->is_credit_purchase ? 'Credit Purchase Payment' : 'Deposit') . 'request from ' . $data->user->username;
+        $adminNotification->title = $type . 'request from ' . $data->user->username;
         $adminNotification->click_url = urlPath('admin.deposit.details', $data->id);
         $adminNotification->save();
 
@@ -264,12 +317,14 @@ class PaymentController extends Controller
         if ($data->is_credit_purchase) {
             $notifyData['purchase_credit_count'] = $data->number_of_credit;
             notify($data->user, "CREDIT_PURCHASE_PENDING", $notifyData);
+        } elseif ($data->survey_id) {
+            $notifyData['trx'] = $data->trx;
+            notify($data->user, "SURVEY_REQUEST", $notifyData);
         } else {
             $notifyData['trx'] = $data->trx;
             notify($data->user, "DEPOSIT_REQUEST", $notifyData);
         }
 
-        $type = $data->is_credit_purchase ? 'Credit Purchase' : 'Payments';
         $notify[] = ['success', "Your {$type} request has been taken"];
         return to_route('user.deposit.history')->withNotify($notify);
     }
@@ -283,15 +338,19 @@ class PaymentController extends Controller
             $deposit->save();
 
             $user = User::find($deposit->user_id);
+
             if ($deposit->is_credit_purchase) {
                 $user->credit += $deposit->number_of_credit;
-                $user->save();
+                $deposit->survey->save();
+            } elseif ($deposit->survey_id && $deposit->survey) {
+                $deposit->survey->status = Status::SURVEY_ENABLE;
+                $deposit->survey->save();
             } else {
                 $user->balance += $deposit->amount;
-                $user->save();
+                $deposit->survey->save();
             }
 
-            $type                      = $deposit->is_credit_purchase ? 'Credit Purchase' : 'Deposit';
+            $type = $deposit->survey_id ? 'Survey Payment' : ($deposit->is_credit_purchase ? 'Credit Payment' : 'Deposit Payment');
             $transaction               = new Transaction();
             $transaction->user_id      = $deposit->user_id;
             $transaction->amount       = $deposit->amount;
@@ -299,7 +358,7 @@ class PaymentController extends Controller
             $transaction->post_credit  = $user->credit;
             $transaction->charge       = $deposit->charge;
             $transaction->trx_type     = '+';
-            $transaction->details      = $type . ' Via ' . $deposit->gatewayCurrency()->name;
+            $transaction->details      = $type . ' Via from' . $deposit->gatewayCurrency()->name;
             $transaction->trx          = $deposit->trx;
             $transaction->remark       = strtolower($type);
             $transaction->save();
@@ -318,17 +377,6 @@ class PaymentController extends Controller
             $userNotification->click_url = urlPath('user.deposit.history', ['search' => $transaction->trx]);
             $userNotification->save();
 
-            notify($user, $isManual ? 'DEPOSIT_APPROVE' : 'DEPOSIT_COMPLETE', [
-                'method_name' => $deposit->gatewayCurrency()->name,
-                'method_currency' => $deposit->method_currency,
-                'method_amount' => showAmount($deposit->final_amo),
-                'amount' => showAmount($deposit->amount),
-                'charge' => showAmount($deposit->charge),
-                'rate' => showAmount($deposit->rate),
-                'trx' => $deposit->trx,
-                'post_balance' => showAmount($user->balance)
-            ]);
-
             // ✅ User notification
             $notifyData = [
                 'method_name'     => $deposit->gatewayCurrency()->name,
@@ -342,6 +390,9 @@ class PaymentController extends Controller
             if ($deposit->is_credit_purchase) {
                 $notifyData['number_of_credit'] = $deposit->number_of_credit;
                 notify($user, 'CREDIT_PAYMENT_APPROVE', $notifyData);
+            } elseif ($deposit->survey_id) {
+                $notifyData['trx'] = $deposit->trx;
+                notify($user, 'SURVEY_PAYMENT_APPROVE', $notifyData);
             } else {
                 $notifyData['trx'] = $deposit->trx;
                 notify($user, $isManual ? 'DEPOSIT_APPROVE' : 'DEPOSIT_COMPLETE', $notifyData);
@@ -362,5 +413,96 @@ class PaymentController extends Controller
         auth()->login($user);
         session()->put('Track', $data->trx);
         return to_route('user.deposit.confirm');
+    }
+
+
+    private function handleBalanceCreditPurchase(User $user, int $creditPurchase, float $totalAmount)
+    {
+        // Check balance
+        if ($user->balance < $totalAmount) {
+            $notify[] = ['error', 'Insufficient Balance'];
+            return back()->withNotify($notify);
+        }
+
+        // Deduct balance and add credit
+        $user->balance -= $totalAmount;
+        $user->credit += $creditPurchase;
+        $user->save();
+
+        // Create transaction
+        $trx = getTrx();
+        $transaction = new Transaction();
+        $transaction->user_id      = $user->id;
+        $transaction->amount       = $totalAmount;
+        $transaction->post_balance = $user->balance;
+        $transaction->post_credit  = $user->credit;
+        $transaction->charge       = 0;
+        $transaction->trx_type     = '-';
+        $transaction->details      = 'Balance with Purchase Credit';
+        $transaction->trx          = $trx;
+        $transaction->remark       = 'Credit Purchase';
+        $transaction->save();
+
+        // Create user notification
+        $userNotification = new UserNotification();
+        $userNotification->user_id   = $user->id;
+        $userNotification->title     = 'Balance with Purchase Credit';
+        $userNotification->click_url = urlPath('user.transactions', ['search' => $transaction->trx]);
+        $userNotification->save();
+
+        $notify[] = ['success', 'Credit Purchase successfully'];
+        return to_route('user.transactions')->withNotify($notify);
+    }
+
+
+
+    private function handleBalanceSurveyPayment(User $user, array $surveyData, float $totalAmount)
+    {
+        // Check balance
+        if ($user->balance < $totalAmount) {
+            $notify[] = ['error', 'Insufficient Balance'];
+            return back()->withNotify($notify);
+        }
+
+        // Create survey
+        $survey = new Survey();
+        $survey->author_id      = $user->id;
+        $survey->author_type    = User::class;
+        $survey->title          = $surveyData['title'];
+        $survey->form_data      = $surveyData['form_data'];
+        $survey->survey_people  = $surveyData['survey_people'];
+        $survey->survey_money   = $surveyData['survey_money'];
+        $survey->total_question = $surveyData['total_question'];
+        $survey->status         = Status::SURVEY_ENABLE;
+        $survey->save();
+
+        // Create transaction
+        $trx = getTrx();
+        $transaction = new Transaction();
+        $transaction->user_id      = $user->id;
+        $transaction->amount       = $totalAmount;
+        $transaction->post_balance = $user->balance;
+        $transaction->post_credit  = $user->credit;
+        $transaction->charge       = 0;
+        $transaction->trx_type     = '-';
+        $transaction->details      = 'Balance with Survey Payment';
+        $transaction->trx          = $trx;
+        $transaction->remark       = 'Credit Purchase';
+        $transaction->save();
+
+
+        $user->balance -= $totalAmount;
+        $user->save();
+        session()->forget('survey_data');
+
+        // Create notification
+        $userNotification = new UserNotification();
+        $userNotification->user_id   = $user->id;
+        $userNotification->title     = 'Balance with Survey Payment';
+        $userNotification->click_url = urlPath('user.transactions', ['search' => $transaction->trx]);
+        $userNotification->save();
+
+        $notify[] = ['success', 'Survey Payment successfully'];
+        return to_route('user.transactions')->withNotify($notify);
     }
 }

@@ -49,13 +49,14 @@
                                 @forelse($surveys as $item)
                                     <tr>
                                         <td>#{{ $loop->iteration }}</td>
-                                        <td>{{ $item->authorName['author_name'] }} ({{ $item->authorName['author_type'] }})</td>
-                                   
+                                        <td>{{ $item->authorName['author_name'] }} ({{ $item->authorName['author_type'] }})
+                                        </td>
+
                                         <td>{{ $item->title }}</td>
-                                        <td>{{ $item->survey_people	 }}</td>
-                                        <td>{{ $general->cur_sym. $item->survey_money }}</td>
-                                        <td>{{  $item->total_question }}</td>
-                                        <td>{{ showDateTime($item->created_at,'M d, Y') }}</td>
+                                        <td>{{ $item->survey_people }}</td>
+                                        <td>{{ $general->cur_sym . $item->survey_money }}</td>
+                                        <td>{{ $item->total_question }}</td>
+                                        <td>{{ showDateTime($item->created_at, 'M d, Y') }}</td>
                                         <td>
                                             @php
                                                 echo $item->statusBadge($item->status);
@@ -63,8 +64,8 @@
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center justify-content-end gap-2">
-                                                <a href="{{ route('admin.survey.details', $item->id) }}"
-                                                    class="btn btn-sm" title="@lang('View')">
+                                                <a href="{{ route('admin.survey.details', $item->id) }}" class="btn btn-sm"
+                                                    title="@lang('View')">
                                                     <i class="fa-solid fa-eye"></i>
                                                 </a>
                                                 <div class="form-group mb-0">
@@ -112,6 +113,14 @@
             $('#status-filter').on('change', function() {
                 $('#statusForm').submit();
             });
+
+            const message = sessionStorage.getItem('success_message');
+            if (message) {
+                setTimeout(() => {
+                    notify('success', message);
+                    sessionStorage.removeItem('success_message');
+                }, 500);
+            }
 
         })(jQuery);
     </script>

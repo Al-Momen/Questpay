@@ -10,8 +10,9 @@ class Status{
     const YES = 1;
     const NO  = 0;
 
-    const SURVEY_ENABLE  = 1;
     const SURVEY_DISABLE = 0;
+    const SURVEY_ENABLE  = 1;
+    const SURVEY_INITIAL = 2;
 
     const PLAN_ENABLE  = 1;
     const PLAN_DISABLE = 0;
