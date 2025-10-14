@@ -8,7 +8,7 @@
                     <div class="row g-4 justify-content-center">
                         <div class="col-lg-8">
                             <div class="profile__wrap card p-4">
-                                <form action="{{ route('user.deposit.insert') }}" method="post">
+                                <form action="{{ route('user.credit.insert') }}" method="post">
                                     @csrf
                                     <input type="hidden" name="method_code">
                                     <input type="hidden" name="currency">
@@ -18,6 +18,7 @@
                                                 <div class="form-floating">
                                                     <select class="form-control form--control" name="gateway" required>
                                                         <option value="">@lang('Select One')</option>
+                                                        <option value="balance">@lang('Account Balance') {{ showAmount(auth()->user()->balance) }}</option>
                                                         @foreach ($gatewayCurrency as $data)
                                                             <option value="{{ $data->method_code }}"
                                                                 @selected(old('gateway') == $data->method_code)
@@ -29,17 +30,28 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12">
+                                        <div class="col-sm-12 mb-4">
                                             <div class="profile__form">
                                                 <div class="form-floating">
-                                                    <div class="form-group">
-                                                        <div class="input-group">
-                                                            <input type="number" step="any" name="amount"
-                                                                class="form-control form--control"
-                                                                value="{{ old('amount') }}" autocomplete="off" required>
-                                                            <span class="input-group-text">{{ $general->cur_text }}</span>
-                                                        </div>
-                                                    </div>
+                                                    <input type="number" name="credit_purchase"
+                                                        class="form-control form--control" value="1" required=""
+                                                        id="credit" step="1" min="1">
+                                                    <label class="form-label">@lang('Credit')</label>
+                                                </div>
+                                                <span class="mt-2">@lang('Per Credit') {{ $general->per_credit_price }}
+                                                    {{ $general->cur_text }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="profile__form">
+                                            <div class="form-floating">
+                                                <div class="input-group">
+                                                    <input type="number" step="any" name="amount"
+                                                        class="form-control form--control"
+                                                        value="{{ $general->per_credit_price }}" readonly
+                                                        autocomplete="off" required>
+                                                    <span class="input-group-text">{{ $general->cur_text }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -76,7 +88,8 @@
     <script>
         (function($) {
             "use strict";
-            $('select[name=gateway]').on('change', function() {
+
+            $('select[name=gateway]').on('change',function() {
                 if (!$('select[name=gateway]').val()) {
                     $('.preview-details').addClass('d-none');
                     return false;
@@ -112,7 +125,7 @@
                 $('.final_amo').text(final_amo);
                 if (resource.currency != '{{ $general->cur_text }}') {
                     var rateElement =
-                        `<span class="fw--500">@lang('Conversion Rate')</span> <span><span  class="fw--500">1 {{ __($general->cur_text) }} = <span class="rate">${rate}</span>  <span class="base-currency">${resource.currency}</span></span></span>`;
+                        `<span class="fw-bold">@lang('Conversion Rate')</span> <span><span  class="fw-bold">1 {{ __($general->cur_text) }} = <span class="rate">${rate}</span> <span class="base-currency">${resource.currency}</span></span></span>`;
                     $('.rate-element').html(rateElement)
                     $('.rate-element').removeClass('d-none');
                     $('.in-site-cur').removeClass('d-none');
@@ -131,10 +144,55 @@
                 $('input[name=method_code]').val(resource.method_code);
                 $('input[name=amount]').on('input');
             });
+
             $('input[name=amount]').on('input', function() {
                 $('select[name=gateway]').change();
                 $('.amount').text(parseFloat($(this).val()).toFixed(2));
             });
+
+
+            $("input[name=credit_purchase]").on('change', function() {
+                var credit = parseFloat($(this).val() || 0).toFixed(2);
+
+                var perCredit = parseFloat("{{ gs()->per_credit_price }}");
+                var totalCreditPrice = (perCredit * credit).toFixed(2);
+                $('input[name=amount]').val(totalCreditPrice);
+
+                var resource = $('select[name=gateway] option:selected').data('gateway');
+                if (!resource) return;
+
+                var fixed_charge = parseFloat(resource.fixed_charge);
+                var percent_charge = parseFloat(resource.percent_charge);
+                var rate = parseFloat(resource.rate);
+                var toFixedDigit = resource.method.crypto == 1 ? 8 : 2;
+
+                if (resource.method.crypto == 1) {
+                    $('.crypto_currency').removeClass('d-none');
+                } else {
+                    $('.crypto_currency').addClass('d-none');
+                }
+
+                $('.min').text(parseFloat(resource.min_amount).toFixed(2));
+                $('.max').text(parseFloat(resource.max_amount).toFixed(2));
+
+                var amount = parseFloat($('input[name=amount]').val()) || 0;
+                if (amount <= 0) {
+                    $('.preview-details').addClass('d-none');
+                    return;
+                }
+
+                $('.preview-details').removeClass('d-none');
+
+                var charge = (fixed_charge + (amount * percent_charge / 100)).toFixed(2);
+                $('.charge').text(charge);
+
+                var payable = (parseFloat(amount) + parseFloat(charge)).toFixed(2);
+                $('.payable').text(payable);
+
+                var final_amo = (payable * rate).toFixed(toFixedDigit);
+                $('.final_amo').text(final_amo);
+            });
+
         })(jQuery);
     </script>
 @endpush

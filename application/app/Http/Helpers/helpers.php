@@ -444,14 +444,13 @@ function gs($key = null)
 
 function siteLogo($type = null)
 {
-    $version = '?v=' . gs('updated_at');
+    $version = '?v=' . urlencode(gs('updated_at'));;
     $name = $type ? "/logo_{$type}.png" : '/logo.png';
     return getImage(getFilePath('logoIcon') . $name ) . $version;
 }
-
 function siteFavicon()
 {
-    $version = '?v=' . gs('updated_at');
+    $version = '?v=' . urlencode(gs('updated_at'));;
     return getImage(getFilePath('logoIcon') . '/favicon.png') . $version;
 }
 

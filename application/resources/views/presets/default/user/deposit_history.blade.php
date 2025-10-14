@@ -4,8 +4,8 @@
         <div class="container">
             <div class="survey-list__main">
                 @include('Template::components.user.top_header')
-                <div class="row justify-content-end">
-                    <div class="col-lg-3 ">
+                <div class="row justify-content-between">
+                    <div class="col-lg-3">
                         <form action="">
                             <div class="form-floating">
                                 <div class="input-group">
@@ -17,6 +17,10 @@
                                 </div>
                             </div>
                         </form>
+                    </div>
+                     <div class="col-lg-3 text-end">
+                       <a href="{{ route('user.deposit') }}"
+                        class="btn btn--base {{ Route::is('user.deposit') ? 'active' : '' }}">@lang('Deposit')</a>
                     </div>
                 </div>
                 <div class="dashboard-table card mt-4">

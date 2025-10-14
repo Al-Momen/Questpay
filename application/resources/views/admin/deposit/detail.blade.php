@@ -3,7 +3,7 @@
     <div class="row mb-none-30 justify-content-center">
         <div class="col-xl-4 col-md-6 mb-30">
             <div class="card p-16 bg--white radius--base br--solid overflow-hidden">
-                <h5 class="mb-20 text-muted mb-20 border-bottom pb-4">@lang('Deposit Via') {{ __($deposit->gateway?->name ?? '') }}</h5>
+                <h5 class="mb-20 text-muted mb-20 border-bottom pb-4">@lang('Payments Via') {{ __($deposit->gateway?->name ?? '') }}</h5>
                 <ul class="list-group">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         @lang('Date')
@@ -64,7 +64,7 @@
             <div class="col-xl-8 col-md-6 mb-30">
                 <div class="card bg--white p-16 radius--base br--solid overflow-hidden">
                     <div class="card-body">
-                        <h5 class="card-title mb-20 border-bottom pb-4">@lang('Deposit Info')</h5>
+                        <h5 class="card-title mb-20 border-bottom pb-4">@lang('Payment Info')</h5>
                         @if ($details != null)
                             @foreach (json_decode($details) as $val)
                                 @if ($deposit->method_code >= 1000)
@@ -120,7 +120,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">@lang('Reject Deposit Confirmation')</h5>
+                    <h5 class="modal-title">@lang('Reject Payment Confirmation')</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>

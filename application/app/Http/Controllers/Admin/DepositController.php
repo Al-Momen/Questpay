@@ -31,11 +31,11 @@ class DepositController extends Controller
         }
 
         $pageTitle = ucfirst($status) . ' Deposits';
-        return view('Admin::deposit.log', compact('pageTitle', 'items','successful','pending','rejected','initiated'));
+        return view('Admin::deposit.log', compact('pageTitle', 'items', 'successful', 'pending', 'rejected', 'initiated'));
     }
 
 
-    protected function depositData($scope = null,$summery = false)
+    protected function depositData($scope = null, $summery = false)
     {
         $baseQuery = $scope ? Deposit::$scope()->with(['user', 'gateway']) : Deposit::with(['user', 'gateway']);
         $dataQuery =  Deposit::query();
@@ -51,34 +51,36 @@ class DepositController extends Controller
         $deposits =  $baseQuery->searchable(['trx', 'user:username'])->dateFilter()->latest()->paginate(getPaginate());
 
         return [
-            'data'=>$deposits,
-            'summery'=>[
-                'successful'=>$successfulSummery,
-                'pending'=>$pendingSummery,
-                'rejected'=>$rejectedSummery,
-                'initiated'=>$initiatedSummery,
-                'total'=>$totalCount
+            'data' => $deposits,
+            'summery' => [
+                'successful' => $successfulSummery,
+                'pending' => $pendingSummery,
+                'rejected' => $rejectedSummery,
+                'initiated' => $initiatedSummery,
+                'total' => $totalCount
             ]
         ];
     }
 
     public function details($id)
     {
-        $general = gs();
-        $deposit = Deposit::where('id', $id)->with(['user', 'gateway'])->firstOrFail();
-        $pageTitle = 'Diposit Request of ' . showAmount($deposit->amount) . ' '.$general->cur_text;
-        $details = ($deposit->detail != null) ? json_encode($deposit->detail) : null;
-        return view('Admin::deposit.detail', compact('pageTitle', 'deposit','details'));
+        $general   = gs();
+        $deposit   = Deposit::where('id', $id)->with(['user', 'gateway'])->firstOrFail();
+        $type      = $deposit->is_credit_purchase ? 'Credit Purchase' : 'Deposit';
+        $pageTitle = "{$type} Request of " . showAmount($deposit->amount) . ' ' . $general->cur_text;
+        $details   = ($deposit->detail != null) ? json_encode($deposit->detail) : null;
+        return view('Admin::deposit.detail', compact('pageTitle', 'deposit', 'details'));
     }
 
 
     public function approve($id)
     {
-        $deposit = Deposit::where('id',$id)->where('status', Status::PAYMENT_PENDING)->firstOrFail();
+        $deposit = Deposit::where('id', $id)->where('status', Status::PAYMENT_PENDING)->firstOrFail();
 
-        PaymentController::userDataUpdate($deposit,true);
+        PaymentController::userDataUpdate($deposit, true);
 
-        $notify[] = ['success', 'Deposit request approved successfully'];
+        $type      = $deposit->is_credit_purchase ? 'Credit Purchase' : 'Deposit';
+        $notify[] = ['success', "{$type} request approved successfully"];
 
         return to_route('admin.deposit.log')->withNotify($notify);
     }
@@ -89,25 +91,35 @@ class DepositController extends Controller
             'id' => 'required|integer',
             'message' => 'required|string|max:255'
         ]);
-        $deposit = Deposit::where('id',$request->id)->where('status', Status::PAYMENT_PENDING)->firstOrFail();
+        $deposit = Deposit::where('id', $request->id)->where('status', Status::PAYMENT_PENDING)->firstOrFail();
 
         $deposit->admin_feedback = $request->message;
         $deposit->status = Status::PAYMENT_REJECT;
         $deposit->save();
 
-        notify($deposit->user, 'DEPOSIT_REJECT', [
+        $type = $deposit->is_credit_purchase ? 'Credit Purchase' : 'Deposit';
+
+        $notifyData = [
             'method_name' => $deposit->gatewayCurrency()->name,
             'method_currency' => $deposit->method_currency,
             'method_amount' => showAmount($deposit->final_amo),
             'amount' => showAmount($deposit->amount),
             'charge' => showAmount($deposit->charge),
             'rate' => showAmount($deposit->rate),
-            'trx' => $deposit->trx,
             'rejection_message' => $request->message
-        ]);
+        ];
 
-        $notify[] = ['success', 'Deposit request rejected successfully'];
+
+        if ($deposit->journal_submit_paper_id && $deposit->journalSubmitPaper) {
+            $notifyData['number_of_credit'] = $deposit->number_of_credit;
+            notify($deposit->user, 'CREDIT_PAYMENT_REJECT', $notifyData);
+        } else {
+            $notifyData['trx'] = $deposit->trx;
+            notify($deposit->user, 'DEPOSIT_REJECT', $notifyData);
+        }
+
+
+        $notify[] = ['success', "{$type} request rejected successfully"];
         return  to_route('admin.deposit.log')->withNotify($notify);
-
     }
 }

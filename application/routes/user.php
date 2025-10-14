@@ -68,8 +68,13 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::post('kyc-submit', 'kycSubmit')->name('kyc.submit');
 
                 Route::get('attachment-download/{fil_hash}', 'attachmentDownload')->name('attachment.download');
+
+                Route::get('user-notification/{id}', 'notification')->name('read.notification');
+
+                Route::get('user-notification-all', 'notificationAll')->name('notification.all');
             });
 
+            
             // User Survey Management
             Route::prefix('survey')->controller('SurveyController')->name('survey.')->group(function () {
                 Route::get('index', 'index')->name('index');
@@ -103,7 +108,10 @@ Route::middleware('auth')->name('user.')->group(function () {
 
         // Payment
         Route::middleware('registration.complete')->controller('Gateway\PaymentController')->group(function () {
-            Route::any('/deposit', 'deposit')->name('deposit');
+            Route::get('credit-purchase-index', 'index')->name("credit.index");
+            Route::get('credit-purchase', 'creditPurchase')->name("credit.purchase");
+            Route::post('credit/insert', 'creditInsert')->name("credit.insert");
+            Route::any('deposit', 'deposit')->name('deposit');
             Route::post('deposit/insert', 'depositInsert')->name('deposit.insert');
             Route::get('deposit/confirm', 'depositConfirm')->name('deposit.confirm');
             Route::get('deposit/manual', 'manualDepositConfirm')->name('deposit.manual.confirm');

@@ -7,6 +7,7 @@ use App\Lib\FormProcessor;
 use App\Lib\GoogleAuthenticator;
 use App\Models\Form;
 use App\Models\Transaction;
+use App\Models\UserNotification;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -22,11 +23,10 @@ class UserController extends Controller
         $pageTitle = 'Deposit History';
         $deposits = auth()->user()->deposits();
         if ($request->search) {
-            $deposits = $deposits->where('trx',$request->search);
+            $deposits = $deposits->where('trx', $request->search);
         }
-        $deposits = $deposits->with(['gateway'])->orderBy('id','desc')->paginate(getPaginate());
+        $deposits = $deposits->with(['gateway'])->orderBy('id', 'desc')->paginate(getPaginate());
         return view('UserTemplate::deposit_history', compact('pageTitle', 'deposits'));
-
     }
 
     public function show2faForm()
@@ -37,7 +37,7 @@ class UserController extends Controller
         $secret = $ga->createSecret();
         $qrCodeUrl = $ga->getQRCodeGoogleUrl($user->username . '@' . $general->site_name, $secret);
         $pageTitle = '2FA Setting';
-        return view('UserTemplate::twofactor', compact('pageTitle', 'secret', 'qrCodeUrl','user'));
+        return view('UserTemplate::twofactor', compact('pageTitle', 'secret', 'qrCodeUrl', 'user'));
     }
 
     public function create2fa(Request $request)
@@ -47,7 +47,7 @@ class UserController extends Controller
             'key' => 'required',
             'code' => 'required',
         ]);
-        $response = verifyG2fa($user,$request->code,$request->key);
+        $response = verifyG2fa($user, $request->code, $request->key);
         if ($response) {
             $user->tsc = $request->key;
             $user->ts = 1;
@@ -67,7 +67,7 @@ class UserController extends Controller
         ]);
 
         $user = auth()->user();
-        $response = verifyG2fa($user,$request->code);
+        $response = verifyG2fa($user, $request->code);
         if ($response) {
             $user->tsc = null;
             $user->ts = 0;
@@ -84,35 +84,35 @@ class UserController extends Controller
         $pageTitle = 'Transactions';
         $remarks = Transaction::distinct('remark')->where('user_id', auth()->id())->orderBy('remark')->get('remark');
 
-        $transactions = Transaction::where('user_id',auth()->id())->searchable(['trx', 'amount'])->dateFilter()->filter(['trx_type', 'remark'])->latest()->paginate(getPaginate());
-        return view('UserTemplate::transactions', compact('pageTitle','transactions','remarks'));
+        $transactions = Transaction::where('user_id', auth()->id())->searchable(['trx', 'amount'])->dateFilter()->filter(['trx_type', 'remark'])->latest()->paginate(getPaginate());
+        return view('UserTemplate::transactions', compact('pageTitle', 'transactions', 'remarks'));
     }
 
     public function kycForm()
     {
         if (auth()->user()->kv == 2) {
-            $notify[] = ['error','Your KYC is under review'];
+            $notify[] = ['error', 'Your KYC is under review'];
             return to_route('user.home')->withNotify($notify);
         }
         if (auth()->user()->kv == 1) {
-            $notify[] = ['error','You are already KYC verified'];
+            $notify[] = ['error', 'You are already KYC verified'];
             return to_route('user.home')->withNotify($notify);
         }
         $pageTitle = 'KYC Form';
-        $form = Form::where('act','kyc')->first();
-        return view('UserTemplate::kyc.form', compact('pageTitle','form'));
+        $form = Form::where('act', 'kyc')->first();
+        return view('UserTemplate::kyc.form', compact('pageTitle', 'form'));
     }
 
     public function kycData()
     {
         $user = auth()->user();
         $pageTitle = 'KYC Data';
-        return view('UserTemplate::kyc.info', compact('pageTitle','user'));
+        return view('UserTemplate::kyc.info', compact('pageTitle', 'user'));
     }
 
     public function kycSubmit(Request $request)
     {
-        $form = Form::where('act','kyc')->first();
+        $form = Form::where('act', 'kyc')->first();
         $formData = $form->form_data;
         $formProcessor = new FormProcessor();
         $validationRule = $formProcessor->valueValidation($formData);
@@ -123,9 +123,8 @@ class UserController extends Controller
         $user->kv = 2;
         $user->save();
 
-        $notify[] = ['success','KYC data submitted successfully'];
+        $notify[] = ['success', 'KYC data submitted successfully'];
         return to_route('user.home')->withNotify($notify);
-
     }
 
     public function attachmentDownload($fileHash)
@@ -133,7 +132,7 @@ class UserController extends Controller
         $filePath = decrypt($fileHash);
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
         $general = gs();
-        $title = slug($general->site_name).'- attachments.'.$extension;
+        $title = slug($general->site_name) . '- attachments.' . $extension;
         $mimetype = mime_content_type($filePath);
         header('Content-Disposition: attachment; filename="' . $title);
         header("Content-Type: " . $mimetype);
@@ -147,7 +146,7 @@ class UserController extends Controller
             return to_route('user.home');
         }
         $pageTitle = 'User Data';
-        return view('UserTemplate::user_data', compact('pageTitle','user'));
+        return view('UserTemplate::user_data', compact('pageTitle', 'user'));
     }
 
     public function userDataSubmit(Request $request)
@@ -157,24 +156,49 @@ class UserController extends Controller
             return to_route('user.home');
         }
         $request->validate([
-            'firstname'=>'required',
-            'lastname'=>'required',
+            'firstname' => 'required',
+            'lastname' => 'required',
         ]);
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
         $user->address = [
-            'country'=> $user->address->country,
-            'address'=>$request->address,
-            'state'=>$request->state,
-            'zip'=>$request->zip,
-            'city'=>$request->city,
+            'country' => $user->address->country,
+            'address' => $request->address,
+            'state' => $request->state,
+            'zip' => $request->zip,
+            'city' => $request->city,
         ];
         $user->reg_step = 1;
         $user->save();
 
-        $notify[] = ['success','Registration process completed successfully'];
+        $notify[] = ['success', 'Registration process completed successfully'];
         return to_route('user.home')->withNotify($notify);
-
     }
 
+    public function notification($id)
+    {
+        $user = auth()->user();
+        $notification = UserNotification::where('user_id', $user->id)->where('id', $id)->first();
+        if (!$notification) {
+            $notify[] = ['error', 'Notification not found'];
+            return back()->withNotify($notify);
+        }
+
+        $notification->read_status = 0;
+        $notification->save();
+        return redirect($notification->click_url);
+    }
+
+    public function notificationAll(Request $request)
+    {
+        $search = $request->get('search');
+        $user = auth()->user();
+        $pageTitle = 'All Notifications';
+        $query = UserNotification::where('user_id', $user->id);
+         if ($search) {
+            $query->searchable(['title']);
+        }
+        $notifications = $query->paginate(getPaginate());
+        return view('UserTemplate::notification.index', compact('pageTitle', 'user','notifications'));
+    }
 }

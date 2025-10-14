@@ -32,25 +32,27 @@ class GeneralSettingController extends Controller
             'secondary_color' => 'nullable',
             'regex:/^[a-f0-9]{6}$/i',
             'timezone' => 'required|integer',
-            'open_ai_key' => 'nullable|string'
+            'open_ai_key' => 'nullable|string',
+            'per_credit_price' => 'required|numeric|min:0.01|regex:/^\d+(\.\d{1,2})?$/',
         ]);
 
-        $general                  = GeneralSetting::first();
-        $general->site_name       = $request->site_name;
-        $general->cur_text        = $request->cur_text;
-        $general->cur_sym         = $request->cur_sym;
-        $general->base_color      = $request->base_color;
-        $general->secondary_color = $request->secondary_color;
-        $general->open_ai_key     = $request->open_ai_key;
-        $general->kv              = $request->kv ? Status::ENABLE : Status::DISABLE;
-        $general->ev              = $request->ev ? Status::ENABLE : Status::DISABLE;
-        $general->en              = $request->en ? Status::ENABLE : Status::DISABLE;
-        $general->sv              = $request->sv ? Status::ENABLE : Status::DISABLE;
-        $general->sn              = $request->sn ? Status::ENABLE : Status::DISABLE;
-        $general->force_ssl       = $request->force_ssl ? Status::ENABLE : Status::DISABLE;
-        $general->secure_password = $request->secure_password ? Status::ENABLE : Status::DISABLE;
-        $general->registration    = $request->registration ? Status::ENABLE : Status::DISABLE;
-        $general->agree           = $request->agree ? Status::ENABLE : Status::DISABLE;
+        $general                   = GeneralSetting::first();
+        $general->site_name        = $request->site_name;
+        $general->cur_text         = $request->cur_text;
+        $general->cur_sym          = $request->cur_sym;
+        $general->base_color       = $request->base_color;
+        $general->secondary_color  = $request->secondary_color;
+        $general->open_ai_key      = $request->open_ai_key;
+        $general->per_credit_price = $request->per_credit_price;
+        $general->kv               = $request->kv ? Status::ENABLE : Status::DISABLE;
+        $general->ev               = $request->ev ? Status::ENABLE : Status::DISABLE;
+        $general->en               = $request->en ? Status::ENABLE : Status::DISABLE;
+        $general->sv               = $request->sv ? Status::ENABLE : Status::DISABLE;
+        $general->sn               = $request->sn ? Status::ENABLE : Status::DISABLE;
+        $general->force_ssl        = $request->force_ssl ? Status::ENABLE : Status::DISABLE;
+        $general->secure_password  = $request->secure_password ? Status::ENABLE : Status::DISABLE;
+        $general->registration     = $request->registration ? Status::ENABLE : Status::DISABLE;
+        $general->agree            = $request->agree ? Status::ENABLE : Status::DISABLE;
         $general->save();
 
         Cache::put('GeneralSetting', $general);
