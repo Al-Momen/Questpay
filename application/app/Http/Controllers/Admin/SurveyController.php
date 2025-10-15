@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Admin;
 use App\Models\Survey;
 use GuzzleHttp\Client;
+use App\Models\Category;
 use App\Constants\Status;
 use Illuminate\Http\Request;
+use App\Rules\FileTypeValidate;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -40,10 +42,12 @@ class SurveyController extends Controller
         return view('Admin::survey.index', compact('surveys', 'pageTitle'));
     }
 
+
     public function create()
     {
         $pageTitle = 'Create New Survey';
-        return view('Admin::survey.create', compact('pageTitle'));
+        $categories = Category::where('status', Status::CATEGORY_ENABLE)->get();
+        return view('Admin::survey.create', compact('pageTitle', 'categories'));
     }
 
     public function generate(Request $request)
@@ -161,7 +165,10 @@ class SurveyController extends Controller
     public function store(Request $request)
     {
         $data      = $request->except('_token');
+        $data['survey'] = json_decode($request->survey, true);
         $validator = Validator::make($data, [
+            'image'                        => ['required', 'image', new FileTypeValidate(['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG'])],
+            'category_id'                  => 'required|integer|exists:categories,id',
             'survey_people'                => 'required|numeric|min:1',
             'survey_money'                 => 'required|numeric|min:0.01|regex:/^\d+(\.\d{1,2})?$/',
             'total_question'               => 'required|numeric|min:1',
@@ -184,7 +191,8 @@ class SurveyController extends Controller
             }
         }
 
-        if (count($request["survey"]['questions']) < 0) {
+
+        if (count($data["survey"]['questions']) < 0) {
             return response()->json([
                 'status' => 'error',
                 'message' => "Question must have at least 1."
@@ -198,15 +206,25 @@ class SurveyController extends Controller
             ], 422);
         }
 
+
         $survey                 = new Survey();
+        $survey->category_id    = $request->category_id;
         $survey->author_id      = auth('admin')->id();
         $survey->author_type    = Admin::class;
         $survey->title          = $data['survey']['title'];
         $survey->form_data      = $data['survey'];
         $survey->survey_people  = $request->survey_people;
         $survey->survey_money   = $request->survey_money;
-        $survey->total_question = count($request["survey"]['questions']);
+        $survey->total_question = count($data["survey"]['questions']);
         $survey->status         = Status::SURVEY_ENABLE;
+        if ($request->hasFile('image')) {
+            try {
+                $survey->image = fileUploader($request->image, getFilePath('survey'), getFileSize('survey'));
+            } catch (\Exception $exp) {
+                $notify[] = ['error', 'Couldn\'t upload your image'];
+                return back()->withNotify($notify);
+            }
+        }
         $survey->save();
 
         return response()->json([

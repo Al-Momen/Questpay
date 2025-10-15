@@ -94,7 +94,7 @@ class PaymentController extends Controller
             $notify[] = ['error', 'Session expired please Try again'];
             return to_route('user.survey.create')->withNotify($notify);
         }
-        $totalAmount = $surveyData['survey_people'] * $surveyData['survey_money'] * $surveyData['total_question'];
+        $totalAmount = $surveyData->survey_people * $surveyData->survey_money * $surveyData->total_question;
 
         return view('UserTemplate::payment.survey_payment', compact('gatewayCurrency', 'pageTitle', 'user', 'surveyData', 'totalAmount'));
     }
@@ -110,7 +110,7 @@ class PaymentController extends Controller
 
         $user = auth()->user();
         $surveyData = session()->get('survey_data');
-        $totalAmount = $surveyData['survey_people'] * $surveyData['survey_money'] * $surveyData['total_question'];
+        $totalAmount = $surveyData->survey_people * $surveyData->survey_money * $surveyData->total_question;
 
         if ($request->gateway == 'balance') {
             return $this->handleBalanceSurveyPayment($user, $surveyData, $totalAmount);
@@ -132,21 +132,10 @@ class PaymentController extends Controller
             $payable = $request->amount + $charge;
             $final_amo = $payable * $gate->rate;
 
-            $survey                 = new Survey();
-            $survey->author_id      = auth()->id();
-            $survey->author_type    = User::class;
-            $survey->title          = $surveyData['title'];
-            $survey->form_data      = $surveyData['form_data'];
-            $survey->survey_people  = $surveyData['survey_people'];
-            $survey->survey_money   = $surveyData['survey_money'];
-            $survey->total_question = $surveyData['total_question'];
-            $survey->status         = Status::SURVEY_INITIAL;
-            $survey->save();
-
 
             $data                  = new Deposit();
             $data->user_id         = $user->id;
-            $data->survey_id       = $survey->id;
+            $data->survey_id       = $surveyData->id;
             $data->method_code     = $gate->method_code;
             $data->method_currency = strtoupper($gate->currency);
             $data->amount          = $totalAmount;
@@ -159,7 +148,6 @@ class PaymentController extends Controller
             $data->try             = 0;
             $data->status          = 0;
             $data->save();
-            session()->forget('survey_data');
             session()->put('Track', $data->trx);
             return to_route('user.deposit.confirm');
         }
@@ -456,7 +444,7 @@ class PaymentController extends Controller
 
 
 
-    private function handleBalanceSurveyPayment(User $user, array $surveyData, float $totalAmount)
+    private function handleBalanceSurveyPayment(User $user, object $surveyData, float $totalAmount)
     {
         // Check balance
         if ($user->balance < $totalAmount) {
@@ -464,18 +452,10 @@ class PaymentController extends Controller
             return back()->withNotify($notify);
         }
 
-        // Create survey
-        $survey                     = new Survey();
-        $survey->author_id          = $user->id;
-        $survey->author_type        = User::class;
-        $survey->title              = $surveyData['title'];
-        $survey->form_data          = $surveyData['form_data'];
-        $survey->survey_people      = $surveyData['survey_people'];
-        $survey->survey_money       = $surveyData['survey_money'];
-        $survey->total_question     = $surveyData['total_question'];
-        $survey->status             = Status::SURVEY_ENABLE;
-        $survey->is_payment_balance = Status::SURVEY_PAYMENT_WITH_BALANCE;
-        $survey->save();
+        // update survey
+        $surveyData->status             = Status::SURVEY_ENABLE;
+        $surveyData->is_payment_balance = Status::SURVEY_PAYMENT_WITH_BALANCE;
+        $surveyData->save();
 
         // Create transaction
         $trx = getTrx();

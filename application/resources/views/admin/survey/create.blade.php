@@ -7,27 +7,49 @@
                     <h4 class="mb-3">@lang('Survey Information')</h4>
                     <div class="row">
                         <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="survey_money" class="form-label">@lang('Number of People Survey Access')</label>
-                                <input type="number" name="survey_people" id="survey_people"
-                                    value="{{ old('survey_people') }}" class="form-control mb-4"
-                                    placeholder="@lang('How many people get access to this survey question?')" required>
+                            <label for="title" class="form-label">@lang('Image')</label>
+                            <div class="logo-upload--box">
+                                <x-image-uploader name="image" :imagePath="getImage(getFilePath('survey') . '/', getFileSize('survey'))" :size="getFileSize('survey')" :isImage="true"
+                                    class="w-100" id="uploadLogo3" :required="true" />
                             </div>
                         </div>
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="survey_money" class="form-label">@lang('Per Question (Cent)')</label>
-                                <input type="number" name="survey_money" id="survey_money" step="any" min="0"
-                                    value="{{ old('survey_money') }}" class="form-control mb-4"
-                                    placeholder="@lang('How many cents does a user get per question answered?')" required>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="total_question" class="form-label">@lang('Total Questions')</label>
-                                <input type="number" name="total_question" id="total_question"
-                                    value="{{ old('total_question') }}" class="form-control mb-4"
-                                    placeholder="@lang('How many cents does a user get per question answered?')" readonly>
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label for="survey_money" class="form-label">@lang('Category')</label>
+                                        <select class="form-control form-select" name="category_id" required>
+                                            <option value="0">@lang('Select category id')</option>
+                                            @foreach ($categories ?? [] as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label for="survey_money" class="form-label">@lang('Number of People Survey Access')</label>
+                                        <input type="number" name="survey_people" id="survey_people"
+                                            value="{{ old('survey_people') }}" class="form-control mb-4"
+                                            placeholder="@lang('How many people get access to this survey question?')" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label for="survey_money" class="form-label">@lang('Per Question (Cent)')</label>
+                                        <input type="number" name="survey_money" id="survey_money" step="any"
+                                            min="0" value="{{ old('survey_money') }}" class="form-control mb-4"
+                                            placeholder="@lang('How many cents does a user get per question answered?')" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label for="total_question" class="form-label">@lang('Total Questions')</label>
+                                        <input type="number" name="total_question" id="total_question"
+                                            value="{{ old('total_question') }}" class="form-control mb-4"
+                                            placeholder="@lang('How many cents does a user get per question answered?')" readonly>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

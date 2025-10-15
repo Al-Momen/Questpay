@@ -289,6 +289,7 @@ function getFilePath($key)
 
 function getFileSize($key)
 {
+
     return fileManager()->$key()->size;
 }
 

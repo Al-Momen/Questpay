@@ -5,8 +5,10 @@ namespace App\Http\Controllers\User;
 use App\Models\User;
 use App\Models\Survey;
 use GuzzleHttp\Client;
+use App\Models\Category;
 use App\Constants\Status;
 use Illuminate\Http\Request;
+use App\Rules\FileTypeValidate;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -43,7 +45,8 @@ class SurveyController extends Controller
     {
         $pageTitle = 'New Survey Create';
         session()->forget('survey_data');
-        return view('UserTemplate::survey.create', compact('pageTitle'));
+        $categories = Category::where('status', Status::CATEGORY_ENABLE)->get();
+        return view('UserTemplate::survey.create', compact('pageTitle', 'categories'));
     }
 
 
@@ -177,7 +180,10 @@ class SurveyController extends Controller
     public function store(Request $request)
     {
         $data      = $request->except('_token');
+        $data['survey'] = json_decode($request->survey, true);
         $validator = Validator::make($data, [
+            'image'                        => ['required', 'image', new FileTypeValidate(['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG'])],
+            'category_id'                  => 'required|integer|exists:categories,id',
             'survey_people'                => 'required|numeric|min:1',
             'survey_money'                 => 'required|numeric|min:0.01|regex:/^\d+(\.\d{1,2})?$/',
             'total_question'               => 'required|numeric|min:1',
@@ -200,7 +206,7 @@ class SurveyController extends Controller
             }
         }
 
-        if (count($request["survey"]['questions']) < 0) {
+        if (count($data["survey"]['questions']) < 0) {
             return response()->json([
                 'status' => 'error',
                 'message' => "Question must have at least 1."
@@ -214,16 +220,26 @@ class SurveyController extends Controller
             ], 422);
         }
 
-        session()->put('survey_data', [
-            'survey_people'  => $request->input('survey_people'),
-            'survey_money'   => $request->input('survey_money'),
-            'total_question' => isset($data['survey']['questions']) ? count($data['survey']['questions']) : 0,
-            'title'          => $data['survey']['title'] ?? null,
-            'form_data'      => $data['survey'] ?? [],
-        ]);
-
-
-
+        $survey                 = new Survey();
+        $survey->category_id    = $request->category_id;
+        $survey->author_id      = auth()->id();
+        $survey->author_type    = User::class;
+        $survey->title          = $data['survey']['title'];
+        $survey->form_data      = $data['survey'];
+        $survey->survey_people  = $request->survey_people;
+        $survey->survey_money   = $request->survey_money;
+        $survey->total_question = count($data["survey"]['questions']);
+        $survey->status         = Status::SURVEY_INITIAL;
+        if ($request->hasFile('image')) {
+            try {
+                $survey->image = fileUploader($request->image, getFilePath('survey'), getFileSize('survey'));
+            } catch (\Exception $exp) {
+                $notify[] = ['error', 'Couldn\'t upload your image'];
+                return back()->withNotify($notify);
+            }
+        }
+        $survey->save();
+        session()->put('survey_data',$survey);
 
         return response()->json([
             'status' => 'success',
@@ -246,7 +262,7 @@ class SurveyController extends Controller
     public function status($id)
     {
         $survey = Survey::with('deposit')->where('id', $id)->first();
-        
+
         if (!($survey->deposit) && !($survey->is_credit_purchase)) {
             $notify[] = ['success', 'Survey not found'];
             return back()->withNotify($notify);

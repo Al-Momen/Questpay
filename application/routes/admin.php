@@ -155,7 +155,7 @@ Route::middleware(['admin'])->group(function () {
         });
     });
 
-  // Plan Management
+    // Plan Management
     Route::middleware('admin.permission:plan-management')->prefix('plan')->controller('PlanController')
         ->name('plan.')->group(function () {
             Route::get('index', 'index')->name('index');
@@ -164,9 +164,9 @@ Route::middleware(['admin'])->group(function () {
             Route::put('update/{id}', 'update')->name('update');
             Route::post('status/{id}', 'status')->name('status');
             Route::get('details/{id}', 'details')->name('details');
-    });
+        });
 
-  // Survey Management
+    // Survey Management
     Route::middleware('admin.permission:survey-management')->prefix('survey')->controller('SurveyController')
         ->name('survey.')->group(function () {
             Route::get('index', 'index')->name('index');
@@ -176,8 +176,16 @@ Route::middleware(['admin'])->group(function () {
             Route::post('update/{id}', 'update')->name('update');
             Route::post('status/{id}', 'status')->name('status');
             Route::get('details/{id}', 'details')->name('details');
-    });
+        });
 
+
+    // Category
+    Route::middleware('admin.permission:category-management')->controller('CategoryController')->name('category.')->prefix('category')->group(function () {
+        Route::get('/{status?}', 'index')->name('index');
+        Route::post('store', 'store')->name('store');
+        Route::post('update/{id}', 'update')->name('update');
+        Route::post('status/{id}', 'status')->name('status');
+    });
 
     // DEPOSIT SYSTEM
     Route::middleware('admin.permission:deposit-management')->name('deposit.')->controller('DepositController')->prefix('manage/deposits')->group(function () {

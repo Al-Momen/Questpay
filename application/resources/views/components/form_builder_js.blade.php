@@ -88,11 +88,16 @@
         //  Generate Button Click
         generateBtn.on("click", function() {
             const prompt = promptInput.val();
-            @if ($general->credit_cost_per_prompt > auth()->user()->credit)
-                notify('error', 'You do not have enough credits.');
+            @if (auth()->guard('web')->check())
+                @if ($general->credit_cost_per_prompt > auth()->user()->credit)
+                    notify('error', 'You do not have enough credits.');
+                @else
+                    generateSurvey(prompt);
+                @endif
             @else
                 generateSurvey(prompt);
             @endif
+
         });
 
         //  Main Render Survey
@@ -336,35 +341,35 @@
         // Save Survey Event json
         $("#saveSurveyBtn").on("click", function() {
             const surveyData = collectSurveyData();
-            const surveyPeople = $('input[name=survey_people]').val();
-            const surveyMoney = $('input[name=survey_money]').val();
-            const totalQuestion = $('input[name=total_question]').val();
+            const formData = new FormData()
+            formData.append('_token', "{{ csrf_token() }}");
+            formData.append('survey_people', $('input[name=survey_people]').val());
+            formData.append('survey_money', $('input[name=survey_money]').val());
+            formData.append('total_question', $('input[name=total_question]').val());
+            formData.append('category_id', $('select[name=category_id]').val());
+            formData.append('survey', JSON.stringify(surveyData));
+            const imageFile = $('input[name=image]')[0].files[0];
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
             $.ajax({
                 url: "{{ $surveyStoreRoute }}",
                 type: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    survey_people: surveyPeople,
-                    survey_money: surveyMoney,
-                    total_question: totalQuestion,
-                    survey: surveyData,
-                },
+                data: formData,
+                processData: false,
+                contentType: false, 
                 success: function(response) {
                     if (response.status === "success") {
                         window.location.href = "{{ $surveyIndexRoute }}";
                         sessionStorage.setItem('success_message', response.message);
-                        return;
                     } else {
                         notify('error', response.message);
                     }
-
                 },
                 error: function(xhr) {
                     if (xhr.responseJSON && xhr.responseJSON.errors) {
-                        let errors = xhr.responseJSON.errors;
-                        $.each(errors, function(field, messages) {
+                        $.each(xhr.responseJSON.errors, function(field, messages) {
                             $.each(messages, function(index, message) {
-
                                 notify('error', message);
                             });
                         });
@@ -374,6 +379,7 @@
                 }
             });
         });
+
 
         $("#surveyFormContainer").sortable({
             handle: ".drag-handle",

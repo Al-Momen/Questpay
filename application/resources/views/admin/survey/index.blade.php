@@ -35,12 +35,12 @@
                             <thead>
                                 <tr>
                                     <th>@lang('SI')</th>
+                                    <th>@lang('Image')</th>
                                     <th>@lang('Author')</th>
                                     <th>@lang('Title')</th>
                                     <th>@lang('Survey People')</th>
                                     <th>@lang('Survey Money')</th>
                                     <th>@lang('Total Question')</th>
-                                    <th>@lang('Created-At')</th>
                                     <th>@lang('Status')</th>
                                     <th>@lang('Action')</th>
                                 </tr>
@@ -49,6 +49,11 @@
                                 @forelse($surveys as $item)
                                     <tr>
                                         <td>#{{ $loop->iteration }}</td>
+                                        <td data-label="Image">
+                                            <img class="rounded-3"
+                                                src="{{ getImage(getFilePath('survey') . '/' . $item->image) }}"
+                                                alt="@lang('Survey Image')" width="70">
+                                        </td>
                                         <td>{{ $item->authorName['author_name'] }} ({{ $item->authorName['author_type'] }})
                                         </td>
 
@@ -56,7 +61,7 @@
                                         <td>{{ $item->survey_people }}</td>
                                         <td>{{ $general->cur_sym . $item->survey_money }}</td>
                                         <td>{{ $item->total_question }}</td>
-                                        <td>{{ showDateTime($item->created_at, 'M d, Y') }}</td>
+                                        
                                         <td>
                                             @php
                                                 echo $item->statusBadge($item->status);

@@ -16,8 +16,10 @@ class Status{
     const SURVEY_REJECTED = 3;
     const SURVEY_PAYMENT_WITH_BALANCE = 1;
 
-    const PLAN_ENABLE  = 1;
-    const PLAN_DISABLE = 0;
+
+
+    const CATEGORY_ENABLE  = 1;
+    const CATEGORY_DISABLE = 0;
 
     const VERIFIED   = 1;
     const UNVERIFIED = 0;

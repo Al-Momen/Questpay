@@ -28,6 +28,7 @@
                             <thead>
                                 <tr>
                                     <th>@lang('SI')</th>
+                                    <th>@lang('Image')</th>
                                     <th class="text-center">@lang('Title')</th>
                                     <th class="text-center">@lang('Survey People')</th>
                                     <th class="text-center">@lang('Distribute Money')</th>
@@ -41,6 +42,11 @@
                                 @forelse($surveys as $item)
                                     <tr>
                                         <td>#{{ $loop->iteration }}</td>
+                                        <td data-label="Image">
+                                            <img class="rounded-3"
+                                                src="{{ getImage(getFilePath('survey') . '/' . $item->image) }}"
+                                                alt="@lang('Survey Image')" width="70">
+                                        </td>
                                         <td class="text-center">{{ $item->title }}</td>
                                         <td class="text-center">{{ $item->survey_people }}</td>
                                         <td class="text-center">{{ $general->cur_sym . $item->survey_money }}</td>

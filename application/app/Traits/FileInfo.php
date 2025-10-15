@@ -58,7 +58,7 @@ trait FileInfo
         ];
         $data['survey'] = [
             'path'   => 'assets/images/backend/survey',
-            'size' => '210x235'
+            'size' => '380x255'
         ];
         $data['paymentGateway'] = [
             'path'      => 'assets/images/gateway/method',
@@ -109,6 +109,7 @@ trait FileInfo
         $data['blog'] = [
             'path'      => 'assets/images/frontend/blog/',
         ];
+
         return $data;
     }
 }

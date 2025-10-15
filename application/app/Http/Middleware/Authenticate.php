@@ -14,12 +14,7 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-       if (! $request->expectsJson()) {
-            if (!Auth::check() && $request->isMethod('post') && Route::currentRouteName() == 'user.paper.submit.store') {
-                $previousUrl = url()->previous();
-                $formData = $request->except(['_token', 'file']);
-                session(['intended_data' => $formData]);
-            }
+        if (! $request->expectsJson()) {
             return route('user.login');
         }
     }

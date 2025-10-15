@@ -36,6 +36,7 @@ class Deposit extends Model
 
     public function badgeData()
     {
+      
         $html = '';
         if ($this->status == Status::PAYMENT_PENDING) {
             $html = '<span class="badge badge--warning">' . trans('Pending') . '</span>';

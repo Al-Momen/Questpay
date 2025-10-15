@@ -103,13 +103,23 @@
                 @endadminHasAny
 
                 @adminHasAny(['survey-management'])
-                    <li class="sidebar-menu-item sidebar-dropdown {{ menuActive(['admin.survey.*','admin.plan.*']) }}">
-                        <a href="javascript:void(0)" class="{{ menuActive(['admin.survey.*','admin.plan.*'], 3) }}">
+                    <li class="sidebar-menu-item sidebar-dropdown {{ menuActive(['admin.survey.*','admin.category.*']) }}">
+                        <a href="javascript:void(0)" class="{{ menuActive(['admin.category.*','admin.survey.*'], 3) }}">
                             <i class="menu-icon fa-solid fa-square-poll-vertical"></i>
                             <span class="menu-title">@lang('Survey')</span>
                         </a>
-                        <div class="sidebar-submenu {{ menuActive(['admin.survey.*','admin.plan.*'], 2) }} ">
+                        <div class="sidebar-submenu {{ menuActive(['admin.category.*','admin.survey.*'], 2) }} ">
                             <ul>
+
+                                @adminHas('category-management')
+                                    <li class="sidebar-menu-item {{ menuActive(['admin.category.index']) }}">
+                                        <a class="nav-link" href="{{ route('admin.category.index') }}">
+                                            <i class="menu-icon fa-solid fa-circle"></i>
+                                            <span class="menu-title"> @lang('Categories')</span>
+                                        </a>
+                                    </li>
+                                @endadminHas
+
                                 @adminHas('survey-management')
                                     <li class="sidebar-menu-item {{ menuActive('admin.survey.index') }}">
                                         <a class="nav-link" href="{{ route('admin.survey.index') }}">
@@ -119,15 +129,8 @@
                                     </li>
                                 @endadminHas
 
-                                @adminHas('plan-management')
-                                    <li class="sidebar-menu-item {{ menuActive('admin.plan.index') }}">
-                                        <a class="nav-link" href="{{ route('admin.plan.index') }}">
-                                            <i class="menu-icon fa-solid fa-circle"></i>
-                                            <span class="menu-title"> @lang('All Plan')</span>
-                                        </a>
-                                    </li>
-                                @endadminHas
-                            
+
+
                             </ul>
                         </div>
                     </li>
