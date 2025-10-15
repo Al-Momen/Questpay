@@ -49,8 +49,10 @@
                                         <td class="text-center">
                                             @if ($item->deposit)
                                                 @php echo $item->deposit->statusBadge @endphp
-                                            @else
+                                            @elseif(!$item->deposit && $item->is_payment_balance)
                                                 <span class="badge badge--success">@lang('Approved')</span>
+                                            @else
+                                                <span class="badge badge--warning">@lang('N/A')</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
@@ -60,19 +62,21 @@
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center justify-content-end gap-2">
-                                                <a href="{{ route('admin.survey.details', $item->id) }}" class="btn btn-sm"
-                                                    title="@lang('View')">
+                                                @if (!in_array($item->status, [Status::SURVEY_INITIAL, Status::SURVEY_REJECTED]))
+                                                    <div class="form-group mb-0">
+                                                        <label class="switch m-0" title="@lang($item->status ? 'Disable' : 'Enable')">
+                                                            <input type="checkbox" class="toggle-switch confirmationBtn"
+                                                                data-question="@lang('Are you sure to change this survey status?')"
+                                                                data-action="{{ route('user.survey.status', $item->id) }}"
+                                                                @checked($item->status)>
+                                                            <span class="slider round"></span>
+                                                        </label>
+                                                    </div>
+                                                @endif
+                                                <a href="{{ route('admin.survey.details', $item->id) }}"
+                                                    class="btn btn--sm btn--base" title="@lang('View')">
                                                     <i class="fa-solid fa-eye"></i>
                                                 </a>
-                                                <div class="form-group mb-0">
-                                                    <label class="switch m-0" title="@lang($item->status ? 'Disable' : 'Enable')">
-                                                        <input type="checkbox" class="toggle-switch confirmationBtn"
-                                                            data-question="@lang('Are you sure to change this survey status?')"
-                                                            data-action="{{ route('user.survey.status', $item->id) }}"
-                                                            @checked($item->status)>
-                                                        <span class="slider round"></span>
-                                                    </label>
-                                                </div>
                                             </div>
                                         </td>
                                     </tr>

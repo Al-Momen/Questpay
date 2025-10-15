@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AdminNotification;
+use Carbon\Carbon;
+use App\Models\Page;
+use App\Models\Survey;
 use App\Models\Frontend;
 use App\Models\Language;
-use App\Models\Page;
-use App\Models\SupportMessage;
-use App\Models\SupportTicket;
-use Carbon\Carbon;
+use App\Constants\Status;
 use Illuminate\Http\Request;
+use App\Models\SupportTicket;
+use App\Models\SupportMessage;
+use App\Models\AdminNotification;
 use Illuminate\Support\Facades\Cookie;
 
 class SiteController extends Controller
@@ -55,12 +57,19 @@ class SiteController extends Controller
         return view('Template::blog_details', compact('blog', 'pageTitle', 'latests'));
     }
 
+    public function survey()
+    {
+        $pageTitle = "Survey";
+        $surveys = Survey::with('deposit')->where('status', Status::SURVEY_ENABLE)->paginate(getPaginate());
+        $sections = Page::where('slug', 'survey')->first();
+        return view('Template::about', compact('pageTitle', 'sections','surveys'));
+    }
+
     public function about()
     {
         $pageTitle = "About Us";
         $sections = Page::where('slug', 'about')->first();
         return view('Template::about', compact('pageTitle', 'sections'));
-
     }
 
 

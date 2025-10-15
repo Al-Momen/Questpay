@@ -46,7 +46,7 @@ class Deposit extends Model
         } elseif ($this->status == Status::PAYMENT_REJECT) {
             $html = '<span class="badge badge--danger">' . trans('Rejected') . '</span>';
         } else {
-            $html = '<span><span class="badge badge--dark">' . trans('Initiated') . '</span></span>';
+            $html = '<span><span class="badge badge--info">' . trans('Initiated') . '</span></span>';
         }
         return $html;
     }

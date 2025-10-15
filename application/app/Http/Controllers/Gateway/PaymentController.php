@@ -465,15 +465,16 @@ class PaymentController extends Controller
         }
 
         // Create survey
-        $survey = new Survey();
-        $survey->author_id      = $user->id;
-        $survey->author_type    = User::class;
-        $survey->title          = $surveyData['title'];
-        $survey->form_data      = $surveyData['form_data'];
-        $survey->survey_people  = $surveyData['survey_people'];
-        $survey->survey_money   = $surveyData['survey_money'];
-        $survey->total_question = $surveyData['total_question'];
-        $survey->status         = Status::SURVEY_ENABLE;
+        $survey                     = new Survey();
+        $survey->author_id          = $user->id;
+        $survey->author_type        = User::class;
+        $survey->title              = $surveyData['title'];
+        $survey->form_data          = $surveyData['form_data'];
+        $survey->survey_people      = $surveyData['survey_people'];
+        $survey->survey_money       = $surveyData['survey_money'];
+        $survey->total_question     = $surveyData['total_question'];
+        $survey->status             = Status::SURVEY_ENABLE;
+        $survey->is_payment_balance = Status::SURVEY_PAYMENT_WITH_BALANCE;
         $survey->save();
 
         // Create transaction

@@ -13,7 +13,8 @@ class Status{
     const SURVEY_DISABLE = 0;
     const SURVEY_ENABLE  = 1;
     const SURVEY_INITIAL = 2;
-    const SURVEY_REJECTED = 2;
+    const SURVEY_REJECTED = 3;
+    const SURVEY_PAYMENT_WITH_BALANCE = 1;
 
     const PLAN_ENABLE  = 1;
     const PLAN_DISABLE = 0;

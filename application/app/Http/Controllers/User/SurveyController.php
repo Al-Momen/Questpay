@@ -26,7 +26,7 @@ class SurveyController extends Controller
                 $query->where('status', Status::SURVEY_ENABLE);
                 break;
             case 'all':
-                $query->whereIn('status', [Status::SURVEY_ENABLE, Status::SURVEY_DISABLE,Status::SURVEY_INITIAL]);
+                $query->whereIn('status', [Status::SURVEY_ENABLE, Status::SURVEY_DISABLE,Status::SURVEY_INITIAL,Status::SURVEY_REJECTED]);
                 break;
             default:
                 break;
@@ -244,7 +244,12 @@ class SurveyController extends Controller
 
     public function status($id)
     {
-        $survey = Survey::findOrFail($id);
+        $survey = Survey::with('deposit')->where('id',$id)->first();
+        if($survey->deposit){
+
+        }
+
+
         $survey->status = $survey->status == 1 ? 0 : 1;
         $survey->save();
         $notify[] = ['success', 'Survey Status has been updated successfully'];

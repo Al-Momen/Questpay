@@ -77,7 +77,7 @@
                                     </div>
                                     <div class="form-group text-end mt-4">
                                         <textarea id="prompts" class="form-control" rows="3" placeholder="@lang('Write a prompt to generate survey...')"></textarea>
-                                        @if ($general->credit_cost_per_prompt < auth()->user()->credit)
+                                        @if ($general->credit_cost_per_prompt <= auth()->user()->credit)
                                             <button type="button" class="btn btn--primary mt-2" id="generateBtn">
                                                 <i class="fa-solid fa-paper-plane"></i> @lang('Generate')
                                             </button>
