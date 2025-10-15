@@ -26,7 +26,7 @@ class SurveyController extends Controller
                 $query->where('status', Status::SURVEY_ENABLE);
                 break;
             case 'all':
-                $query->whereIn('status', [Status::SURVEY_ENABLE, Status::SURVEY_DISABLE,Status::SURVEY_INITIAL,Status::SURVEY_REJECTED]);
+                $query->whereIn('status', [Status::SURVEY_ENABLE, Status::SURVEY_DISABLE, Status::SURVEY_INITIAL, Status::SURVEY_REJECTED]);
                 break;
             default:
                 break;
@@ -46,6 +46,7 @@ class SurveyController extends Controller
         return view('UserTemplate::survey.create', compact('pageTitle'));
     }
 
+
     public function generate(Request $request)
     {
         $prompt = $request->input('prompt');
@@ -62,7 +63,7 @@ class SurveyController extends Controller
 
         $response = $this->generateSurveyJson($apiKey, $prompt);
 
-        if($response['status'] == 'success'){
+        if ($response['status'] == 'success') {
             $user = auth()->user();
             $user->credit -= gs()->credit_cost_per_prompt;
             $user->save();
@@ -154,7 +155,7 @@ class SurveyController extends Controller
                 return [
                     'status' => 'error',
                     'message' => 'Invalid JSON format received.',
-                    'data' => $content 
+                    'data' => $content
                 ];
             }
 
@@ -213,16 +214,16 @@ class SurveyController extends Controller
             ], 422);
         }
 
-         session()->put('survey_data', [
+        session()->put('survey_data', [
             'survey_people'  => $request->input('survey_people'),
             'survey_money'   => $request->input('survey_money'),
             'total_question' => isset($data['survey']['questions']) ? count($data['survey']['questions']) : 0,
             'title'          => $data['survey']['title'] ?? null,
             'form_data'      => $data['survey'] ?? [],
         ]);
-         
 
-        
+
+
 
         return response()->json([
             'status' => 'success',
@@ -244,11 +245,12 @@ class SurveyController extends Controller
 
     public function status($id)
     {
-        $survey = Survey::with('deposit')->where('id',$id)->first();
-        if($survey->deposit){
-
+        $survey = Survey::with('deposit')->where('id', $id)->first();
+        
+        if (!($survey->deposit) && !($survey->is_credit_purchase)) {
+            $notify[] = ['success', 'Survey not found'];
+            return back()->withNotify($notify);
         }
-
 
         $survey->status = $survey->status == 1 ? 0 : 1;
         $survey->save();

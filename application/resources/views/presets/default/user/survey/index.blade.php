@@ -30,7 +30,7 @@
                                     <th>@lang('SI')</th>
                                     <th class="text-center">@lang('Title')</th>
                                     <th class="text-center">@lang('Survey People')</th>
-                                    <th class="text-center">@lang('Survey Money')</th>
+                                    <th class="text-center">@lang('Distribute Money')</th>
                                     <th class="text-center">@lang('Total Question')</th>
                                     <th class="text-center">@lang('Payment Status')</th>
                                     <th class="text-center">@lang('Status')</th>
@@ -45,7 +45,6 @@
                                         <td class="text-center">{{ $item->survey_people }}</td>
                                         <td class="text-center">{{ $general->cur_sym . $item->survey_money }}</td>
                                         <td class="text-center">{{ $item->total_question }}</td>
-
                                         <td class="text-center">
                                             @if ($item->deposit)
                                                 @php echo $item->deposit->statusBadge @endphp
@@ -73,7 +72,7 @@
                                                         </label>
                                                     </div>
                                                 @endif
-                                                <a href="{{ route('admin.survey.details', $item->id) }}"
+                                                <a href="{{ route('user.survey.details', $item->id) }}"
                                                     class="btn btn--sm btn--base" title="@lang('View')">
                                                     <i class="fa-solid fa-eye"></i>
                                                 </a>
