@@ -191,7 +191,6 @@ class SurveyController extends Controller
             }
         }
 
-
         if (count($data["survey"]['questions']) < 0) {
             return response()->json([
                 'status' => 'error',
@@ -206,7 +205,6 @@ class SurveyController extends Controller
             ], 422);
         }
 
-
         $survey                 = new Survey();
         $survey->category_id    = $request->category_id;
         $survey->author_id      = auth('admin')->id();
@@ -216,6 +214,7 @@ class SurveyController extends Controller
         $survey->survey_people  = $request->survey_people;
         $survey->survey_money   = $request->survey_money;
         $survey->total_question = count($data["survey"]['questions']);
+        $survey->total_amount   = $request->survey_people * $request->survey_money * count($data["survey"]['questions']);
         $survey->status         = Status::SURVEY_ENABLE;
         if ($request->hasFile('image')) {
             try {

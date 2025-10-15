@@ -1,7 +1,5 @@
 <?php
 
 return [
-
-    'submission' => false,
-    'home' => false,
+    'survey.details' => false,
 ];

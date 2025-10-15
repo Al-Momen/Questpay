@@ -84,6 +84,7 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::post('update/{id}', 'update')->name('update');
                 Route::post('status/{id}', 'status')->name('status');
                 Route::get('details/{id}', 'details')->name('details');
+                Route::post('submit', 'answerSubmit')->name('submit');
             });
 
             //Profile setting

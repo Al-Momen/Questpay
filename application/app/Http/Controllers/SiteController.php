@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\SupportTicket;
 use App\Models\SupportMessage;
 use App\Models\AdminNotification;
+use App\Models\Category;
 use Illuminate\Support\Facades\Cookie;
 
 class SiteController extends Controller
@@ -51,24 +52,34 @@ class SiteController extends Controller
 
     public function blogDetails($slug, $id)
     {
-        $latests = Frontend::where('data_keys', 'blog.element')->orderBy('id', 'desc')->limit(5)->get();
-        $blog = Frontend::where('id', $id)->where('data_keys', 'blog.element')->firstOrFail();
+        $latests   = Frontend::where('data_keys', 'blog.element')->orderBy('id', 'desc')->limit(5)->get();
+        $blog      = Frontend::where('id', $id)->where('data_keys', 'blog.element')->firstOrFail();
         $pageTitle = 'Blog Details';
         return view('Template::blog_details', compact('blog', 'pageTitle', 'latests'));
     }
 
     public function survey()
     {
-        $pageTitle = "Survey";
-        $surveys = Survey::with('deposit')->where('status', Status::SURVEY_ENABLE)->paginate(getPaginate());
-        $sections = Page::where('slug', 'survey')->first();
-        return view('Template::about', compact('pageTitle', 'sections','surveys'));
+        $pageTitle  = "Survey";
+        $surveys    = Survey::with('category','deposit')->where('status', Status::SURVEY_ENABLE)->paginate(getPaginate());
+        $sections   = Page::where('slug', 'survey')->first();
+        $categories = Category::where('status', Status::CATEGORY_ENABLE)->get();
+        return view('Template::survey', compact('pageTitle', 'sections','surveys','categories'));
+    }
+
+    public function surveyDetails($id)
+    {
+        $pageTitle  = "Survey Details";
+        $survey     = Survey::with('category','deposit')->where('status', Status::SURVEY_ENABLE)->where('id',$id)->first();
+        $sections   = Page::where('slug', 'survey')->first();
+        $categories = Category::where('status', Status::CATEGORY_ENABLE)->get();
+        return view('Template::survey_details', compact('pageTitle', 'sections','survey','categories'));
     }
 
     public function about()
     {
         $pageTitle = "About Us";
-        $sections = Page::where('slug', 'about')->first();
+        $sections  = Page::where('slug', 'about')->first();
         return view('Template::about', compact('pageTitle', 'sections'));
     }
 
@@ -76,7 +87,7 @@ class SiteController extends Controller
     public function contact()
     {
         $pageTitle = "Contact Us";
-        $sections = Page::where('slug', 'contact')->first();
+        $sections  = Page::where('slug', 'contact')->first();
         return view('Template::contact', compact('pageTitle', 'sections'));
     }
 
@@ -84,8 +95,8 @@ class SiteController extends Controller
     public function contactSubmit(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'email' => 'required',
+            'name'    => 'required',
+            'email'   => 'required',
             'subject' => 'required|string|max:255',
             'message' => 'required',
         ]);

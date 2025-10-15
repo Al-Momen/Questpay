@@ -132,7 +132,6 @@ class PaymentController extends Controller
             $payable = $request->amount + $charge;
             $final_amo = $payable * $gate->rate;
 
-
             $data                  = new Deposit();
             $data->user_id         = $user->id;
             $data->survey_id       = $surveyData->id;

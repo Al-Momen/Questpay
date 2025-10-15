@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Rules\FileTypeValidate;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Models\SurveyAnswer;
 use Illuminate\Support\Facades\Validator;
 
 class SurveyController extends Controller
@@ -229,6 +230,7 @@ class SurveyController extends Controller
         $survey->survey_people  = $request->survey_people;
         $survey->survey_money   = $request->survey_money;
         $survey->total_question = count($data["survey"]['questions']);
+        $survey->total_amount   = $request->survey_people * $request->survey_money * count($data["survey"]['questions']);
         $survey->status         = Status::SURVEY_INITIAL;
         if ($request->hasFile('image')) {
             try {
@@ -239,7 +241,7 @@ class SurveyController extends Controller
             }
         }
         $survey->save();
-        session()->put('survey_data',$survey);
+        session()->put('survey_data', $survey);
 
         return response()->json([
             'status' => 'success',
@@ -261,7 +263,7 @@ class SurveyController extends Controller
 
     public function status($id)
     {
-        $survey = Survey::with('deposit')->where('id', $id)->first();
+        $survey = Survey::with('deposit')->where('author_id', auth()->id())->where('author_type', User::class)->where('id', $id)->first();
 
         if (!($survey->deposit) && !($survey->is_credit_purchase)) {
             $notify[] = ['success', 'Survey not found'];
@@ -271,6 +273,34 @@ class SurveyController extends Controller
         $survey->status = $survey->status == 1 ? 0 : 1;
         $survey->save();
         $notify[] = ['success', 'Survey Status has been updated successfully'];
+        return back()->withNotify($notify);
+    }
+
+
+    public function answerSubmit(Request $request)
+    {
+        $isExists = SurveyAnswer::where('survey_id', $request->survey_id)
+            ->where('user_id', auth()->id())
+            ->whereNotIn('status', [Status::SURVEY_ANSWER_REJECTED])
+            ->exists();
+
+        if ($isExists) {
+            $notify[] = ['error', 'Survey answer has already been submitted.'];
+            return back()->withNotify($notify);
+        }
+
+        $request->validate([
+            'survey_id' => 'required|integer|exists:surveys,id',
+        ]);
+
+        $surveyAnswer            = new SurveyAnswer();
+        $surveyAnswer->user_id   = auth()->id();
+        $surveyAnswer->survey_id = $request->survey_id;
+        $surveyAnswer->answer    = $request->questions;
+        $surveyAnswer->status    = Status::SURVEY_ANSWER_PENDING;
+        $surveyAnswer->save();
+
+        $notify[] = ['success', 'Survey answer has been submitted successfully.'];
         return back()->withNotify($notify);
     }
 }

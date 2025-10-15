@@ -30,7 +30,7 @@ Route::controller('SiteController')->group(function () {
     Route::get('blog/{slug}/{id}', 'blogDetails')->name('blog.details');
 
     Route::get('survey', 'survey')->name('survey');
-    Route::get('survey/details', 'details')->name('details');
+    Route::get('survey/details/{id}', 'surveyDetails')->name('survey.details');
 
     Route::get('about', 'about')->name('about');
 

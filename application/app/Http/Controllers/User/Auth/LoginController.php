@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\User\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Lib\Intended;
 use App\Models\UserLogin;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 
 class LoginController extends Controller
@@ -47,6 +49,7 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         $pageTitle = "Login";
+        Intended::identifyRoute();
         return view('UserTemplate::auth.login', compact('pageTitle'));
     }
 
@@ -57,8 +60,8 @@ class LoginController extends Controller
 
         $request->session()->regenerateToken();
 
-        if(!verifyCaptcha()){
-            $notify[] = ['error','Invalid captcha provided'];
+        if (!verifyCaptcha()) {
+            $notify[] = ['error', 'Invalid captcha provided'];
             return back()->withNotify($notify);
         }
 
@@ -79,6 +82,7 @@ class LoginController extends Controller
         // to login and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
+        Intended::reAssignSession();
 
 
         return $this->sendFailedLoginResponse($request);
@@ -100,11 +104,14 @@ class LoginController extends Controller
 
     protected function validateLogin(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             $this->username() => 'required|string',
             'password' => 'required|string',
         ]);
-
+        if ($validator->fails()) {
+            Intended::reAssignSession();
+            $validator->validate();
+        }
     }
 
     public function logout()
@@ -123,7 +130,7 @@ class LoginController extends Controller
         $user->tv = $user->ts == 1 ? 0 : 1;
         $user->save();
         $ip = getRealIP();
-        $exist = UserLogin::where('user_ip',$ip)->first();
+        $exist = UserLogin::where('user_ip', $ip)->first();
         $userLogin = new UserLogin();
         if ($exist) {
             $userLogin->longitude =  $exist->longitude;
@@ -131,12 +138,12 @@ class LoginController extends Controller
             $userLogin->city =  $exist->city;
             $userLogin->country_code = $exist->country_code;
             $userLogin->country =  $exist->country;
-        }else{
+        } else {
             $info = json_decode(json_encode(getIpInfo()), true);
-            $userLogin->longitude =  @implode(',',$info['long']);
-            $userLogin->latitude =  @implode(',',$info['lat']);
-            $userLogin->city =  @implode(',',$info['city']);
-            $userLogin->country_code = @implode(',',$info['code']);
+            $userLogin->longitude =  @implode(',', $info['long']);
+            $userLogin->latitude =  @implode(',', $info['lat']);
+            $userLogin->city =  @implode(',', $info['city']);
+            $userLogin->country_code = @implode(',', $info['code']);
             $userLogin->country =  @implode(',', $info['country']);
         }
 
@@ -148,8 +155,8 @@ class LoginController extends Controller
         $userLogin->os = $userAgent['os_platform'];
         $userLogin->save();
 
+        $redirection = Intended::getRedirection();
+
         return to_route('user.home');
     }
-
-
 }
