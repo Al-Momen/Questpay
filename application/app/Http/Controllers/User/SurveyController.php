@@ -17,7 +17,7 @@ class SurveyController extends Controller
     {
         $status = $request->get('status', 'all');
         $search = $request->get('search');
-        $query = Survey::where('author_id', auth()->id())->where('author_type', User::class)->latest();
+        $query = Survey::with('deposit')->where('author_id', auth()->id())->where('author_type', User::class)->latest();
         switch ($status) {
             case 'disable':
                 $query->where('status', Status::SURVEY_DISABLE);
@@ -26,7 +26,7 @@ class SurveyController extends Controller
                 $query->where('status', Status::SURVEY_ENABLE);
                 break;
             case 'all':
-                $query->whereIn('status', [Status::SURVEY_ENABLE, Status::SURVEY_DISABLE]);
+                $query->whereIn('status', [Status::SURVEY_ENABLE, Status::SURVEY_DISABLE,Status::SURVEY_INITIAL]);
                 break;
             default:
                 break;

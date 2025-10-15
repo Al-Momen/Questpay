@@ -15,6 +15,11 @@ class Survey extends Model
         return $this->morphTo();
     }
 
+    public function deposit()
+    {
+        return $this->hasOne(Deposit::class);
+    }
+
 
     public function getAuthorNameAttribute()
     {
@@ -45,8 +50,12 @@ class Survey extends Model
         $html = '';
         if ($this->status == 0) {
             $html = '<span class="badge badge--warning">' . trans('Inactive') . '</span>';
-        } else {
+        } elseif ($this->status == 1) {
             $html = '<span class="badge badge--success">' . trans('Active') . '</span>';
+        } elseif ($this->status == 2) {
+            $html = '<span class="badge badge--info">' . trans('Initiated') . '</span>';
+        } else {
+            $html = '<span class="badge badge--danger">' . trans('Rejected') . '</span>';
         }
         return $html;
     }

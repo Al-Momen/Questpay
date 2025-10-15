@@ -28,6 +28,7 @@ class Deposit extends Model
 
     public function statusBadge(): Attribute
     {
+
         return new Attribute(
             get: fn() => $this->badgeData(),
         );

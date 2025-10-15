@@ -91,7 +91,7 @@ class DepositController extends Controller
             'id' => 'required|integer',
             'message' => 'required|string|max:255'
         ]);
-        $deposit = Deposit::where('id', $request->id)->where('status', Status::PAYMENT_PENDING)->firstOrFail();
+        $deposit = Deposit::with('survey')->where('id', $request->id)->where('status', Status::PAYMENT_PENDING)->firstOrFail();
 
         $deposit->admin_feedback = $request->message;
         $deposit->status = Status::PAYMENT_REJECT;
@@ -114,6 +114,8 @@ class DepositController extends Controller
             $notifyData['number_of_credit'] = $deposit->number_of_credit;
             notify($deposit->user, 'CREDIT_PAYMENT_REJECT', $notifyData);
         } elseif ($deposit->survey_id) {
+            $deposit->survey->status = Status::SURVEY_REJECTED;
+            $deposit->survey->save();
             $notifyData['trx'] = $deposit->trx;
             notify($deposit->user, 'SURVEY_PAYMENT_REJECT', $notifyData);
         } else {

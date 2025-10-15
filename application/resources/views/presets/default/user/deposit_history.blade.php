@@ -58,7 +58,7 @@
                                             $details = $deposit->detail != null ? json_encode($deposit->detail) : null;
                                         @endphp
 
-                                        <td data-label="@lang('Action')">
+                                        <td data-label="@lang('Details')">
                                             <a href="javascript:void(0)"
                                                 class="btn btn--base btn-md action--btn @if ($deposit->method_code >= 1000) detailBtn @else disabled @endif"
                                                 @if ($deposit->method_code >= 1000) data-info="{{ $details }}" @endif

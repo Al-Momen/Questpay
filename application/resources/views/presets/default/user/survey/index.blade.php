@@ -28,13 +28,12 @@
                             <thead>
                                 <tr>
                                     <th>@lang('SI')</th>
-                                    <th>@lang('Author')</th>
-                                    <th>@lang('Title')</th>
-                                    <th>@lang('Survey People')</th>
-                                    <th>@lang('Survey Money')</th>
-                                    <th>@lang('Total Question')</th>
-                                    <th>@lang('Created-At')</th>
-                                    <th>@lang('Status')</th>
+                                    <th class="text-center">@lang('Title')</th>
+                                    <th class="text-center">@lang('Survey People')</th>
+                                    <th class="text-center">@lang('Survey Money')</th>
+                                    <th class="text-center">@lang('Total Question')</th>
+                                    <th class="text-center">@lang('Payment Status')</th>
+                                    <th class="text-center">@lang('Status')</th>
                                     <th>@lang('Action')</th>
                                 </tr>
                             </thead>
@@ -42,14 +41,19 @@
                                 @forelse($surveys as $item)
                                     <tr>
                                         <td>#{{ $loop->iteration }}</td>
-                                        <td>{{ $item->authorName['author_name'] }} ({{ $item->authorName['author_type'] }})
+                                        <td class="text-center">{{ $item->title }}</td>
+                                        <td class="text-center">{{ $item->survey_people }}</td>
+                                        <td class="text-center">{{ $general->cur_sym . $item->survey_money }}</td>
+                                        <td class="text-center">{{ $item->total_question }}</td>
+
+                                        <td class="text-center">
+                                            @if ($item->deposit)
+                                                @php echo $item->deposit->statusBadge @endphp
+                                            @else
+                                                <span class="badge badge--success">@lang('Approved')</span>
+                                            @endif
                                         </td>
-                                        <td>{{ $item->title }}</td>
-                                        <td>{{ $item->survey_people }}</td>
-                                        <td>{{ $general->cur_sym . $item->survey_money }}</td>
-                                        <td>{{ $item->total_question }}</td>
-                                        <td>{{ showDateTime($item->created_at, 'M d, Y') }}</td>
-                                        <td>
+                                        <td class="text-center">
                                             @php
                                                 echo $item->statusBadge($item->status);
                                             @endphp
@@ -85,5 +89,5 @@
             </div>
         </div>
     </div>
-     <x-confirmation-modal></x-confirmation-modal>
+    <x-confirmation-modal></x-confirmation-modal>
 @endsection
