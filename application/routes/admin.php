@@ -155,16 +155,6 @@ Route::middleware(['admin'])->group(function () {
         });
     });
 
-    // Plan Management
-    Route::middleware('admin.permission:plan-management')->prefix('plan')->controller('PlanController')
-        ->name('plan.')->group(function () {
-            Route::get('index', 'index')->name('index');
-            Route::get('create', 'create')->name('create');
-            Route::post('store', 'store')->name('store');
-            Route::put('update/{id}', 'update')->name('update');
-            Route::post('status/{id}', 'status')->name('status');
-            Route::get('details/{id}', 'details')->name('details');
-        });
 
     // Survey Management
     Route::middleware('admin.permission:survey-management')->prefix('survey')->controller('SurveyController')

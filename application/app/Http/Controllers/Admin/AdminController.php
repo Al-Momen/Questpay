@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Constants\Status;
-use App\Http\Controllers\Controller;
-use App\Lib\CurlRequest;
-use App\Models\AdminNotification;
-use App\Models\Deposit;
-use App\Models\Transaction;
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Survey;
+use App\Models\Deposit;
+use App\Lib\CurlRequest;
+use App\Constants\Status;
 use App\Models\UserLogin;
 use App\Models\Withdrawal;
+use App\Models\Transaction;
+use Illuminate\Http\Request;
 use App\Models\SupportTicket;
 use App\Rules\FileTypeValidate;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\Models\AdminNotification;
+use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\SurveyAnswer;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
@@ -22,40 +25,34 @@ class AdminController extends Controller
 
     public function dashboard()
     {
-        $pageTitle = 'Dashboard';
-        $userQuery = User::query();
-        $withdrawQuery = Withdrawal::query();
-        $depositQuery = Deposit::query();
+        $pageTitle              = 'Dashboard';
+        $userQuery              = User::query();
+        $withdrawQuery          = Withdrawal::query();
+        $depositQuery           = Deposit::query();
+        $supportTicketQuery     = SupportTicket::query();
+        $totalSurveys           = Survey::whereIn('status',[Status::SURVEY_DISABLE,Status::SURVEY_ENABLE,Status::SURVEY_REJECTED])->count();
+        $totalSurveySubmissions = SurveyAnswer::count();
+        $totalCategories        = Category::where('status',Status::CATEGORY_ENABLE)->count();
+        $openTickets            = (clone $supportTicketQuery)->where('status',Status::TICKET_OPEN)->count();
 
-        $widget = [];
-
-        $widget['total_user']                     = (clone $userQuery)->count();
-
-        $widget['banned_users']                   = (clone $userQuery)->banned()->count();
-        $widget['verified_users']                 = (clone $userQuery)->active()->count();
-        $widget['email_unverified_users']         = (clone $userQuery)->emailUnverified()->count();
-        $widget['mobile_unverified_users']        = (clone $userQuery)->mobileUnverified()->count();
-
-        $widget['banned_percent']                 = ($widget['total_user'] > 0) ? number_format((($widget['banned_users'] / $widget['total_user']) * 100), 2) : 0;
-        $widget['verified_percent']               = ($widget['total_user'] > 0) ? number_format((($widget['verified_users'] / $widget['total_user']) * 100), 2) : 0;
-        $widget['email_unverified_percent']       = ($widget['total_user'] > 0) ? number_format((($widget['email_unverified_users'] / $widget['total_user']) * 100), 2) : 0;
-        $widget['mobile_unverified_percent']      = ($widget['total_user'] > 0) ? number_format((($widget['mobile_unverified_users'] / $widget['total_user']) * 100), 2) : 0;
-
-        $widget['total_deposit_amount']           = (clone $depositQuery)->successful()->sum('amount');
-        $widget['deposit_change']                 = (clone $depositQuery)->successful()->sum('charge');
-        $widget['total_withdraw_amount']          = (clone $withdrawQuery)->approved()->sum('amount');
-        $widget['withdraw_change']                = (clone $withdrawQuery)->approved()->sum('charge');
+        $widget                             = [];
+        $widget['total_deposit_amount']     = (clone $depositQuery)->successful()->sum('amount');
+        $widget['deposit_change']           = (clone $depositQuery)->successful()->sum('charge');
+        $widget['total_withdraw_amount']    = (clone $withdrawQuery)->approved()->sum('amount');
+        $widget['withdraw_change']          = (clone $withdrawQuery)->approved()->sum('charge');
+        $widget['total_surveys']            = $totalSurveys;
+        $widget['total_survey_submissions'] = $totalSurveySubmissions;
+        $widget['total_categories']         = $totalCategories;
+        $widget['open_ticket']              = $openTickets;
 
         $transactionQuery = Transaction::query();
-        $widget['plus_transactions']             = (clone $transactionQuery)->where('trx_type', '+')->count();
-        $widget['minus_transactions']            = (clone $transactionQuery)->where('trx_type', '-')->count();
+        $widget['plus_transactions']  = (clone $transactionQuery)->where('trx_type', '+')->count();
+        $widget['minus_transactions'] = (clone $transactionQuery)->where('trx_type', '-')->count();
 
-        $transactions                             = (clone $transactionQuery)->latest()->take(4)->get();
-        $tickets                                  = SupportTicket::with('user')->where('status', Status::TICKET_OPEN)->latest()->limit(5)->get();
+        $transactions = (clone $transactionQuery)->latest()->take(4)->get();
+        $tickets      = (clone $supportTicketQuery)->with('user')->where('status', Status::TICKET_OPEN)->latest()->limit(5)->get();
 
-
-
-        $allMonths = collect(range(1, now()->month))->mapWithKeys(function ($month) {
+         $allMonths = collect(range(1, now()->month))->mapWithKeys(function ($month) {
             $name = date('F', mktime(0, 0, 0, $month, 1));
             return [$month => $name];
         });
