@@ -2,20 +2,28 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
-use App\Lib\FormProcessor;
-use App\Lib\GoogleAuthenticator;
 use App\Models\Form;
+use App\Models\User;
+use App\Models\Survey;
+use App\Lib\FormProcessor;
 use App\Models\Transaction;
-use App\Models\UserNotification;
+use App\Models\SurveyAnswer;
 use Illuminate\Http\Request;
+use App\Lib\GoogleAuthenticator;
+use App\Models\UserNotification;
+use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
     public function home()
     {
-        $pageTitle = 'Dashboard';
-        return view('UserTemplate::dashboard', compact('pageTitle'));
+        $pageTitle             = 'Dashboard';
+        $user                  = auth()->user();
+        $widget                = [];
+        $widget['totalSurvey'] = Survey::where('author_id', $user->id)->where('author_type', User::class)->count();
+        $widget['totalAnswer'] = SurveyAnswer::where('user_id', $user->id)->count();
+        $transactions          = Transaction::where('user_id', $user->id)->latest()->paginate(getPaginate(10));
+        return view('UserTemplate::dashboard', compact('pageTitle', 'widget', 'transactions'));
     }
 
     public function depositHistory(Request $request)
@@ -196,6 +204,6 @@ class UserController extends Controller
         $pageTitle = 'All Notifications';
         $query = UserNotification::searchable(['title'])->where('user_id', $user->id);
         $notifications = $query->paginate(getPaginate());
-        return view('UserTemplate::notification.index', compact('pageTitle', 'user','notifications'));
+        return view('UserTemplate::notification.index', compact('pageTitle', 'user', 'notifications'));
     }
 }
