@@ -194,10 +194,7 @@ class UserController extends Controller
         $search = $request->get('search');
         $user = auth()->user();
         $pageTitle = 'All Notifications';
-        $query = UserNotification::where('user_id', $user->id);
-         if ($search) {
-            $query->searchable(['title']);
-        }
+        $query = UserNotification::searchable(['title'])->where('user_id', $user->id);
         $notifications = $query->paginate(getPaginate());
         return view('UserTemplate::notification.index', compact('pageTitle', 'user','notifications'));
     }

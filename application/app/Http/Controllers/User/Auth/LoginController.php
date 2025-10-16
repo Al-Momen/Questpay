@@ -156,7 +156,6 @@ class LoginController extends Controller
         $userLogin->save();
 
         $redirection = Intended::getRedirection();
-
-        return to_route('user.home');
+        return $redirection ? $redirection : to_route('user.home');
     }
 }

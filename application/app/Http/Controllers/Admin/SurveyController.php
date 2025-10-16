@@ -7,6 +7,7 @@ use App\Models\Survey;
 use GuzzleHttp\Client;
 use App\Models\Category;
 use App\Constants\Status;
+use App\Models\SurveyAnswer;
 use Illuminate\Http\Request;
 use App\Rules\FileTypeValidate;
 use Illuminate\Support\Facades\Log;
@@ -18,8 +19,7 @@ class SurveyController extends Controller
     public function index(Request $request)
     {
         $status = $request->get('status', 'all');
-        $search = $request->get('search');
-        $query = Survey::latest();
+        $query = Survey::searchable(['title'])->latest();
         switch ($status) {
             case 'disable':
                 $query->where('status', Status::SURVEY_DISABLE);
@@ -33,9 +33,7 @@ class SurveyController extends Controller
             default:
                 break;
         }
-        if ($search) {
-            $query->searchable(['title']);
-        }
+ 
         $surveys = $query->with('author')->paginate(getPaginate());
         $pageTitle = ucfirst($status) . ' Surveys';
 
@@ -243,13 +241,78 @@ class SurveyController extends Controller
         return view('Admin::survey.details', compact('pageTitle', 'survey'));
     }
 
-
     public function status($id)
     {
         $survey = Survey::findOrFail($id);
         $survey->status = $survey->status == 1 ? 0 : 1;
         $survey->save();
         $notify[] = ['success', 'Survey Status has been updated successfully'];
+        return back()->withNotify($notify);
+    }
+
+    public function answerList(Request $request, $id)
+    {
+        $pageTitle = 'Survey Answer List';
+        $status = $request->get('status', 'all');
+        $query = SurveyAnswer::with('survey', 'user')->where('survey_id', $id)->latest();
+
+        switch ($status) {
+            case 'pending':
+                $query->where('status', Status::SURVEY_ANSWER_PENDING);
+                break;
+            case 'approved':
+                $query->where('status', Status::SURVEY_ANSWER_APPROVED);
+                break;
+            case 'reject':
+                $query->where('status', Status::SURVEY_ANSWER_REJECTED);
+                break;
+            case 'all':
+                $query->whereIn('status', [Status::SURVEY_ANSWER_PENDING, Status::SURVEY_ANSWER_APPROVED, Status::SURVEY_ANSWER_REJECTED]);
+                break;
+            default:
+                break;
+        }
+
+        $surveyAnswers = $query->paginate(getPaginate());
+        return view('Admin::survey.answer_user_list', compact('pageTitle', 'surveyAnswers'));
+    }
+
+    public function answerDetails($id)
+    {
+        $pageTitle = 'Survey Answer List';
+        $surveyAnswerDetail = SurveyAnswer::with('survey', 'user')->where('id', $id)->first();
+        return view('Admin::survey.answer_detail', compact('pageTitle', 'surveyAnswerDetail'));
+    }
+
+
+    public function answerStatus($status, $id)
+    {
+        $surveyAnswer = SurveyAnswer::with('survey', 'user')->whereHas('survey', function ($q) {
+            $q->where('author_id', auth('admin')->id())
+                ->where('author_type', Admin::class);
+        })->where('id', $id)->first();
+
+        if (!$surveyAnswer) {
+            $notify[] = ['error', 'Survey answer is not valid'];
+            return back()->withNotify($notify);
+        }
+
+        if ($status == Status::SURVEY_ANSWER_APPROVED) {
+            $surveyAnswer->status = Status::SURVEY_ANSWER_APPROVED;
+            $surveyAnswer->save();
+
+            $surveyAnswer->user->balance +=  $surveyAnswer->survey->survey_money * $surveyAnswer->total_answer;
+            $surveyAnswer->user->save();
+
+            $surveyAnswer->survey->survey_people_answer +=  1;
+            $surveyAnswer->survey->save();
+            $notify[] = ['success', 'Survey answer has been approved.'];
+        } else {
+            $surveyAnswer->status = Status::SURVEY_ANSWER_REJECTED;
+            $surveyAnswer->save();
+            $notify[] = ['success', 'Survey answer has been rejected.'];
+        }
+
         return back()->withNotify($notify);
     }
 }

@@ -61,7 +61,7 @@
                                         <td>{{ $item->survey_people }}</td>
                                         <td>{{ $general->cur_sym . $item->survey_money }}</td>
                                         <td>{{ $item->total_question }}</td>
-                                        
+
                                         <td>
                                             @php
                                                 echo $item->statusBadge($item->status);
@@ -69,10 +69,6 @@
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center justify-content-end gap-2">
-                                                <a href="{{ route('admin.survey.details', $item->id) }}" class="btn btn-sm"
-                                                    title="@lang('View')">
-                                                    <i class="fa-solid fa-eye"></i>
-                                                </a>
                                                 <div class="form-group mb-0">
                                                     <label class="switch m-0" title="@lang($item->status ? 'Disable' : 'Enable')">
                                                         <input type="checkbox" class="toggle-switch confirmationBtn"
@@ -82,6 +78,14 @@
                                                         <span class="slider round"></span>
                                                     </label>
                                                 </div>
+                                                <a href="{{ route('admin.survey.details', $item->id) }}" class="btn btn-sm"
+                                                    title="@lang('View')">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </a>
+                                                <a href="{{ route('admin.survey.answer.user.list', $item->id) }}"
+                                                    class="btn btn-sm" title="@lang('List')">
+                                                    <i class="fa-solid fa-list-check"></i>
+                                                </a>
                                             </div>
                                         </td>
                                     </tr>

@@ -19,8 +19,7 @@ class SurveyController extends Controller
     public function index(Request $request)
     {
         $status = $request->get('status', 'all');
-        $search = $request->get('search');
-        $query = Survey::with('deposit')->where('author_id', auth()->id())->where('author_type', User::class)->latest();
+        $query = Survey::with('deposit')->searchable(['title'])->where('author_id', auth()->id())->where('author_type', User::class)->latest();
         switch ($status) {
             case 'disable':
                 $query->where('status', Status::SURVEY_DISABLE);
@@ -34,9 +33,7 @@ class SurveyController extends Controller
             default:
                 break;
         }
-        if ($search) {
-            $query->searchable(['title']);
-        }
+
         $surveys = $query->with('author')->paginate(getPaginate());
         $pageTitle = ucfirst($status) . ' Surveys';
         return view('UserTemplate::survey.index', compact('surveys', 'pageTitle'));
@@ -264,7 +261,6 @@ class SurveyController extends Controller
     public function status($id)
     {
         $survey = Survey::with('deposit')->where('author_id', auth()->id())->where('author_type', User::class)->where('id', $id)->first();
-
         if (!($survey->deposit) && !($survey->is_credit_purchase)) {
             $notify[] = ['success', 'Survey not found'];
             return back()->withNotify($notify);
@@ -277,8 +273,30 @@ class SurveyController extends Controller
     }
 
 
+    public function submission()
+    {
+        $surveySubmissions = SurveyAnswer::with('survey')->searchable(['survey:title'])->where('user_id', auth()->id())->paginate(getPaginate());
+        $pageTitle = 'Survey Submissions';
+        return view('UserTemplate::survey.submission', compact('pageTitle', 'surveySubmissions'));
+    }
+
+    public function submissionDetails($id)
+    {
+        $pageTitle = 'Submission Survey Answer List';
+        $submissionSurveyAnswerDetail = SurveyAnswer::with('survey', 'user')->where('id', $id)->first();
+        return view('UserTemplate::survey.submission_detail', compact('pageTitle', 'submissionSurveyAnswerDetail'));
+    }
+
+
     public function answerSubmit(Request $request)
     {
+        $isAuthor = Survey::where('id', $request->survey_id)->first();
+
+        if ($isAuthor->author_id == auth()->id() && $isAuthor->author_type == User::class) {
+            $notify[] = ['error', 'You are owner this survey'];
+            return back()->withNotify($notify);
+        }
+
         $isExists = SurveyAnswer::where('survey_id', $request->survey_id)
             ->where('user_id', auth()->id())
             ->whereNotIn('status', [Status::SURVEY_ANSWER_REJECTED])
@@ -289,18 +307,78 @@ class SurveyController extends Controller
             return back()->withNotify($notify);
         }
 
+        if ($isExists && $isExists->survey_people <= $isExists->survey_people_answer) {
+            $notify[] = ['error', 'The survey limit has been reached. No more responses can be submitted.'];
+            return back()->withNotify($notify);
+        }
+
         $request->validate([
             'survey_id' => 'required|integer|exists:surveys,id',
         ]);
 
-        $surveyAnswer            = new SurveyAnswer();
-        $surveyAnswer->user_id   = auth()->id();
-        $surveyAnswer->survey_id = $request->survey_id;
-        $surveyAnswer->answer    = $request->questions;
-        $surveyAnswer->status    = Status::SURVEY_ANSWER_PENDING;
+        $evaluateSurveyAnswers = evaluateSurveyAnswers($request->questions);
+        $surveyAnswer                  = new SurveyAnswer();
+        $surveyAnswer->user_id         = auth()->id();
+        $surveyAnswer->survey_id       = $request->survey_id;
+        $surveyAnswer->answer          = $evaluateSurveyAnswers['results'];
+        $surveyAnswer->total_question  = $evaluateSurveyAnswers['summary']['total_questions'];
+        $surveyAnswer->total_answer    = $evaluateSurveyAnswers['summary']['answered'];
+        $surveyAnswer->empty_answer    = $evaluateSurveyAnswers['summary']['empty_answers'];
+        $surveyAnswer->average_quality = $evaluateSurveyAnswers['summary']['average_score'];
+        $surveyAnswer->status          = Status::SURVEY_ANSWER_PENDING;
         $surveyAnswer->save();
 
         $notify[] = ['success', 'Survey answer has been submitted successfully.'];
+        return back()->withNotify($notify);
+    }
+
+    public function answerList($id)
+    {
+        $pageTitle = 'Survey Answer List';
+        $surveyAnswers = SurveyAnswer::with('survey', 'user')->whereHas('survey', function ($q) use ($id) {
+            $q->where('author_id', auth()->id())
+                ->where('author_type', User::class)
+                ->where('id', $id);
+        })->latest()->paginate(getPaginate());
+        return view('UserTemplate::survey.answer_user_list', compact('pageTitle', 'surveyAnswers'));
+    }
+
+    public function answerDetails($id)
+    {
+        $pageTitle = 'Survey Answer List';
+        $surveyAnswerDetail = SurveyAnswer::with('survey', 'user')->where('id', $id)->first();
+        return view('UserTemplate::survey.answer_detail', compact('pageTitle', 'surveyAnswerDetail'));
+    }
+
+
+    public function answerStatus($status, $id)
+    {
+        $surveyAnswer = SurveyAnswer::with('survey', 'user')->whereHas('survey', function ($q) {
+            $q->where('author_id', auth()->id())
+                ->where('author_type', User::class);
+        })->where('id', $id)->first();
+
+        if (!$surveyAnswer) {
+            $notify[] = ['error', 'Survey answer is not valid'];
+            return back()->withNotify($notify);
+        }
+
+        if ($status == Status::SURVEY_ANSWER_APPROVED) {
+            $surveyAnswer->status = Status::SURVEY_ANSWER_APPROVED;
+            $surveyAnswer->save();
+
+            $surveyAnswer->user->balance += $surveyAnswer->survey->survey_money * $surveyAnswer->total_answer;
+            $surveyAnswer->user->save();
+
+            $surveyAnswer->survey->survey_people_answer += 1;
+            $surveyAnswer->survey->save();
+            $notify[] = ['success', 'Survey answer has been approved.'];
+        } else {
+            $surveyAnswer->status = Status::SURVEY_ANSWER_REJECTED;
+            $surveyAnswer->save();
+            $notify[] = ['success', 'Survey answer has been rejected.'];
+        }
+
         return back()->withNotify($notify);
     }
 }

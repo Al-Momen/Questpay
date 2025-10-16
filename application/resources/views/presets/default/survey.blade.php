@@ -96,7 +96,7 @@
                                                 <h3 class="dashboard-list__mouny-title fs--24 fw--700 text--black m-0">
                                                     {{ $general->cur_sym }}{{ $item->total_amount }}
                                                 </h3>
-                                                <p class="dashboard-list__mouny-desc">@lang('Total Money')</p>
+                                                <p class="dashboard-list__mouny-desc">@lang('Total Amount')</p>
                                             </div>
                                             <div class="dashboard-list__button">
                                                 <a class="btn btn--base custom--btn" href="{{route('survey.details',$item->id)}}">@lang('Start Survey')</a>

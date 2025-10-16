@@ -70,7 +70,6 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('attachment-download/{fil_hash}', 'attachmentDownload')->name('attachment.download');
 
                 Route::get('user-notification/{id}', 'notification')->name('read.notification');
-
                 Route::get('user-notification-all', 'notificationAll')->name('notification.all');
             });
 
@@ -84,7 +83,13 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::post('update/{id}', 'update')->name('update');
                 Route::post('status/{id}', 'status')->name('status');
                 Route::get('details/{id}', 'details')->name('details');
+                Route::get('submission', 'submission')->name('submission');
+                Route::get('submission/details/{id}', 'submissionDetails')->name('submission.details');
                 Route::post('submit', 'answerSubmit')->name('submit');
+                Route::get('answer-list/{id}', 'answerList')->name('answer.user.list');
+                Route::get('answer-details/{id}', 'answerDetails')->name('answer.detail');
+                Route::post('answer-status/{status}/{id}', 'answerStatus')->name('answer.status');
+
             });
 
             //Profile setting

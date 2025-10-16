@@ -12,9 +12,9 @@
                         <div class="col-lg-12">
                             <div class="profile__wrap card p-4">
                                 <h5 class="mb-20">@lang('Survey Form Data')</h5>
-                                @foreach ($survey['form_data']['questions'] as $q)
+                                @foreach ($survey['form_data']['questions'] as $index=> $q)
                                     <div class="mb-3">
-                                        <label class="form-label fw-bold">{{ $q['question'] }}</label>
+                                        <label class="form-label fw-bold">{{ $index + 1 < 10 ? '0' . ($index + 1) : $index + 1 }}.{{ $q['question'] }}</label>
                                         <span class="d-block">@lang('Type'):
                                             {{ ucwords(str_replace('_', ' ', $q['type'])) }}</span>
                                         @if ($q['type'] == 'mcq_single' || $q['type'] == 'mcq_multiple')

@@ -176,6 +176,9 @@ Route::middleware(['admin'])->group(function () {
             Route::post('update/{id}', 'update')->name('update');
             Route::post('status/{id}', 'status')->name('status');
             Route::get('details/{id}', 'details')->name('details');
+            Route::get('answer-list/{id}', 'answerList')->name('answer.user.list');
+            Route::get('answer-details/{id}', 'answerDetails')->name('answer.detail');
+            Route::post('answer-status/{status}/{id}', 'answerStatus')->name('answer.status');
         });
 
 

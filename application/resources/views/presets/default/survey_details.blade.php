@@ -53,10 +53,14 @@
                                             @endif
                                         </div>
                                     @endforeach
+                                    @guest
+                                        <a href="{{route('user.login')}}" class="btn btn--base btn--lg w-100">@lang('Submit Answers')</a>
+                                    @endguest
+                                    @auth
+                                        <button type="submit" class="btn btn--base w-100">@lang('Submit Answers')</button>
+                                    @endauth
 
-                                    <button type="submit" class="btn btn--base w-100">@lang('Submit Answers')</button>
                                 </form>
-
                             </div>
                         </div>
                     </div>

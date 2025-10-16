@@ -20,6 +20,11 @@ class Survey extends Model
         return $this->hasOne(Deposit::class);
     }
 
+    public function survey_answers()
+    {
+        return $this->hasMany(SurveyAnswer::class);
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

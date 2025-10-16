@@ -447,7 +447,7 @@ function siteLogo($type = null)
 {
     $version = '?v=' . urlencode(gs('updated_at'));;
     $name = $type ? "/logo_{$type}.png" : '/logo.png';
-    return getImage(getFilePath('logoIcon') . $name ) . $version;
+    return getImage(getFilePath('logoIcon') . $name) . $version;
 }
 function siteFavicon()
 {
@@ -474,3 +474,110 @@ if (!function_exists('isGuestRoute')) {
 }
 
 
+function evaluateSurveyAnswers(array $surveyAnswers): array
+{
+    $results = [];
+    $totalScore = 0;
+    $nullCount = 0;
+    $answeredCount = 0;
+
+    foreach ($surveyAnswers as $item) {
+        $question = $item['question'] ?? '';
+        $type = $item['type'] ?? 'unknown';
+        $answer = $item['answer'] ?? null;
+
+        // Convert array answer to string (for mcq_multiple)
+        if (is_array($answer)) {
+            $answer = implode(', ', $answer);
+        }
+
+        // If it's MCQ type => fixed full score
+        if (in_array($type, ['mcq_single', 'mcq_multiple'])) {
+            $check = ['score' => 100, 'null_count' => empty($answer) ? 1 : 0];
+        } else {
+            // Otherwise check quality (written_input, written_textarea)
+            $check = checkAnswerQuality($question, $answer);
+        }
+
+        $results[] = [
+            'question' => $question,
+            'type' => $type,
+            'answer' => $answer ?: 'N/A',
+            'score' => $check['score'],
+            'is_null' => $check['null_count'] > 0,
+        ];
+
+        $totalScore += $check['score'];
+        $nullCount += $check['null_count'];
+        if ($check['null_count'] === 0) {
+            $answeredCount++;
+        }
+    }
+
+    // Avoid division by zero
+    $averageScore = $answeredCount > 0 ? round($totalScore / $answeredCount, 2) : 0;
+
+    return [
+        'results' => $results,
+        'summary' => [
+            'total_questions' => count($surveyAnswers),
+            'answered' => $answeredCount,
+            'empty_answers' => $nullCount,
+            'average_score' => $averageScore,
+        ],
+    ];
+}
+
+
+/**
+ * Check individual answer quality (used inside main function)
+ */
+function checkAnswerQuality(string $question, ?string $answer): array
+{
+    $question = trim(strtolower($question));
+    $answer   = trim(strtolower($answer ?? ''));
+
+    if (empty($answer)) {
+        return ['score' => 0, 'null_count' => 1];
+    }
+
+    // Clean and split words
+    $cleanQuestion = preg_replace('/[^a-z0-9 ]+/', '', $question);
+    $cleanAnswer   = preg_replace('/[^a-z0-9 ]+/', '', $answer);
+
+    $questionWords = array_unique(array_filter(explode(' ', $cleanQuestion)));
+    $answerWords   = array_values(array_filter(explode(' ', $cleanAnswer)));
+    $wordCount     = count($answerWords);
+
+    // Step 1: Relevance (40%)
+    $commonWords = array_intersect($questionWords, $answerWords);
+    $overlapScore = count($commonWords) > 0 ? (count($commonWords) / count($questionWords)) * 40 : 0;
+
+    // Step 2: Length (30%)
+    $lengthScore = min($wordCount * 3, 30);
+
+    // Step 3: Grammar / punctuation (10%)
+    $grammarScore = preg_match('/[.!?]$/', $answer) ? 10 : 5;
+
+    // Step 4: Repeated phrases penalty (-30%)
+    $phrases2 = [];
+    $phrases3 = [];
+    for ($i = 0; $i < $wordCount - 1; $i++) {
+        $phrases2[] = $answerWords[$i] . ' ' . $answerWords[$i + 1];
+        if ($i < $wordCount - 2) {
+            $phrases3[] = $answerWords[$i] . ' ' . $answerWords[$i + 1] . ' ' . $answerWords[$i + 2];
+        }
+    }
+
+    $repeats2 = array_filter(array_count_values($phrases2), fn($c) => $c > 1);
+    $repeats3 = array_filter(array_count_values($phrases3), fn($c) => $c > 1);
+
+    $repeatCount = array_sum($repeats2) + array_sum($repeats3);
+    $repeatedPenalty = min(30, $repeatCount * 5);
+
+    // Final score calculation
+    $finalScore = $overlapScore + $lengthScore + $grammarScore - $repeatedPenalty;
+    $finalScore = max(0, min(100, round($finalScore, 2)));
+
+    return ['score' => $finalScore, 'null_count' => 0];
+}

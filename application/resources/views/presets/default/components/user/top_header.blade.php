@@ -14,6 +14,8 @@
                         class="{{ Route::is('user.home') ? 'active' : '' }}"></span>@lang('Dashboard')</a></li>
                 <li><a href="{{ route('user.survey.index') }}"
                         class="{{ Route::is('user.survey.index') ? 'active' : '' }}">@lang('Survey List')</a></li>
+                <li><a href="{{ route('user.survey.submission') }}"
+                        class="{{ Route::is('user.survey.submission') ? 'active' : '' }}">@lang('Survey Submission')</a></li>
                 <li><a href="{{ route('user.withdraw.history') }}"
                         class="{{ Route::is('user.withdraw.history') ? 'active' : '' }}">@lang('Withdrawals')</a></li>
                 <li><a href="{{ route('user.deposit.history') }}"
