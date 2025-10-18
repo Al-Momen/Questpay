@@ -1,8 +1,8 @@
 @extends($activeTemplate . 'layouts.master')
 @section('content')
-    <div class="survey-list pt-120">
+    <div class="dashboard-section pt-120">
         <div class="container">
-            <div class="survey-list__main">
+            <div class="dashboard-wrapper">
                 @include('Template::components.user.top_header')
                 <div class="row justify-content-end">
                     <div class="col-lg-3">
@@ -21,6 +21,7 @@
                    
                 </div>
                 <div class="dashboard-table card mt-4">
+                            <h3 class="dashboard-table__title fs--16 fw--700 mb--16">@lang('Submission List')</h3>
                     <div class="dashboard-table__items">
                         <table class="table table--responsive--md">
                             <thead>

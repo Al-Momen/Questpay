@@ -79,6 +79,7 @@
             });
         }
         (function($) {
+             'use strict';
             $('#btn-confirm').on('click', function(e) {
                 e.preventDefault();
                 pay('Buy', {{ $data->Buy }});

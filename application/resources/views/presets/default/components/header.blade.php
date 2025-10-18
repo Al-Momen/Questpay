@@ -54,7 +54,7 @@
                     <a href="{{ route('user.logout') }}" class="btn btn--base sign-in--btn">@lang('Logout')</a>
                 @endauth
                 @guest
-                    <a href="{{ route('user.login') }}" class="btn btn--base sign-in--btn">@lang('Sign in')</a>
+                    <a href="{{ route('user.login') }}" class="btn btn--base sign-in--btn">@lang('Sign In')</a>
                 @endguest
             </div>
         </div>
@@ -134,7 +134,7 @@
                                 <a href="{{ route('user.home') }}">@lang('Dashboard')</a>
                             @endauth
                             @guest
-                                <a href="{{ route('user.login') }}">@lang('Sign in')</a>
+                                <a href="{{ route('user.login') }}">@lang('Sign In')</a>
                             @endguest
                         </div>
                     </div>

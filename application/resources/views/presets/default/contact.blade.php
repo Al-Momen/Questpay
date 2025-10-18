@@ -167,7 +167,7 @@
             $('.recap').each(function() {
 
                 if ($(this).children().length === 0) {
-                    console.log($(this).children().length);
+                  
                     $(this).addClass('d-none');
                 } else {
                     $(this).removeClass('d-none');

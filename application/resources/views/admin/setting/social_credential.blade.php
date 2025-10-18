@@ -157,7 +157,7 @@
                         input.blur();
                         notify('success', `Copied: ${copybtn.closest('.input-group').find('input').val()}`);
                     } catch (err) {
-                       console.log('err');
+                       
                     }
                 }
             });

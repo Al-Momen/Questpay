@@ -358,6 +358,7 @@
             }
 
             $(document).ready(function() {
+                 'use strict';
                 restoreCheckedStates();
             });
 
@@ -382,7 +383,7 @@
                         $('#items-table-body').html('<tr><td colspan="6">Loading...</td></tr>');
                     },
                     success: function(response) {
-                        console.log(response);
+                      
                         $('#items_table__body').html(response.html);
                         $('.pagination__wrapper').html(response.pagination);
 
@@ -393,7 +394,7 @@
                         }
                     },
                     error: function() {
-                        console.log('Failed to load filtered tickets.');
+                      
                     }
                 });
             });

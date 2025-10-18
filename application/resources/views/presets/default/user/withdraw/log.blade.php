@@ -1,10 +1,10 @@
 @extends($activeTemplate . 'layouts.master')
 @section('content')
-    <div class="survey-list pt-120">
+    <div class="dashboard-section pt-120">
         <div class="container">
-            <div class="survey-list__main">
+            <div class="dashboard-wrapper">
                 @include('Template::components.user.top_header')
-                <div class="row justify-content-between">
+                <div class="row gy-3 gy-xl-4 justify-content-between">
                  
                     <div class="col-lg-3">
                         <form action="">
@@ -21,10 +21,11 @@
                     </div>
                        <div class="col-lg-3 text-end">
                         <a href="{{ route('user.withdraw') }}"
-                        class="btn btn--base {{ Route::is('user.withdraw') ? 'active' : '' }}">@lang('Withdraw')</a>
+                        class="btn btn--md btn--base {{ Route::is('user.withdraw') ? 'active' : '' }}">@lang('Withdraw')</a>
                     </div>
                 </div>
-                <div class="dashboard-table card mt-4">
+                <div class="dashboard-table card mt-3">
+                            <h3 class="dashboard-table__title fs--16 fw--700 mb--16">@lang('Withdraw List')</h3>
                     <div class="dashboard-table__items">
                         <table class="table table--responsive--md">
                             <thead>
@@ -51,13 +52,12 @@
                                             {{ showDateTime($withdraw->created_at) }}
                                         </td>
                                         <td class="text-center" data-label="@lang('Amount')">
-                                            {{ __($general->cur_sym) }}{{ showAmount($withdraw->amount) }}
+                                            {{ ($general->cur_sym) }}{{ showAmount($withdraw->amount) }}
                                             </span>
                                         </td>
                                         <td class="text-center" data-label="@lang('Conversion')">
-                                            <span>{{ __($withdraw->currency) }} {{ showAmount($withdraw->final_amount) }}</span>
-                                            (1 {{ __($general->cur_text) }} = {{ showAmount($withdraw->rate) }}
-                                            {{ __($withdraw->currency) }})
+                                            <span>{{ showAmount($withdraw->final_amount) }} {{$withdraw->currency }} </span>
+                                          
                                         </td>
                                         <td class="text-center" data-label="@lang('Status')">
                                             @php echo $withdraw->statusBadge @endphp
@@ -91,9 +91,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">@lang('Details')</h5>
-                    <span type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="fa-solid fa-xmark"></i>
-                    </span>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <ul class="list-group userData">

@@ -1,10 +1,10 @@
 @extends($activeTemplate . 'layouts.master')
 @section('content')
-    <div class="survey-list pt-120">
+    <div class="dashboard-section pt-120">
         <div class="container">
-            <div class="survey-list__main">
+            <div class="dashboard-wrapper">
                 @include('Template::components.user.top_header')
-                <div class="row justify-content-between">
+                <div class="row gy-3 gy-xl-4 justify-content-between">
                     <div class="col-lg-3">
                         <form action="">
                             <div class="form-floating">
@@ -20,10 +20,11 @@
                     </div>
                      <div class="col-lg-3 text-end">
                        <a href="{{ route('user.deposit') }}"
-                        class="btn btn--base {{ Route::is('user.deposit') ? 'active' : '' }}">@lang('Deposit')</a>
+                        class="btn btn--md btn--base {{ Route::is('user.deposit') ? 'active' : '' }}">@lang('Deposit')</a>
                     </div>
                 </div>
-                <div class="dashboard-table card mt-4">
+                <div class="dashboard-table card mt-3">
+                    <h3 class="dashboard-table__title fs--16 fw--700 mb--16">@lang('Payment History')</h3>
                     <div class="dashboard-table__items">
                         <table class="table table--responsive--md">
                             <thead>
@@ -60,7 +61,7 @@
 
                                         <td data-label="@lang('Details')">
                                             <a href="javascript:void(0)"
-                                                class="btn btn--base btn-md action--btn @if ($deposit->method_code >= 1000) detailBtn @else disabled @endif"
+                                                class="btn btn--base btn--sm action--btn @if ($deposit->method_code >= 1000) detailBtn @else disabled @endif"
                                                 @if ($deposit->method_code >= 1000) data-info="{{ $details }}" @endif
                                                 @if ($deposit->status == 3) data-admin_feedback="{{ $deposit->admin_feedback }}" @endif>
                                                 <i class="fa fa-eye"></i>

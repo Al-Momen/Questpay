@@ -2,7 +2,9 @@
 @section('content')
     <div class="profile-section">
         <div class="container">
-            @include('Template::components.user.top_header')
+            @if (auth()->check())
+                @include('Template::components.user.top_header')
+            @endif
             <div class="profile-items">
                 <div class="profile__wrap card p-4">
                     <div class="row g-4">
@@ -41,7 +43,7 @@
                                             </div>
                                         </div>
                                         <div class="text-end">
-                                            <a href="javascript:void(0)" class="btn btn--lg btn--base mb-2 mt-4 addFile">
+                                            <a href="javascript:void(0)" class="btn btn--md btn--base mb-2 mt-4 addFile">
                                                 <i class="fa fa-plus"></i>
                                                 @lang('Add New')
                                             </a>
@@ -59,7 +61,7 @@
                                             </p>
                                         </div>
                                         <div class="text-end">
-                                            <button type="submit" class="btn btn--base btn--lg">
+                                            <button type="submit" class="btn btn--base btn--lmd">
                                                 <i class="fa fa-reply"></i>
                                                 @lang('Reply')
                                             </button>

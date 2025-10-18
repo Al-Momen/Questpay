@@ -82,11 +82,9 @@
             "left_heading": "text",
             "left_subheading": "text",
             "left_button_text": "text",
-            "left_button_url": "url",
             "right_heading": "text",
             "right_subheading": "text",
-            "right_button_text": "text",
-            "right_button_url": "url"
+            "right_button_text": "text"
         }
     },
 

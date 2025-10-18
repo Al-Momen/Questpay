@@ -14,7 +14,7 @@
 <!--================================= footer section start =================================-->
 <footer class="footer mt-120">
     <div class="container">
-        <div class="row g-4">
+        <div class="row g-4 justify-content-sm-center">
             <div class="col-lg-3">
                 <div class="footer-items">
                     <a href="{{ route('home') }}" class="footer-logo">
@@ -32,7 +32,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-4 col-6">
+            <div class="col-lg-3 col-md-4 col-12">
                 <div class="footer-menu">
                     <h4 class="footer-menu__title">@lang('Company links')</h4>
                     <div class="footer-menu__items">
@@ -58,7 +58,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-4 col-6">
+            <div class="col-lg-3 col-md-4 col-12">
                 <div class="footer-menu">
                     <h4 class="footer-menu__title">@lang('Quick Links')</h4>
                     <div class="footer-menu__items">
@@ -82,16 +82,25 @@
                             @endforeach
                             <li>
                                 <a class="footer-menu__links" href="{{ url('/') . '/policy/terms-of-service/42' }}">
+                                    <span class="text--base me-2">
+                                                <i class="fa-solid fa-angle-right"></i>
+                                            </span>
                                     @lang('Privacy Policy')
                                 </a>
                             </li>
                             <li>
                                 <a class="footer-menu__links" href="{{ url('/') . '/policy/terms-of-service/43' }}">
+                                    <span class="text--base me-2">
+                                                <i class="fa-solid fa-angle-right"></i>
+                                            </span>
                                     @lang('Terms And Conditions')
                                 </a>
                             </li>
                             <li>
                                 <a class="footer-menu__links" href="{{ url('/') . '/cookie-policy' }}">
+                                    <span class="text--base me-2">
+                                                <i class="fa-solid fa-angle-right"></i>
+                                            </span>
                                     @lang('Cookie Policy')
                                 </a>
                             </li>
@@ -115,7 +124,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p class="text-center fs--16 text--white mt-60">@php echo $contactSection->data_values->website_footer; @endphp</p>
+            <div class="text-center fs--16 text--white mt-60">@php echo $contactSection->data_values->website_footer; @endphp</div>
         </div>
     </div>
 </footer>

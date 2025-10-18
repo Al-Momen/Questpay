@@ -7,10 +7,14 @@
                 <div class="row g-4 justify-content-center">
                     <div class="col-lg-12">
                         <div class="profile__wrap card p-4">
-                            <h4 class="mb-3">@lang('Survey Information')</h4>
+                            <div class="d-flex justify-content-between align-content-center flex-wrap gap-2 mb-3">
+                                <h4 class="mb-0">@lang('Survey Information')</h4>
+                                <div>
+                                    <span class="badge badge--base total-question">@lang('Total Question')(0)</span>
+                                </div>
+                            </div>
                             <div class="row g-4">
                                 <div class="col-lg-4">
-                                    <label for="title" class="form-label">@lang('Image')</label>
                                     <div class="logo-upload--box">
                                         <x-image-uploader name="image" :imagePath="getImage(getFilePath('survey') . '/', getFileSize('survey'))" :size="getFileSize('survey')"
                                             :isImage="true" class="w-100" id="uploadLogo3" :required="true" />
@@ -22,7 +26,7 @@
                                             <div class="profile__form">
                                                 <div class="form-floating">
                                                     <select class="form-control form-select mb-4" name="category_id" required>
-                                                        <option value="0">@lang('Select category id')</option>
+                                                        <option value="0">@lang('Select category')</option>
                                                         @foreach ($categories ?? [] as $item)
                                                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                                                         @endforeach
@@ -52,17 +56,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12">
-                                            <div class="profile__form">
-                                                <div class="form-floating">
-                                                    <input type="number" name="total_question" id="total_question"
-                                                        value="{{ old('total_question') }}" class="form-control mb-4"
-                                                        placeholder="@lang('How many cents does a user get per question answered?')" readonly>
-                                                    <label for="total_question"
-                                                        class="form-label">@lang('Total Questions')</label>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -75,19 +68,19 @@
                     <div class="row g-4 justify-content-center">
                         <div class="col-lg-6">
                             <div class="profile__wrap card p-4">
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
                                     <h4 class="mb-0">@lang('AI Survey Generator')</h4>
                                     <span>
                                         (@lang('Credit Cost per Prompt'): {{ $general->credit_cost_per_prompt }})
                                     </span>
                                 </div>
-                                <div class="d-flex align-items-center">
-                                    <span>@lang('Your current credit is'): {{ auth()->user()->credit }}.</span>
+                                <div class="mb-4">
+                                    <p>@lang('Your current credit is'): {{ auth()->user()->credit }}.</p>
                                     @if ($general->credit_cost_per_prompt > auth()->user()->credit)
-                                        <span class="text-danger">
+                                        <p class="text-danger mb-2">
                                             @lang('You do not have enough credits.')
-                                        </span>
-                                        <a href="{{ route('user.credit.purchase') }}" class="btn btn--base btn--sm w-25">
+                                        </p>
+                                        <a href="{{ route('user.credit.purchase') }}" class="btn btn--base btn--sm">
                                             @lang('Buy Credits')
                                         </a>
                                     @endif
@@ -122,7 +115,7 @@
                                                     <div class="text-center defaultChatMessage">@lang('Create a set of questions')</div>
                                                     <div id="surveyFormContainer" class="question-list"></div>
                                                     <div class="text-end">
-                                                        <button type="button" class="btn btn-outline--base w-25 mt-3"
+                                                        <button type="button" class="btn btn-outline--base btn--md  mt-3"
                                                             id="addQuestionBtn">
                                                             <i class="fa fa-plus"></i> @lang('Add Question')
                                                         </button>
@@ -164,6 +157,10 @@
 
     @push('style')
         <style>
+            #surveyFormContainer{
+                max-height: 100vh;
+                overflow-y: auto;
+            }
             #prompts::placeholder {
                 color: hsl(var(--black) / 0.4);
             }

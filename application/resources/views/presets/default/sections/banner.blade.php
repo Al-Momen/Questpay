@@ -5,7 +5,7 @@
 
 <!-- ==============================Hero section start============================== -->
 <section class="hero position-relative">
-    <h1 class="hero-text">{{ $general->site_name }}</h1>
+    <h1 class="hero-text">@lang('SURVEY')</h1>
     <div class="hero-shape">
         <img class="pointer-event" src="{{ getImage(getFilePath('banner') . 'hero-circle.png') }}" alt="@lang('circle')">
     </div>
@@ -33,7 +33,7 @@
 
                         </div>
                         <p class="hero-contributor__title">
-                            {{ __($bannerSectionContent->data_values->contributor_text) }}<span
+                            {{ __($bannerSectionContent->data_values->contributor_text) }} <span
                                 class="fs-16 fw--500 bold-title">{{ $bannerSectionContent->data_values->contributor_number }}</span>
                         </p>
                     </div>
@@ -43,7 +43,7 @@
                         <p class="hero-desc sub-animation">{{ __($bannerSectionContent->data_values->sub_heading) }}
                         </p>
                         <a class="hero-button btn btn--base"
-                            href="#">{{ __($bannerSectionContent->data_values->button_text) }}</a>
+                            href="{{route('survey')}}">{{ __($bannerSectionContent->data_values->button_text) }}</a>
                     </div>
                 </div>
             </div>

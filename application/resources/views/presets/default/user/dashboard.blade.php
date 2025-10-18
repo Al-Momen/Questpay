@@ -9,7 +9,7 @@
                 @include('Template::components.user.top_header')
                 <div class="dashboard-cards mb-4">
                     <h3 class="dashboard-title fs--18 fw--600 mb-4">{{ __($pageTitle) }}</h3>
-                    <div class="row g-4">
+                    <div class="row  g-3 g-lg-4">
                         <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
                             <a href="javascript:void(0)"
                                 class="dashboard-card position-relative d-flex gap--20 align-items-center">

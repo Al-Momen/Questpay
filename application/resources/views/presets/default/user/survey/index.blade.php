@@ -1,16 +1,17 @@
 @extends($activeTemplate . 'layouts.master')
 @section('content')
-    <div class="survey-list pt-120">
+    <div class="dashboard-section pt-120">
         <div class="container">
-            <div class="survey-list__main">
+            <div class="dashboard-wrapper">
                 @include('Template::components.user.top_header')
-                <div class="row justify-content-between">
+                <div class="row gy-3 gy-xl-4 justify-content-between">
                     <div class="col-lg-3">
                         <form action="">
                             <div class="form-floating">
                                 <div class="input-group">
                                     <input type="text" class="form-control" name="search" value="{{ request()->search }}"
                                         placeholder="@lang('Search TRX')">
+
                                     <span class="input-group-text">
                                         <i class="fa-solid fa-magnifying-glass"></i>
                                     </span>
@@ -22,7 +23,8 @@
                         <a href="{{ route('user.survey.create') }}" class="btn btn--md btn--base">@lang('Add New')</a>
                     </div>
                 </div>
-                <div class="dashboard-table card mt-4">
+                <div class="dashboard-table card mt-3 mt-xl-4">
+                    <h3 class="dashboard-table__title fs--16 fw--700 mb--16">@lang('Survey List')</h3>
                     <div class="dashboard-table__items">
                         <table class="table table--responsive--md">
                             <thead>
@@ -66,27 +68,33 @@
                                             @endphp
                                         </td>
                                         <td>
-                                            <div class="d-flex align-items-center justify-content-end gap-2">
-                                                @if (!in_array($item->status, [Status::SURVEY_INITIAL, Status::SURVEY_REJECTED]))
-                                                    <div class="form-group mb-0">
-                                                        <label class="switch m-0" title="@lang($item->status ? 'Disable' : 'Enable')">
-                                                            <input type="checkbox" class="toggle-switch confirmationBtn"
+                                            <div class="dropdown">
+                                                <button class="dashboard-table__btn" type="button"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                   
+                                                    <li><a class="dropdown-item"
+                                                            href="{{ route('user.survey.details', $item->id) }}">@lang('View')</a>
+                                                    </li>
+
+                                                    <li><a class="dropdown-item"
+                                                            href="{{ route('user.survey.answer.user.list', $item->id) }}">@lang('Submission List')</a>
+                                                    </li>
+                                                     @if (!in_array($item->status, [Status::SURVEY_INITIAL, Status::SURVEY_REJECTED]))
+                                                        <li>
+                                                            <a class="dropdown-item confirmationBtn" href="javascript:void(0)"
+                                                                title="@lang($item->status ? 'Disable' : 'Enable')"
                                                                 data-question="@lang('Are you sure to change this survey status?')"
-                                                                data-action="{{ route('user.survey.status', $item->id) }}"
-                                                                @checked($item->status)>
-                                                            <span class="slider round"></span>
-                                                        </label>
-                                                    </div>
-                                                @endif
-                                                <a href="{{ route('user.survey.details', $item->id) }}"
-                                                    class="btn btn--sm btn--base" title="@lang('View')">
-                                                    <i class="fa-solid fa-eye"></i>
-                                                </a>
-                                                <a href="{{ route('user.survey.answer.user.list', $item->id) }}"
-                                                    class="btn btn--sm btn--base" title="@lang('List')">
-                                                    <i class="fa-solid fa-list-check"></i>
-                                                </a>
+                                                                data-action="{{ route('user.survey.status', $item->id) }}">@lang('Status')
+                                                            </a>
+                                                        </li>
+                                                    @endif
+                                                </ul>
                                             </div>
+
+
                                         </td>
                                     </tr>
                                 @empty

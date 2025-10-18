@@ -169,7 +169,6 @@ class SurveyController extends Controller
             'category_id'                  => 'required|integer|exists:categories,id',
             'survey_people'                => 'required|numeric|min:1',
             'survey_money'                 => 'required|numeric|min:0.01|regex:/^\d+(\.\d{1,2})?$/',
-            'total_question'               => 'required|numeric|min:1',
             'survey.title'                 => 'required|string|max:255',
             'survey.questions'             => 'required|array|min:1',
             'survey.questions.*.id'        => 'required|integer|distinct',

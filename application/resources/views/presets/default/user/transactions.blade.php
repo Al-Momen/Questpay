@@ -1,11 +1,11 @@
 @extends($activeTemplate . 'layouts.master')
 @section('content')
-    <div class="survey-list pt-120">
+    <div class="dashboard-section pt-120">
         <div class="container">
-            <div class="survey-list__main">
+            <div class="dashboard-wrapper">
                 @include('Template::components.user.top_header')
                 <form action="">
-                    <div class="row">
+                    <div class="row gy-3">
                         <!-- Transaction Number -->
                         <div class="col-md-3">
                             <div class="form-floating">
@@ -14,11 +14,11 @@
                                 <label class="form-label">@lang('Transaction Number')</label>
                             </div>
                         </div>
-                        
+
                         <!-- Type -->
                         <div class="col-md-3">
                             <div class="form-floating">
-                                <select name="type" class="form-select">
+                                <select name="type" class="form-control form-select">
                                     <option value="">@lang('All')</option>
                                     <option value="+" @selected(request()->type == '+')>@lang('Plus')</option>
                                     <option value="-" @selected(request()->type == '-')>@lang('Minus')</option>
@@ -30,8 +30,7 @@
                         <!-- Remark -->
                         <div class="col-md-3">
                             <div class="form-floating">
-
-                                <select class="form-select" name="remark">
+                                <select class="form-control form-select" name="remark">
                                     <option value="">@lang('Any')</option>
                                     @foreach ($remarks as $remark)
                                         <option value="{{ $remark->remark }}" @selected(request()->remark == $remark->remark)>
@@ -52,15 +51,16 @@
                     </div>
                 </form>
 
-                <div class="dashboard-table card mt-4">
+                <div class="dashboard-table card mt-3">
+                    <h3 class="dashboard-table__title fs--16 fw--700 mb--16">@lang('Transactions')</h3>
                     <div class="dashboard-table__items">
                         <table class="table table--responsive--md">
                             <thead>
                                 <tr>
                                     <th>@lang('Trx')</th>
-                                    <th>@lang('Transacted')</th>
-                                    <th>@lang('Amount')</th>
-                                    <th>@lang('Post Balance')</th>
+                                    <th class="text-center">@lang('Transacted')</th>
+                                    <th class="text-center">@lang('Amount')</th>
+                                    <th class="text-center">@lang('Post Balance')</th>
                                     <th>@lang('Detail')</th>
                                 </tr>
                             </thead>
@@ -71,11 +71,11 @@
                                             {{ $trx->trx }}
                                         </td>
 
-                                        <td>
+                                        <td class="text-center">
                                             {{ showDateTime($trx->created_at) }}
                                         </td>
 
-                                        <td class="budget">
+                                        <td class="budget text-center">
                                             <span
                                                 class=" @if ($trx->trx_type == '+') text-success @else text-danger @endif">
                                                 {{ $trx->trx_type }} {{ showAmount($trx->amount) }}
@@ -83,7 +83,7 @@
                                             </span>
                                         </td>
 
-                                        <td class="budget">
+                                        <td class="budget text-center">
                                             {{ showAmount($trx->post_balance) }}
                                             {{ __($general->cur_text) }}
                                         </td>

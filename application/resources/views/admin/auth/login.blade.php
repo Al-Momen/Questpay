@@ -37,7 +37,7 @@
                     </div>
                     <x-captcha></x-captcha>
                     <div class="field">
-                        <button type="submit" class="sign-in">@lang('Sign in')</button>
+                        <button type="submit" class="sign-in">@lang('Sign In')</button>
                     </div>
                 </form>
             </div>

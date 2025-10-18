@@ -1,15 +1,19 @@
 @extends($activeTemplate . 'layouts.master')
 @section('content')
-    <div class="survey-list pt-120">
+    <div class="dashboard-section pt-120">
         <div class="container">
-            <div class="survey-list__main">
+            <div class="dashboard-wrapper">
                 @include('Template::components.user.top_header')
-                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
-                    <h3 class="survey-list__header-title">{{ __($pageTitle) }}</h3>
-                    <a href="{{ route('ticket.open') }}" class="btn btn-md btn--base mb-2"> <i class="fa fa-plus"></i>
-                        @lang('New Ticket')</a>
+                <div class="row gy-3 gy-xl-4 justify-content-end">
+                    <div class="col-lg-3 text-end">
+                        <a href="{{ route('ticket.open') }}" class="btn btn--md btn--base mb-2">
+                            <i class="fa fa-plus"></i>
+                            @lang('New Ticket')
+                        </a>
+                    </div>
                 </div>
-                <div class="dashboard-table card">
+                <div class="dashboard-table card mt-3">
+                    <h3 class="dashboard-table__title fs--16 fw--700 mb--16">@lang('Support Ticket')</h3>
                     <div class="dashboard-table__items">
                         <table class="table table--responsive--md">
                             <thead>
@@ -56,7 +60,7 @@
                         </table>
                     </div>
                 </div>
-                 {{ $supports->links() }}
+                {{ $supports->links() }}
             </div>
         </div>
     </div>

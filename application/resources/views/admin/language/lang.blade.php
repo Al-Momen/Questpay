@@ -232,7 +232,7 @@
                 modal.find('input[name=name]').val(lang.name);
                 modal.find('select[name=text_align]').val(lang.text_align);
                 if (lang.is_default == 1) {
-                    console.log("default");
+            
                     modal.find('.modal-body #setDefault').val(1);
                 } else {
                     modal.find('.modal-body #setDefault').val(0);

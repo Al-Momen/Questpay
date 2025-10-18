@@ -283,7 +283,7 @@
                     }
                 }
                 $.post(url, data, function(response) {
-                    console.log(response.data, response.type);
+                    
 
                     if (response.data != false && response.type == 'email') {
                         $('#existModalCenter').modal('show');
@@ -300,7 +300,7 @@
             'use strict';
             $('.recap').each(function() {
                 if ($(this).children().length === 0) {
-                    console.log($(this).children().length);
+                    
                     $(this).addClass('d-none');
                 } else {
                     $(this).removeClass('d-none');

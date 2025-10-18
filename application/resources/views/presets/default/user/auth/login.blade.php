@@ -21,7 +21,7 @@
                 <div class="wrap mt-5">
                     <div class="section-heading">
                         <p class="section-heading__subtitle title-animation">@lang('Welcome back!')</p>
-                        <h2 class="section-heading__title sign-up__title title-animation">@lang('Sign in your account')</h2>
+                        <h2 class="section-heading__title sign-up__title title-animation">@lang('Sign In your account')</h2>
                         <p class="section-heading__desc title-animation">@lang('It only takes a minute to start earning with surveys you’ll actually enjoy.')</p>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                         </div>
                         <div class="form--check__btn">
                             <button class="hero-button btn btn--base w--100" type="submit"
-                                id="recaptcha">@lang('Sign in')</button>
+                                id="recaptcha">@lang('Sign In')</button>
                         </div>
                     </form>
                     @if ($credentials->google->status == 1 || $credentials->facebook->status == 1)
@@ -95,7 +95,7 @@
                         </ul>
                     @endif
                     <p class="sign-up__links mt-4">@lang('Don’t have an account? ')
-                        <a class=" sign-in__text text--base text--underline" href="{{ route('user.register') }}">@lang('Sign up')</a>
+                        <a class=" sign-in__text text--base text--underline" href="{{ route('user.register') }}">@lang('Sign Up')</a>
                     </p>
                 </div>
 
@@ -111,7 +111,7 @@
             'use strict';
             $('.recap').each(function() {
                 if ($(this).children().length === 0) {
-                    console.log($(this).children().length);
+           
                     $(this).addClass('d-none');
                 } else {
                     $(this).removeClass('d-none');

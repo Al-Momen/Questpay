@@ -138,6 +138,7 @@
         (function($) {
             'use strict';
             $(document).ready(function() {
+                 'use strict';
                 $('.clearAll').on('click', function() {
                     $('input[type="checkbox"][name="category_id[]"]').prop('checked', false);
                 });

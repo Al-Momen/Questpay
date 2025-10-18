@@ -1,5 +1,5 @@
 (function($){
-    "use strict"
+    "use strict";
 
     $('[name=form_type]').on('change',function(){
         var formType = $(this).val();

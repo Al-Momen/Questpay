@@ -10,7 +10,7 @@
         $surveyStoreRoute = route('admin.survey.store');
         $surveyIndexRoute = route('admin.survey.index');
     } else {
-        $addButtonClass = 'btn btn-outline--base';
+        $addButtonClass = 'btn btn-outline--base btn--md';
         $canceledBtnClass = 'btn btn-outline--danger';
         $surveyGenerateRoute = route('user.survey.generate');
         $surveyStoreRoute = route('user.survey.store');
@@ -122,7 +122,7 @@
         function renderSurveyTitle(title) {
             return `
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Survey Title</label>
+                        <label class="form-label fw-bold">@lang('Survey Title')</label>
                         <input type="text" class="form-control" name="survey_title" value="${title}">
                     </div>
                 `;
@@ -143,8 +143,8 @@
                                     </span>
                                     <strong class="question-number">Question ${questionNumber}</strong>
                                 </div>
-                                <button type="button" class="btn btn-sm btn-danger delete-question">
-                                    <i class="fa fa-trash"></i>
+                                <button type="button" class="btn btn-danger delete-question">
+                                    <i class="fa fa-trash"></i>  Delete
                                 </button>
                             </div>
                             <div class="mb-2">
@@ -334,7 +334,7 @@
 
         function updateTotalQuestionCount() {
             const total = $(".question-item").length;
-            $('input[name=total_question]').val(total);
+            $('.total-question').text('Total Question('+ total +')');
 
         }
 
@@ -345,7 +345,6 @@
             formData.append('_token', "{{ csrf_token() }}");
             formData.append('survey_people', $('input[name=survey_people]').val());
             formData.append('survey_money', $('input[name=survey_money]').val());
-            formData.append('total_question', $('input[name=total_question]').val());
             formData.append('category_id', $('select[name=category_id]').val());
             formData.append('survey', JSON.stringify(surveyData));
             const imageFile = $('input[name=image]')[0].files[0];

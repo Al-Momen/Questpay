@@ -152,7 +152,7 @@
                                     <li class="sidebar-menu-item {{ menuActive('admin.deposit.*') }}">
                                         <a class="nav-link" href="{{ route('admin.deposit.log') }}">
                                             <i class="menu-icon fa-solid fa-circle"></i>
-                                            <span class="menu-title"> @lang('Deposits Log')</span>
+                                            <span class="menu-title"> @lang('Payments Log')</span>
                                             @if (0 < $pendingDepositsCount)
                                                 <div class="blob white"></div>
                                             @endif

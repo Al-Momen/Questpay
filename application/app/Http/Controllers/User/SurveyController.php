@@ -34,6 +34,8 @@ class SurveyController extends Controller
                 break;
         }
 
+        $this->deleteInitialSurvey();
+
         $surveys = $query->with('author')->paginate(getPaginate());
         $pageTitle = ucfirst($status) . ' Surveys';
         return view('UserTemplate::survey.index', compact('surveys', 'pageTitle'));
@@ -184,7 +186,6 @@ class SurveyController extends Controller
             'category_id'                  => 'required|integer|exists:categories,id',
             'survey_people'                => 'required|numeric|min:1',
             'survey_money'                 => 'required|numeric|min:0.01|regex:/^\d+(\.\d{1,2})?$/',
-            'total_question'               => 'required|numeric|min:1',
             'survey.title'                 => 'required|string|max:255',
             'survey.questions'             => 'required|array|min:1',
             'survey.questions.*.id'        => 'required|integer|distinct',
@@ -380,5 +381,28 @@ class SurveyController extends Controller
         }
 
         return back()->withNotify($notify);
+    }
+
+
+    public function deleteInitialSurvey()
+    {
+        $initialSurveys = Survey::with('deposit')
+            ->where(function ($q) {
+                $q->whereHas('deposit', function ($q2) {
+                    $q2->where('status', Status::PAYMENT_INITIATE)->where('survey_id', '!=', 0);
+                })
+                    ->orDoesntHave('deposit');
+            })
+            ->where('status', Status::SURVEY_INITIAL)
+            ->where('author_id', auth()->id())
+            ->where('author_type', User::class)
+            ->get();
+
+        foreach ($initialSurveys ?? [] as $value) {
+            fileManager()->removeFile(getFilePath('survey') . '/' . $value->image);
+            $value->deposit?->delete();
+            $value->delete();
+        }
+        return 0;
     }
 }
