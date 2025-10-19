@@ -32,7 +32,7 @@
                                         <div class="col-sm-12">
                                             <div class="profile__form">
                                                 <div class="form-floating">
-                                                    <div class="form-group">
+                                                    <div class="form-group mb-0">
                                                         <div class="input-group">
                                                             <input type="number" step="any" name="amount"
                                                                 class="form-control form--control"

@@ -164,14 +164,7 @@
                                         <i class="fa-solid fa-clock-rotate-left"></i> @lang('Login History')
                                     </a>
                                 </div>
-                                @if ($user->kyc_data)
-                                    <div class="col-sm-12">
-                                        <a class="d-block btn btn--secondary outline"
-                                            href="{{ route('admin.users.kyc.details', $user->id) }}">
-                                            <i class="fa-regular fa-paper-plane"></i> @lang('KYC Data')
-                                        </a>
-                                    </div>
-                                @endif
+                      
                                 <div class="col-sm-12">
                                     <a class="d-block btn btn--secondary outline"
                                         href="{{ route('admin.users.notification.single', $user->id) }}">
@@ -220,14 +213,7 @@
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
-                                <div class="form-group col-12 d-flex justify-content-between align-items-center mb-0 pb-0">
-                                    <label class="mb-0">@lang('KYC') </label>
-                                    <label class="switch m-0">
-                                        <input type="checkbox" class="toggle-switch" name="kv"
-                                            {{ $user->kv ? 'checked' : null }}>
-                                        <span class="slider round"></span>
-                                    </label>
-                                </div>
+                               
                             </div>
                         </div>
                     </div>

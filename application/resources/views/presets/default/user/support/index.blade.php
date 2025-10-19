@@ -20,8 +20,8 @@
                                 <tr>
                                     <th>@lang('Subject')</th>
                                     <th class="text-center">@lang('Status')</th>
-                                    <th>@lang('Priority')</th>
-                                    <th>@lang('Last Reply')</th>
+                                    <th class="text-center">@lang('Priority')</th>
+                                    <th class="text-center">@lang('Last Reply')</th>
                                     <th>@lang('Action')</th>
                                 </tr>
                             </thead>
@@ -40,7 +40,7 @@
                                             @elseif($support->priority == 2)
                                                 <span class="badge badge--success">@lang('Medium')</span>
                                             @elseif($support->priority == 3)
-                                                <span class="badge badge--primary">@lang('High')</span>
+                                                <span class="badge badge--base">@lang('High')</span>
                                             @endif
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($support->last_reply)->diffForHumans() }} </td>

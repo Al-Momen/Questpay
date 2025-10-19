@@ -19,7 +19,7 @@
                 <li><a href="{{ route('user.withdraw.history') }}"
                         class="{{ Route::is('user.withdraw.history') ? 'active' : '' }}">@lang('Withdrawals')</a></li>
                 <li><a href="{{ route('user.deposit.history') }}"
-                        class="{{ Route::is('user.deposit.history') ? 'active' : '' }}">@lang('Payment History')</a></li>
+                        class="{{ Route::is('user.deposit.history') || Route::is('user.deposit') ? 'active' : '' }}">@lang('Payment History')</a></li>
                 <li><a href="{{ route('user.transactions') }}"
                         class="{{ Route::is('user.transactions') ? 'active' : '' }}">@lang('Transactions')</a></li>
                 <li><a href="{{ route('ticket') }}"

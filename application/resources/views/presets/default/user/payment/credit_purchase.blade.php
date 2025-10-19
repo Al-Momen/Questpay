@@ -16,7 +16,7 @@
                                         <div class="col-sm-12">
                                             <div class="profile__form">
                                                 <div class="form-floating">
-                                                    <select class="form-control form--control" name="gateway" required>
+                                                    <select class="form-control" name="gateway" required>
                                                         <option value="">@lang('Select One')</option>
                                                         <option value="balance">@lang('Account Balance') {{ showAmount(auth()->user()->balance) }}</option>
                                                         @foreach ($gatewayCurrency as $data)
@@ -34,7 +34,7 @@
                                             <div class="profile__form">
                                                 <div class="form-floating">
                                                     <input type="number" name="credit_purchase"
-                                                        class="form-control form--control" value="1" required=""
+                                                        class="form-control" value="1" required=""
                                                         id="credit" step="1" min="1">
                                                     <label class="form-label">@lang('Credit')</label>
                                                 </div>
@@ -48,7 +48,7 @@
                                             <div class="form-floating">
                                                 <div class="input-group">
                                                     <input type="number" step="any" name="amount"
-                                                        class="form-control form--control"
+                                                        class="form-control support-readonly"
                                                         value="{{ $general->per_credit_price }}" readonly
                                                         autocomplete="off" required>
                                                     <span class="input-group-text">{{ $general->cur_text }}</span>

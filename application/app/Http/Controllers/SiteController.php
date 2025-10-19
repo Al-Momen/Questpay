@@ -68,21 +68,13 @@ class SiteController extends Controller
             ->where('status', Status::SURVEY_ENABLE)
             ->when(!empty($categoryIds), function ($q) use ($categoryIds) {
                 $q->whereIn('category_id', $categoryIds);
-            })
+            })->orderBy('id','desc')
             ->paginate(getPaginate());
         $sections   = Page::where('slug', 'survey')->first();
         $categories = Category::where('status', Status::CATEGORY_ENABLE)->get();
         return view('Template::survey', compact('pageTitle', 'sections', 'surveys', 'categories'));
     }
 
-    public function surveyDetails($id)
-    {
-        $pageTitle  = "Survey Details";
-        $survey     = Survey::with('category', 'deposit')->where('status', Status::SURVEY_ENABLE)->where('id', $id)->first();
-        $sections   = Page::where('slug', 'survey')->first();
-        $categories = Category::where('status', Status::CATEGORY_ENABLE)->get();
-        return view('Template::survey_details', compact('pageTitle', 'sections', 'survey', 'categories'));
-    }
 
     public function about()
     {
@@ -156,6 +148,7 @@ class SiteController extends Controller
 
     public function changeLanguage($lang = null)
     {
+ 
         $language = Language::where('code', $lang)->first();
         if (!$language) $lang = 'en';
         session()->put('lang', $lang);

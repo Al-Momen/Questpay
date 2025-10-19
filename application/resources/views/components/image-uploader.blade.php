@@ -9,6 +9,7 @@
     'required' => true,
     'id' => 'image-input-' . uniqid(),
     'whiteLogoClass' => false,
+    'baseColor' => false,
 ])
 @php
     $size = $size ?? getFileSize($type);
@@ -32,7 +33,7 @@
         <i class="fa-solid fa-cloud-arrow-up"></i>
         <h6>
             @lang('Drag files here or')
-            <span class="text--primary cursor-pointer browse-trigger">@lang('browse')</span>
+            <span class="{{$baseColor ? 'text--base' : 'text--primary'}} cursor-pointer browse-trigger">@lang('browse')</span>
         </h6>
         <p class="text-center">@lang('Supported Files:') <span class="text-black">{{ $accept }}</span>.
             @lang('Image will be resized into') <span class="text-black">{{ $size }}@lang('px')</span>

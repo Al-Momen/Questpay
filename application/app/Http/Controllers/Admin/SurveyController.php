@@ -18,6 +18,7 @@ class SurveyController extends Controller
 {
     public function index(Request $request)
     {
+   
         $status = $request->get('status', 'all');
         $query = Survey::searchable(['title'])->latest();
         switch ($status) {
@@ -28,7 +29,7 @@ class SurveyController extends Controller
                 $query->where('status', Status::SURVEY_ENABLE);
                 break;
             case 'all':
-                $query->whereIn('status', [Status::SURVEY_ENABLE, Status::SURVEY_DISABLE]);
+                $query->whereIn('status', [Status::SURVEY_ENABLE, Status::SURVEY_DISABLE, Status::SURVEY_INITIAL, Status::SURVEY_REJECTED]);
                 break;
             default:
                 break;

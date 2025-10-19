@@ -80,14 +80,7 @@
                                     </li>
                                 @endadminHas
 
-                                @adminHas('kyc')
-                                    <li class="sidebar-menu-item {{ menuActive(['admin.kyc.setting']) }}">
-                                        <a class="nav-link" href="{{ route('admin.kyc.setting') }}">
-                                            <i class="menu-icon fa-solid fa-circle"></i>
-                                            <span class="menu-title"> @lang('KYC Setting')</span>
-                                        </a>
-                                    </li>
-                                @endadminHas
+                                
 
                                 @adminHas('subscriber-management')
                                     <li class="sidebar-menu-item {{ menuActive(['admin.subscriber.*']) }}">

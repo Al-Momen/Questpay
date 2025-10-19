@@ -153,7 +153,7 @@ class UserController extends Controller
         if ($user->reg_step == 1) {
             return to_route('user.home');
         }
-        $pageTitle = 'User Data';
+        $pageTitle = 'Profile Settings';
         return view('UserTemplate::user_data', compact('pageTitle', 'user'));
     }
 

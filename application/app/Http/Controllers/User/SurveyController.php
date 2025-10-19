@@ -405,4 +405,12 @@ class SurveyController extends Controller
         }
         return 0;
     }
+
+    public function surveyDetails($id)
+    {
+        $pageTitle  = "Survey Details";
+        $survey     = Survey::with('category', 'deposit')->where('status', Status::SURVEY_ENABLE)->where('id', $id)->first();
+        $categories = Category::where('status', Status::CATEGORY_ENABLE)->get();
+        return view('Template::survey_details', compact('pageTitle', 'survey', 'categories'));
+    }
 }

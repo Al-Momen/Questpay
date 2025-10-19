@@ -16,19 +16,19 @@
                             <div class="row g-4">
                                 <div class="col-lg-6 col-md-6">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control" id="firstName"
+                                        <input type="text" class="form-control support-readonly" id="firstName"
                                             placeholder="@lang('Name')" name="name"
                                             value="{{ $user->firstname ?? ('' . ' ' . $user->lastname ?? '') }}" required
                                             readonly>
-                                        <label for="firstName">@lang('First Name')</label>
+                                        <label class="label-readonly" for="firstName">@lang('First Name')</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control" id="email"
+                                        <input type="text" class="form-control support-readonly" id="email"
                                             placeholder="@lang('Email Address')" name="email" value="{{ $user->email }}"
                                             required readonly>
-                                        <label for="email">@lang('Email Address')</label>
+                                        <label class="label-readonly" for="email">@lang('Email Address')</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6">

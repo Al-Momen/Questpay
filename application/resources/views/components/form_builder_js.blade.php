@@ -4,12 +4,14 @@
     $canceledBtnClass = '';
 
     if (Str::startsWith($currentRoute, 'admin.')) {
+        $baseBackground = 'bg--primary';
         $addButtonClass = 'btn btn-sm btn-outline-primary';
         $canceledBtnClass = 'btn btn-sm btn-outline-danger';
         $surveyGenerateRoute = route('admin.survey.generate');
         $surveyStoreRoute = route('admin.survey.store');
         $surveyIndexRoute = route('admin.survey.index');
     } else {
+        $baseBackground = 'bg--base';
         $addButtonClass = 'btn btn-outline--base btn--md';
         $canceledBtnClass = 'btn btn-outline--danger';
         $surveyGenerateRoute = route('user.survey.generate');
@@ -32,7 +34,7 @@
         // Append Message Function
         function appendMessage(content, type = "ai") {
             const msgClass = type === "user" ?
-                "bg-primary text-white align-self-end" :
+                "{{$baseBackground}} text-white align-self-end" :
                 "bg-white border align-self-start";
             const msg = `<div class="p-3 rounded ${msgClass}" style="max-width:80%">${content}</div>`;
             chatMessages.append(msg);

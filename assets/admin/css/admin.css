@@ -3,9 +3,9 @@
 :root {
   --heading-font: "Outfit", sans-serif;
   --body-font: "Outfit", sans-serif;
-  --primary-h: 206;
+  --primary-h: 155;
   --primary-s: 100%;
-  --primary-l: 50%;
+  --primary-l: 36%;
   --primary: var(--primary-h) var(--primary-s) var(--primary-l);
 
   --primary-d-100: var(--primary-h) var(--primary-s) calc(var(--primary-l) - var(--primary-l) * 0.1);

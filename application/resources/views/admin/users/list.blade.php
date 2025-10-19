@@ -21,8 +21,8 @@
                     <i class="dashboard-card-icon fa-regular fa-circle-user"></i>
                 </div>
                 <div class="dashboard-widget__content">
-                    <span class="title">@lang('KYC verified')</span>
-                    <h5 class="number">{{ $widget['kyc_verified_user'] }}</h5>
+                    <span class="title">@lang('With Balance')</span>
+                    <h5 class="number">{{ $widget['with_balance'] }}</h5>
                 </div>
                 <span class="badge badge--primary position-absolute">
                     <i class="fa-solid fa-arrow-trend-up"></i> +{{ $widget['kyc_verified_user_percent'] }}%</span>
@@ -148,12 +148,7 @@
                             @lang('Mobile Verified')</option>
                         <option value="mobile_unverified" {{ request()->status == 'mobile_unverified' ? 'selected' : '' }}>
                             @lang('Mobile Unverified')</option>
-                        <option value="kyc_verified" {{ request()->status == 'kyc_verified' ? 'selected' : '' }}>
-                            @lang('KYC Verified')</option>
-                        <option value="kyc_unverified" {{ request()->status == 'kyc_unverified' ? 'selected' : '' }}>
-                            @lang('KYC Unverified')</option>
-                        <option value="kyc_pending" {{ request()->status == 'kyc_pending' ? 'selected' : '' }}>
-                            @lang('KYC Pending')</option>
+                        
                         <option value="with_balance" {{ request()->status == 'with_balance' ? 'selected' : '' }}>
                             @lang('With Balance')</option>
                     </select>

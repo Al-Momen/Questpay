@@ -40,7 +40,6 @@
                                     <th>@lang('Title')</th>
                                     <th>@lang('Survey People')</th>
                                     <th>@lang('Survey Money')</th>
-                                    <th>@lang('Total Question')</th>
                                     <th>@lang('Status')</th>
                                     <th>@lang('Action')</th>
                                 </tr>
@@ -60,7 +59,7 @@
                                         <td>{{ $item->title }}</td>
                                         <td>{{ $item->survey_people }}</td>
                                         <td>{{ $general->cur_sym . $item->survey_money }}</td>
-                                        <td>{{ $item->total_question }}</td>
+                              
 
                                         <td>
                                             @php

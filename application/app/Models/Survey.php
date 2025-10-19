@@ -63,7 +63,7 @@ class Survey extends Model
         } elseif ($this->status == 1) {
             $html = '<span class="badge badge--success">' . trans('Active') . '</span>';
         } elseif ($this->status == 2) {
-            $html = '<span class="badge badge--info">' . trans('Initiated') . '</span>';
+            $html = '<span class="badge badge--warning">' . trans('Pending') . '</span>';
         } else {
             $html = '<span class="badge badge--danger">' . trans('Rejected') . '</span>';
         }

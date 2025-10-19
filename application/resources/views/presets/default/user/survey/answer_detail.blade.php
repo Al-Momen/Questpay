@@ -60,7 +60,7 @@
                                             @lang('Question'): {{ $index + 1 < 10 ? '0' . ($index + 1) : $index + 1 }}.
                                             {{ $q['question'] }}
                                         </label>
-                                        <span class="d-block mb-2">
+                                        <span class="d-block mb-2 question__type">
                                             @lang('Type'): {{ ucwords(str_replace('_', ' ', $q['type'])) }}
                                         </span>
                                         <span class="d-block mb-2">

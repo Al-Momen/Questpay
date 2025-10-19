@@ -38,7 +38,7 @@
                     <ul class="dropdown-menu">
                         @foreach ($languages as $language)
                             <li>
-                                <div class="language__item dropdown-item lang-change">
+                                <div class="language__item dropdown-item lang-change" data-lang="{{ $language->code }}" @if (Session::get('lang') === $language->code) selected @endif>
                                     <img src="{{ getImage(getFilePath('language') . '/' . $language->image ?? '', getFileSize('language')) }}"
                                         alt="@lang('flag-image')">
                                     <p>{{ ucfirst($language->name) }}</p>
@@ -120,7 +120,7 @@
                             <ul class="dropdown-menu">
                                 @foreach ($languages as $language)
                                     <li>
-                                        <div class="language__item dropdown-item lang-change">
+                                        <div class="language__item dropdown-item lang-change" data-lang="{{ $language->code }}" @if (Session::get('lang') === $language->code) selected @endif>
                                             <img src="{{ getImage(getFilePath('language') . '/' . $language->image ?? '', getFileSize('language')) }}"
                                                 alt="@lang('flag-image')">
                                             <p>{{ ucfirst($language->name) }}</p>

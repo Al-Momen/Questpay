@@ -73,24 +73,26 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('user-notification-all', 'notificationAll')->name('notification.all');
             });
 
-            
+
             // User Survey Management
             Route::prefix('survey')->controller('SurveyController')->name('survey.')->group(function () {
+
+                Route::get('survey-details/{id}', 'surveyDetails')->name('details');
                 Route::get('index', 'index')->name('index');
                 Route::get('create', 'create')->name('create');
                 Route::post('store', 'store')->name('store');
                 Route::post('generate', 'generate')->name('generate');
                 Route::post('update/{id}', 'update')->name('update');
                 Route::post('status/{id}', 'status')->name('status');
-                Route::get('details/{id}', 'details')->name('details');
                 Route::get('submission', 'submission')->name('submission');
                 Route::get('submission/details/{id}', 'submissionDetails')->name('submission.details');
                 Route::post('submit', 'answerSubmit')->name('submit');
                 Route::get('answer-list/{id}', 'answerList')->name('answer.user.list');
                 Route::get('answer-details/{id}', 'answerDetails')->name('answer.detail');
                 Route::post('answer-status/{status}/{id}', 'answerStatus')->name('answer.status');
-
             });
+
+
 
             //Profile setting
             Route::controller('ProfileController')->group(function () {

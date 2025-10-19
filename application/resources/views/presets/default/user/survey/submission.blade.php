@@ -18,10 +18,10 @@
                             </div>
                         </form>
                     </div>
-                   
+
                 </div>
                 <div class="dashboard-table card mt-4">
-                            <h3 class="dashboard-table__title fs--16 fw--700 mb--16">@lang('Submission List')</h3>
+                    <h3 class="dashboard-table__title fs--16 fw--700 mb--16">@lang('Submission List')</h3>
                     <div class="dashboard-table__items">
                         <table class="table table--responsive--md">
                             <thead>
@@ -51,7 +51,7 @@
                                         <td class="text-center">{{ $general->cur_sym . $item->survey->survey_money }}</td>
                                         <td class="text-center">{{ $item->total_question }}</td>
                                         <td class="text-center">{{ $item->total_answer }}</td>
-                                    
+
                                         <td class="text-center">
                                             @php
                                                 echo $item->statusBadge($item->status);
@@ -59,7 +59,7 @@
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center justify-content-end gap-2">
-                                   
+
                                                 <a href="{{ route('user.survey.submission.details', $item->id) }}"
                                                     class="btn btn--sm btn--base" title="@lang('View')">
                                                     <i class="fa-solid fa-eye"></i>

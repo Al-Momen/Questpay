@@ -1,4 +1,4 @@
-@extends($activeTemplate . 'layouts.master')
+@extends($activeTemplate . 'layouts.frontend')
 @section('content')
     <section class="about mt-120">
         <div class="container">
@@ -70,21 +70,21 @@
                                 </div>
                             </form>
                         </div>
-                    </div>
+                    </div> 
                 </div>
                 <div class="deshboard-list">
-                    <div class="row g-4">
-                        @foreach ($surveys ?? [] as $item)
+                    <div class="row justify-content-center g-4">
+                        @forelse ($surveys ?? [] as $item)
                             <div class="col-lg-4 col-md-6">
                                 <div class="dashboard-list__items">
-                                    <a href="{{ route('survey.details', $item->id) }}"
+                                    <a href="{{ route('user.survey.details', $item->id) }}"
                                         class="dashboard-list__thumb mb-3 w--100">
                                         <img class="w--100 radius--12"
                                             src="{{ getImage(getFilePath('survey') . '/' . $item->image) }}"
                                             alt="@lang('dashboard-img')">
                                     </a>
                                     <div class="dashboard-list__content">
-                                        <a href="{{ route('survey.details', $item->id) }}">
+                                        <a href="{{ route('user.survey.details', $item->id) }}">
                                             <h3 class="dashboard-list__title fs--20 fw--700 ps-3">{{ $item->title }}</h3>
                                         </a>
                                         <div class="dashboard-list__catagory d-flex justify-content-between">
@@ -117,7 +117,7 @@
                                             </div>
                                             <div class="dashboard-list__button">
                                                 <a class="btn btn--base custom--btn"
-                                                    href="{{ route('survey.details', $item->id) }}">
+                                                    href="{{ route('user.survey.details', $item->id) }}">
                                                     @lang('Start Survey')
                                                 </a>
                                             </div>
@@ -125,9 +125,19 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        @empty
+                            <div class="col-lg-12 col-md-12">
+                                <div class=" text-center">
+                                    <div class="dashboard-list__contents"> 
+                                        <img class="no-data" src="{{ getImage(getFilePath('shape') . 'paper.png') }}" alt="@lang('no data')">                                       
+                                        <h3 class="dashboard-list__title fs--30 fw--700 ps-3">No Data</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
+                {{$surveys->links()}}
             </div>
         </div>
     </section>
@@ -138,7 +148,7 @@
         (function($) {
             'use strict';
             $(document).ready(function() {
-                 'use strict';
+                'use strict';
                 $('.clearAll').on('click', function() {
                     $('input[type="checkbox"][name="category_id[]"]').prop('checked', false);
                 });

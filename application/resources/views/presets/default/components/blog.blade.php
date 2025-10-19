@@ -18,14 +18,8 @@
                          @endif
                      </h3>
                  </a>
-                 <p class="news-desc">
-                     @if (strlen(__(strip_tags($item->data_values->description))) > 80)
-                         {{ strLimit(__(strip_tags($item->data_values->description)), 80) }}
-                     @else
-                         {{ __(strip_tags($item->data_values->description)) }}
-                     @endif
-                 </p>
-                 <div class="news-button d-flex align-items-center gap--12">
+           
+                 <div class="news-button d-flex align-items-center gap--12 pt-4">
                      <span class="news-shape"></span>
                      <a class="news-read-more"
                          href="{{ route('blog.details', ['slug' => slug($item->data_values->title), 'id' => $item->id]) }}">

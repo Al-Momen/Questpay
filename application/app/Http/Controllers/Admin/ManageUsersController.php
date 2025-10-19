@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Constants\Status;
@@ -85,10 +86,10 @@ class ManageUsersController extends Controller
         }
 
         return $this->renderUserList($scope, $pageTitle);
-
     }
 
-    protected function userData($scope = null){
+    protected function userData($scope = null)
+    {
 
         $baseQuery = $scope ? User::$scope() : User::query();
         $dataQuery =  User::query();
@@ -101,6 +102,9 @@ class ManageUsersController extends Controller
         $activeUser = (clone $summaryQuery)->active()->count();
         $activeUserPercent = ($totalUser > 0) ? number_format((($activeUser / $totalUser) * 100), 2) : 0;
 
+        $withBalanceUser = (clone $summaryQuery)->withBalance()->count();
+        $withBalanceUserPercent = ($totalUser > 0) ? number_format((($withBalanceUser / $totalUser) * 100), 2) : 0;
+
         $kycVerifiedUser = (clone $summaryQuery)->kycVerified()->count();
         $kycVerifiedUserPercent = ($totalUser > 0) ? number_format((($kycVerifiedUser / $totalUser) * 100), 2) : 0;
 
@@ -111,23 +115,24 @@ class ManageUsersController extends Controller
         $emailVerifiedUserPercent = ($totalUser > 0) ? number_format((($emailVerifiedUser / $totalUser) * 100), 2) : 0;
 
 
-        $users =  $baseQuery->searchable(['username','email'])->dateFilter()->latest()->paginate(getPaginate());
+        $users =  $baseQuery->searchable(['username', 'email'])->dateFilter()->latest()->paginate(getPaginate());
 
         return [
-            'data'=>$users,
-            'summery'=>[
-                'active_user'=>$activeUser,
-                'active_user_percent'=>$activeUserPercent,
-                'kyc_verified_user'=>$kycVerifiedUser,
-                'kyc_verified_user_percent'=>$kycVerifiedUserPercent,
-                'mobile_verified_user'=>$moibileVerifiedUser,
-                'mobile_verified_user_percent'=>$moibileVerifiedUserPercent,
-                'email_verified_user'=>$emailVerifiedUser,
-                'email_verified_user_percent'=>$emailVerifiedUserPercent,
-                'total'=>$totalUser
+            'data' => $users,
+            'summery' => [
+                'active_user'                  => $activeUser,
+                'active_user_percent'          => $activeUserPercent,
+                'with_balance'                 => $withBalanceUser,
+                'with_balance_percent'         => $withBalanceUserPercent,
+                'kyc_verified_user'            => $kycVerifiedUser,
+                'kyc_verified_user_percent'    => $kycVerifiedUserPercent,
+                'mobile_verified_user'         => $moibileVerifiedUser,
+                'mobile_verified_user_percent' => $moibileVerifiedUserPercent,
+                'email_verified_user'          => $emailVerifiedUser,
+                'email_verified_user_percent'  => $emailVerifiedUserPercent,
+                'total'                        => $totalUser
             ]
         ];
-
     }
 
 
@@ -138,15 +143,17 @@ class ManageUsersController extends Controller
         $summery = $userData['summery'];
 
         $widget = [
-            'total_user' => $summery['total'],
-            'active_user' => $summery['active_user'],
-            'active_user_percent' => $summery['active_user_percent'],
-            'kyc_verified_user' => $summery['kyc_verified_user'],
-            'kyc_verified_user_percent' => $summery['kyc_verified_user_percent'],
-            'mobile_verified_user' => $summery['mobile_verified_user'],
+            'total_user'                   => $summery['total'],
+            'active_user'                  => $summery['active_user'],
+            'active_user_percent'          => $summery['active_user_percent'],
+            'kyc_verified_user'            => $summery['kyc_verified_user'],
+            'with_balance'                 => $summery['with_balance'],
+            'with_balance_percent'         => $summery['with_balance_percent'],
+            'kyc_verified_user_percent'    => $summery['kyc_verified_user_percent'],
+            'mobile_verified_user'         => $summery['mobile_verified_user'],
             'mobile_verified_user_percent' => $summery['mobile_verified_user_percent'],
-            'email_verified_user' => $summery['email_verified_user'],
-            'email_verified_user_percent' => $summery['email_verified_user_percent'],
+            'email_verified_user'          => $summery['email_verified_user'],
+            'email_verified_user_percent'  => $summery['email_verified_user_percent'],
         ];
 
         if (request()->ajax()) {
@@ -173,29 +180,29 @@ class ManageUsersController extends Controller
 
 
 
-        if($action == 'banned') {
+        if ($action == 'banned') {
             foreach ($users as $user) {
                 $user->status = Status::USER_BAN;
                 $user->ban_reason = $request->message;
                 $user->save();
             }
-        }else if($action == 'unbanned') {
+        } else if ($action == 'unbanned') {
             foreach ($users as $user) {
                 $user->status = Status::USER_ACTIVE;
                 $user->ban_reason = null;
                 $user->save();
             }
-        }else if($action == 'mobile_verified') {
+        } else if ($action == 'mobile_verified') {
             foreach ($users as $user) {
                 $user->sv = Status::VERIFIED;
                 $user->save();
             }
-        }else if($action == 'email_verified') {
+        } else if ($action == 'email_verified') {
             foreach ($users as $user) {
                 $user->ev = Status::VERIFIED;
                 $user->save();
             }
-        }else if($action == 'kyc_verified') {
+        } else if ($action == 'kyc_verified') {
             foreach ($users as $user) {
                 $user->kv = Status::VERIFIED;
                 $user->save();
@@ -216,27 +223,27 @@ class ManageUsersController extends Controller
     {
         $countryData = (array)json_decode(file_get_contents(resource_path('views/includes/country.json')));
         $countryCodes = implode(',', array_keys($countryData));
-        $mobileCodes = implode(',',array_column($countryData, 'dial_code'));
-        $countries = implode(',',array_column($countryData, 'country'));
+        $mobileCodes = implode(',', array_column($countryData, 'dial_code'));
+        $countries = implode(',', array_column($countryData, 'country'));
         $request->validate([
             'email' => 'required|string|email|unique:users',
             'mobile' => 'required|regex:/^([0-9]*)$/',
             'password' => 'required|string|min:6',
             'username' => 'required|unique:users|min:6',
-            'mobile_code' => 'required|in:'.$mobileCodes,
-            'country_code' => 'required|in:'.$countryCodes,
-            'country' => 'required|in:'.$countries,
+            'mobile_code' => 'required|in:' . $mobileCodes,
+            'country_code' => 'required|in:' . $countryCodes,
+            'country' => 'required|in:' . $countries,
             'firstname' => 'required|string|max:40',
             'lastname' => 'required|string|max:40',
         ]);
 
-        if(preg_match("/[^a-z0-9_]/", trim($request->username))){
+        if (preg_match("/[^a-z0-9_]/", trim($request->username))) {
             $notify[] = ['info', 'Username can contain only small letters, numbers and underscore.'];
             $notify[] = ['error', 'No special character, space or capital letters in username.'];
             return back()->withNotify($notify)->withInput($request->all());
         }
 
-        $exist = User::where('mobile',$request->mobile_code.$request->mobile)->first();
+        $exist = User::where('mobile', $request->mobile_code . $request->mobile)->first();
         if ($exist) {
             $notify[] = ['error', 'The mobile number already exists'];
             return back()->withNotify($notify)->withInput();
@@ -274,13 +281,13 @@ class ManageUsersController extends Controller
     public function detail($id)
     {
         $user = User::findOrFail($id);
-        $pageTitle = 'User Details / @'.$user->username;
+        $pageTitle = 'User Details / @' . $user->username;
 
-        $totalDeposit = Deposit::where('user_id',$user->id)->where('status',1)->sum('amount');
-        $totalWithdrawals = Withdrawal::where('user_id',$user->id)->where('status',1)->sum('amount');
-        $totalTransaction = Transaction::where('user_id',$user->id)->count();
+        $totalDeposit = Deposit::where('user_id', $user->id)->where('status', 1)->sum('amount');
+        $totalWithdrawals = Withdrawal::where('user_id', $user->id)->where('status', 1)->sum('amount');
+        $totalTransaction = Transaction::where('user_id', $user->id)->count();
         $countries = json_decode(file_get_contents(resource_path('views/includes/country.json')));
-        return view('Admin::users.detail', compact('pageTitle', 'user','totalDeposit','totalWithdrawals','totalTransaction','countries'));
+        return view('Admin::users.detail', compact('pageTitle', 'user', 'totalDeposit', 'totalWithdrawals', 'totalTransaction', 'countries'));
     }
 
 
@@ -288,7 +295,7 @@ class ManageUsersController extends Controller
     {
         $pageTitle = 'KYC Details';
         $user = User::findOrFail($id);
-        return view('Admin::users.kyc_detail', compact('pageTitle','user'));
+        return view('Admin::users.kyc_detail', compact('pageTitle', 'user'));
     }
 
     public function kycApprove($id)
@@ -297,9 +304,9 @@ class ManageUsersController extends Controller
         $user->kv = 1;
         $user->save();
 
-        notify($user,'KYC_APPROVE',[]);
+        notify($user, 'KYC_APPROVE', []);
 
-        $notify[] = ['success','KYC approved successfully'];
+        $notify[] = ['success', 'KYC approved successfully'];
         return to_route('admin.users.kyc.pending')->withNotify($notify);
     }
 
@@ -308,16 +315,16 @@ class ManageUsersController extends Controller
         $user = User::findOrFail($id);
         foreach ($user->kyc_data as $kycData) {
             if ($kycData->type == 'file') {
-                fileManager()->removeFile(getFilePath('verify').'/'.$kycData->value);
+                fileManager()->removeFile(getFilePath('verify') . '/' . $kycData->value);
             }
         }
         $user->kv = Status::UNVERIFIED;
         $user->kyc_data = null;
         $user->save();
 
-        notify($user,'KYC_REJECT',[]);
+        notify($user, 'KYC_REJECT', []);
 
-        $notify[] = ['success','KYC rejected successfully'];
+        $notify[] = ['success', 'KYC rejected successfully'];
         return to_route('admin.users.kyc.pending')->withNotify($notify);
     }
 
@@ -338,20 +345,20 @@ class ManageUsersController extends Controller
             'lastname' => 'required|string|max:40',
             'email' => 'required|email|string|max:40|unique:users,email,' . $user->id,
             'mobile' => 'required|string|max:40|unique:users,mobile,' . $user->id,
-            'country' => 'required|in:'.$countries,
+            'country' => 'required|in:' . $countries,
         ]);
-        $user->mobile = $dialCode.$request->mobile;
+        $user->mobile = $dialCode . $request->mobile;
         $user->country_code = $countryCode;
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
         $user->email = $request->email;
         $user->address = [
-                            'address' => $request->address,
-                            'city' => $request->city,
-                            'state' => $request->state,
-                            'zip' => $request->zip,
-                            'country' => $country,
-                        ];
+            'address' => $request->address,
+            'city' => $request->city,
+            'state' => $request->state,
+            'zip' => $request->zip,
+            'country' => $country,
+        ];
         $user->ev = $request->ev ? Status::VERIFIED : Status::UNVERIFIED;
         $user->sv = $request->sv ? Status::VERIFIED : Status::UNVERIFIED;
         $user->ts = $request->ts ? Status::VERIFIED : Status::UNVERIFIED;
@@ -360,12 +367,12 @@ class ManageUsersController extends Controller
             if ($user->kyc_data) {
                 foreach ($user->kyc_data as $kycData) {
                     if ($kycData->type == 'file') {
-                        fileManager()->removeFile(getFilePath('verify').'/'.$kycData->value);
+                        fileManager()->removeFile(getFilePath('verify') . '/' . $kycData->value);
                     }
                 }
             }
             $user->kyc_data = null;
-        }else{
+        } else {
             $user->kv = Status::KYC_VERIFIED;
         }
         $user->save();
@@ -398,7 +405,6 @@ class ManageUsersController extends Controller
             $notifyTemplate = 'BAL_ADD';
 
             $notify[] = ['success', $general->cur_sym . $amount . ' has been added successfully'];
-
         } else {
             if ($amount > $user->balance) {
                 $notify[] = ['error', $user->username . ' doesn\'t have sufficient balance.'];
@@ -434,29 +440,29 @@ class ManageUsersController extends Controller
         return back()->withNotify($notify);
     }
 
-    public function login($id){
+    public function login($id)
+    {
         Auth::loginUsingId($id);
         return to_route('user.home');
     }
 
-    public function status(Request $request,$id)
+    public function status(Request $request, $id)
     {
         $user = User::findOrFail($id);
         if ($user->status == 1) {
             $request->validate([
-                'reason'=>'required|string|max:255'
+                'reason' => 'required|string|max:255'
             ]);
             $user->status = Status::USER_BAN;
             $user->ban_reason = $request->reason;
-            $notify[] = ['success','User banned successfully'];
-        }else{
+            $notify[] = ['success', 'User banned successfully'];
+        } else {
             $user->status = Status::USER_ACTIVE;
             $user->ban_reason = null;
-            $notify[] = ['success','User unbanned successfully'];
+            $notify[] = ['success', 'User unbanned successfully'];
         }
         $user->save();
         return back()->withNotify($notify);
-
     }
 
 
@@ -465,8 +471,8 @@ class ManageUsersController extends Controller
         $user = User::findOrFail($id);
         $general = gs();
         if (!$general->en && !$general->sn) {
-            $notify[] = ['warning','Notification options are disabled currently'];
-            return to_route('admin.users.detail',$user->id)->withNotify($notify);
+            $notify[] = ['warning', 'Notification options are disabled currently'];
+            return to_route('admin.users.detail', $user->id)->withNotify($notify);
         }
         $pageTitle = 'Send Notification to ' . $user->username;
         return view('Admin::users.notification_single', compact('pageTitle', 'user'));
@@ -480,9 +486,9 @@ class ManageUsersController extends Controller
         ]);
 
         $user = User::findOrFail($id);
-        notify($user,'DEFAULT',[
-            'subject'=>$request->subject,
-            'message'=>$request->message,
+        notify($user, 'DEFAULT', [
+            'subject' => $request->subject,
+            'message' => $request->message,
         ]);
         $notify[] = ['success', 'Notification sent successfully'];
         return back()->withNotify($notify);
@@ -525,8 +531,8 @@ class ManageUsersController extends Controller
         }
 
 
-        $template = NotificationTemplate::where('act', 'DEFAULT')->where($request->via.'_status', Status::ENABLE)->exists();
-        if(!$template){
+        $template = NotificationTemplate::where('act', 'DEFAULT')->where($request->via . '_status', Status::ENABLE)->exists();
+        if (!$template) {
             $notify[] = ['warning', 'Default notification template is not enabled'];
             return back()->withNotify($notify);
         }
@@ -548,7 +554,7 @@ class ManageUsersController extends Controller
         if (session()->has("SEND_NOTIFICATION")) {
             $totalUserCount = session('SEND_NOTIFICATION')['total_user'];
         } else {
-            $totalUserCount = (clone $userQuery)->count() - ($request->start-1);
+            $totalUserCount = (clone $userQuery)->count() - ($request->start - 1);
         }
 
 
@@ -597,7 +603,8 @@ class ManageUsersController extends Controller
         return redirect($url)->withNotify($notify);
     }
 
-    public function countBySegment($methodName){
+    public function countBySegment($methodName)
+    {
         return User::active()->$methodName()->count();
     }
 
@@ -618,10 +625,11 @@ class ManageUsersController extends Controller
         ]);
     }
 
-    public function notificationLog($id){
+    public function notificationLog($id)
+    {
         $user = User::findOrFail($id);
-        $pageTitle = 'Notifications Sent to '.$user->username;
-        $logs = NotificationLog::where('user_id',$id)->with('user')->orderBy('id','desc')->paginate(getPaginate());
-        return view('Admin::reports.notification_history', compact('pageTitle','logs','user'));
+        $pageTitle = 'Notifications Sent to ' . $user->username;
+        $logs = NotificationLog::where('user_id', $id)->with('user')->orderBy('id', 'desc')->paginate(getPaginate());
+        return view('Admin::reports.notification_history', compact('pageTitle', 'logs', 'user'));
     }
 }

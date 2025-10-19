@@ -32,7 +32,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-4 col-12">
+            <div class="col-lg-3 col-md-4 col-6">
                 <div class="footer-menu">
                     <h4 class="footer-menu__title">@lang('Company links')</h4>
                     <div class="footer-menu__items">
@@ -58,7 +58,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-4 col-12">
+            <div class="col-lg-3 col-md-4 col-6">
                 <div class="footer-menu">
                     <h4 class="footer-menu__title">@lang('Quick Links')</h4>
                     <div class="footer-menu__items">

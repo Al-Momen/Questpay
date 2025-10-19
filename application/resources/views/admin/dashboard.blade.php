@@ -41,7 +41,7 @@
                                 <i class="dashboard-card-icon fa-solid fa-paste"></i>
                             </div>
                             <div class="dashboard-widget__content">
-                                <span class="title">@lang('Total Submission Answer')</span>
+                                <span class="title">@lang('Total Submissions')</span>
                                 <h5 class="number">{{ $widget['total_survey_submissions'] }}</h5>
                             </div>
                         </a>
@@ -301,7 +301,7 @@
                             horizontal: false
                         }
                     },
-                    colors: ['#FFA500', '#00A86B'],
+                    colors: ['#0091ff', '#00a86b'],
                     series: [{
                             name: 'Withdrawals',
                             data: withdrawalsChart.values

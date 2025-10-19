@@ -36,7 +36,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-6 mb-2">
                             <div class="form-floating">
                                 <input type="text" class="form-control" name="address" id="address" value="{{ old('address') }}" placeholder="@lang('Address')"
-                                    required>
+                                    >
                                 <label class="form-label" for="address">@lang('Address')</label>
 
                             </div>
@@ -46,7 +46,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-6 mb-2">
                             <div class="form-floating">
                                 <input type="text" class="form-control" name="state" id="state" value="{{ old('state') }}" placeholder="@lang('State')"
-                                    required>
+                                    >
                                 <label class="form-label" for="state">@lang('State')</label>
 
                             </div>
@@ -55,7 +55,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="form-floating">
                                 <input type="text" class="form-control" name="zip" id="zip" value="{{ old('zip') }}" placeholder="@lang('Zip')"
-                                    required>
+                                    >
                                 <label class="form-label" for="zip">@lang('Zip Code')</label>
 
                             </div>
@@ -63,8 +63,8 @@
 
                         <div class="col-lg-6 col-md-6 col-sm-6 mb-2">
                             <div class="form-floating">
-                                <input type="text" class="form-control" name="city" id="firstname" value="{{ old('city') }}" placeholder="@lang('City')"
-                                    required>
+                                <input type="text" class="form-control" name="city" id="city" value="{{ old('city') }}" placeholder="@lang('City')"
+                                    >
                                 <label class="form-label" for="city">@lang('City')</label>
                             </div>
                         </div>

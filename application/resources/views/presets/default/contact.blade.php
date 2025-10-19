@@ -107,33 +107,33 @@
                                 <div class="row g-4">
                                     <div class="col-lg-6">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" id="userName" name="name"
+                                            <input type="text" class="form-control support-readonly" id="userName" name="name"
                                                 value="@if(auth()->user()){{ auth()->user()->fullname}}@else{{ old('name') }}@endif"
                                                 @if (auth()->user()) readonly @endif required
                                                 placeholder="@lang('Enter Full Name')">
-                                            <label for="userName">@lang('Username')</label>
+                                            <label for="userName" class="label-readonly">@lang('Username')</label>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-floating">
-                                            <input type="email" class="form-control" id="emailAddress"
+                                            <input type="email" class="form-control support-readonly" id="emailAddress"
                                                 placeholder="@lang('Enter Email Address')" name="email"
                                                 value="@if (auth()->user()) {{ auth()->user()->email }}@else{{ old('email') }} @endif"
                                                 @if (auth()->user()) readonly @endif required>
-                                            <label for="emailAddress">@lang('Email Address')</label>
+                                            <label for="emailAddress" class="label-readonly">@lang('Email Address')</label>
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" id="subject" name="subject"
+                                            <input type="text" class="form-control support-readonly" id="subject" name="subject"
                                                 placeholder="@lang('Subject')" value="{{ old('subject') }}"required>
-                                            <label for="subject">@lang('Subject')</label>
+                                            <label for="subject" class="label-readonly">@lang('Subject')</label>
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="form-floating mb-4">
-                                            <textarea class="form-control text-area" name="message" placeholder="@lang('Enter your message here')..." id="message" required>{{ old('message') }}</textarea>
-                                            <label for="message">@lang('Type Something')</label>
+                                            <textarea class="form-control text-area support-readonly" name="message" placeholder="@lang('Enter your message here')..." id="message" required>{{ old('message') }}</textarea>
+                                            <label for="message" class="label-readonly">@lang('Type Something')</label>
                                         </div>
                                     </div>
                                     <div class="col-lg-12 recap">

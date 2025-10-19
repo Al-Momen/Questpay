@@ -1,78 +1,83 @@
 @extends($activeTemplate . 'layouts.master')
 @section('content')
     <!--==========================  two-factor Section Start  ==========================-->
-    <div class="two-factor-section">
+    <div class="dashboard-section pt-120">
         <div class="container">
-            @include('Template::components.user.top_header')
-            <div class="row g-4">
-                @if (!auth()->user()->ts)
-                    <div class="col-lg-4">
-                        <div class="card p-4">
-                            <div class="card-header pt-0">
-                                <h5 class="card-title fs--20 fw--600">@lang('Two Factor Authenticator')</h5>
-                            </div>
-                            <div class="card-body px-0 pb-0">
-                                <div class="two__factor__info ">
-                                    <p class="fs-14 fw--500 mb-4">
-                                        @lang('Use the QR code or setup key on your Google Authenticator app to add your account.')
-                                    </p>
-                                    <div class="text-center qr-code">
-                                        <img src="{{ $qrCodeUrl }}"alt="@lang('QR Code')">
-                                    </div>
-
+            <div class="dashboard-wrapper">
+                @include('Template::components.user.top_header')
+                <div class="row g-4">
+                    @if (!auth()->user()->ts)
+                        <div class="col-lg-4">
+                            <div class="card p-4">
+                                <div class="card-header pt-0">
+                                    <h5 class="card-title fs--20 fw--600">@lang('Two Factor Authenticator')</h5>
                                 </div>
-                                <div class="two__factor__key">
-                                    <label class="form-label">@lang('Setup Key')</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control referralURL" value="{{ $secret }}" readonly="" id="key">
-                                        <button class="input-group-text copytext" id="copyBoard">
-                                            <i class="fa-solid fa-copy"></i>
-                                        </button>
+                                <div class="card-body px-0 pb-0">
+                                    <div class="two__factor__info ">
+                                        <p class="fs-14 fw--500 mb-4">
+                                            @lang('Use the QR code or setup key on your Google Authenticator app to add your account.')
+                                        </p>
+                                        <div class="text-center qr-code">
+                                            <img src="{{ $qrCodeUrl }}"alt="@lang('QR Code')">
+                                        </div>
+
+                                    </div>
+                                    <div class="two__factor__key">
+                                        <label class="form-label">@lang('Setup Key')</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control referralURL"
+                                                value="{{ $secret }}" readonly="" id="key">
+                                            <button class="input-group-text copytext" id="copyBoard">
+                                                <i class="fa-solid fa-copy"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-                <div class="col-lg-8">
-                    @if (auth()->user()->ts)
-                        <div class="card p-4">
-                            <div class="card-header pt-0">
-                                <h5 class="card-title">@lang('Disable 2FA Security')</h5>
-                            </div>
-                            <div class="card-body px-0 pb-0">
-                                <form action="{{ route('user.twofactor.disable') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="key" value="{{ $secret }}">
-                                    <div class="two__factor__form">
-                                        <label class="form-label required" for="code">@lang('Google Authenticator OTP')</label>
-                                        <input class="form-control" type="text" name="code" required=""
-                                            id="code" placeholder="@lang('Enter OTP')">
-                                        <button type="submit" class="btn btn--base w-100 mt-3">@lang('Submit')</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    @else
-                        <div class="card p-4">
-                            <div class="card-header pt-0">
-                                <h5 class="card-title">@lang('Enable 2FA Security')</h5>
-                            </div>
-                            <div class="card-body px-0 pb-0">
-                                <form action="{{ route('user.twofactor.enable') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="key" value="{{ $secret }}">
-
-                                    <div class="two__factor__form">
-                                        <label class="form-label required" for="code">@lang('Google Authenticator OTP')</label>
-                                        <input class="form-control" type="text" name="code" required=""
-                                            id="code" placeholder="@lang('Enter OTP')">
-                                        <button type="submit" class="btn btn--base w-100 mt-3">@lang('Submit')</button>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     @endif
+                    <div class="col-lg-8">
+                        @if (auth()->user()->ts)
+                            <div class="card p-4">
+                                <div class="card-header pt-0">
+                                    <h5 class="card-title">@lang('Disable 2FA Security')</h5>
+                                </div>
+                                <div class="card-body px-0 pb-0">
+                                    <form action="{{ route('user.twofactor.disable') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="key" value="{{ $secret }}">
+                                        <div class="two__factor__form">
+                                            <label class="form-label required" for="code">@lang('Google Authenticator OTP')</label>
+                                            <input class="form-control" type="text" name="code" required=""
+                                                id="code" placeholder="@lang('Enter OTP')">
+                                            <button type="submit"
+                                                class="btn btn--base w-100 mt-3">@lang('Submit')</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        @else
+                            <div class="card p-4">
+                                <div class="card-header pt-0">
+                                    <h5 class="card-title">@lang('Enable 2FA Security')</h5>
+                                </div>
+                                <div class="card-body px-0 pb-0">
+                                    <form action="{{ route('user.twofactor.enable') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="key" value="{{ $secret }}">
+
+                                        <div class="two__factor__form">
+                                            <label class="form-label required" for="code">@lang('Google Authenticator OTP')</label>
+                                            <input class="form-control" type="text" name="code" required=""
+                                                id="code" placeholder="@lang('Enter OTP')">
+                                            <button type="submit"
+                                                class="btn btn--base w-100 mt-3">@lang('Submit')</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>

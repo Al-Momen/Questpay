@@ -17,7 +17,7 @@
                                 <div class="col-lg-4">
                                     <div class="logo-upload--box">
                                         <x-image-uploader name="image" :imagePath="getImage(getFilePath('survey') . '/', getFileSize('survey'))" :size="getFileSize('survey')"
-                                            :isImage="true" class="w-100" id="uploadLogo3" :required="true" />
+                                            :isImage="true" class="w-100" id="uploadLogo3" :baseColor="true" :required="true" />
                                     </div>
                                 </div>
                                 <div class="col-lg-8">
@@ -63,14 +63,13 @@
                     </div>
                 </div>
 
-
                 <div class="profile-items mt-4">
                     <div class="row g-4 justify-content-center">
                         <div class="col-lg-6">
                             <div class="profile__wrap card p-4">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <h4 class="mb-0">@lang('AI Survey Generator')</h4>
-                                    <span>
+                                    <span class="text--base">
                                         (@lang('Credit Cost per Prompt'): {{ $general->credit_cost_per_prompt }})
                                     </span>
                                 </div>
@@ -96,7 +95,7 @@
                                         <div class="form-group text-end mt-4">
                                             <textarea id="prompts" class="form-control" rows="3" placeholder="@lang('Write a prompt to generate survey...')"></textarea>
                                             @if ($general->credit_cost_per_prompt <= auth()->user()->credit)
-                                                <button type="button" class="btn btn--primary mt-2" id="generateBtn">
+                                                <button type="button" class="btn btn--base mt-2" id="generateBtn">
                                                     <i class="fa-solid fa-paper-plane"></i> @lang('Generate')
                                                 </button>
                                             @endif
@@ -124,7 +123,7 @@
 
                                                 <div class="col-sm-4">
                                                     <div class="text-end">
-                                                        <button class="btn btn--primary mt-3 d-none" id="saveSurveyBtn">
+                                                        <button class="btn btn--base mt-3 d-none" id="saveSurveyBtn">
                                                             <i class="fa fa-save"></i> @lang('Save Survey')
                                                         </button>
                                                     </div>
@@ -142,7 +141,7 @@
     @endsection
 
     @push('breadcrumb-plugins')
-        <a href="{{ route('admin.survey.index') }}" class="btn btn-sm btn--primary">
+        <a href="{{ route('admin.survey.index') }}" class="btn btn-sm btn--base">
             <i class="fa-solid fa-arrow-left"></i> @lang('Back')
         </a>
     @endpush

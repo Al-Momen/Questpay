@@ -11,7 +11,7 @@
                         <div class="col-lg-12 col-md-12">
                             <div class="row align-items-center justify-content-between mb-3">
                                 <div class="col-auto">
-                                    <h5 class="text--black mt-0 mb-0">
+                                    <h5 class="text--black ticket-view mt-0 mb-0">
                                         @php echo $myTicket->statusBadge; @endphp
                                         [@lang('Ticket')#{{ $myTicket->ticket }}] {{ $myTicket->subject }}
                                     </h5>

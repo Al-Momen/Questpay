@@ -334,7 +334,7 @@ class PaymentController extends Controller
                 $deposit->survey->save();
             } else {
                 $user->balance += $deposit->amount;
-                $deposit->survey->save();
+                $deposit->save();
             }
 
             $type = $deposit->survey_id ? 'Survey Payment' : ($deposit->is_credit_purchase ? 'Credit Payment' : 'Deposit Payment');

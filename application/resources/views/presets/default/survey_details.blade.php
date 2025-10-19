@@ -29,20 +29,27 @@
                                             @if (in_array($q['type'], ['mcq_single', 'mcq_multiple']))
                                                 <ul class="list-group list-group-flush">
                                                     @foreach ($q['options'] as $opt)
-                                                        <li class="list-group-item">
-                                                            <label class="d-flex align-items-center gap-2">
-                                                                @if ($q['type'] === 'mcq_single')
-                                                                    <input type="radio"
+                                                        @if ($q['type'] === 'mcq_single')
+                                                            <li class="list-group-item form-radio">
+                                                                <label class="d-flex align-items-center gap-2">
+                                                                    <input class="form-check-input" type="radio"
                                                                         name="questions[{{ $index }}][answer]"
                                                                         value="{{ $opt }}">
-                                                                @else
-                                                                    <input type="checkbox"
-                                                                        name="questions[{{ $index }}][answer][]"
-                                                                        value="{{ $opt }}">
-                                                                @endif
-                                                                {{ $opt }}
-                                                            </label>
-                                                        </li>
+                                                                    {{ $opt }}
+                                                                </label>
+                                                            </li>
+                                                        @else
+                                                            <li class="list-group-item">
+                                                                <label class="d-flex align-items-center gap-2">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            name="questions[{{ $index }}][answer][]"
+                                                                            value="{{ $opt }}">
+                                                                    </div>
+                                                                    {{ $opt }}
+                                                                </label>
+                                                            </li>
+                                                        @endif
                                                     @endforeach
                                                 </ul>
                                             @elseif ($q['type'] === 'written_textarea')
@@ -53,12 +60,9 @@
                                             @endif
                                         </div>
                                     @endforeach
-                                    @guest
-                                        <a href="{{route('user.login')}}" class="btn btn--base btn--lg w-100">@lang('Submit Answers')</a>
-                                    @endguest
-                                    @auth
+                                   
                                         <button type="submit" class="btn btn--base w-100">@lang('Submit Answers')</button>
-                                    @endauth
+                                    
 
                                 </form>
                             </div>

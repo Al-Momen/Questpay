@@ -54,9 +54,9 @@ function hexToHsl($hex)
 ?>
 
 :root{
---primary-h: <?php echo hexToHsl($color)['h']; ?>;
---primary-s: <?php echo hexToHsl($color)['s']; ?>%;
---primary-l: <?php echo hexToHsl($color)['l']; ?>%;
+--base-h: <?php echo hexToHsl($color)['h']; ?>;
+--base-s: <?php echo hexToHsl($color)['s']; ?>%;
+--base-l: <?php echo hexToHsl($color)['l']; ?>%;
 --secondary-h: <?php echo hexToHsl($secondColor)['h']; ?>;
 --secondary-s: <?php echo hexToHsl($secondColor)['s']; ?>%;
 --secondary-l: <?php echo hexToHsl($secondColor)['l']; ?>%;

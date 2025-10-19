@@ -74,18 +74,25 @@
                                                     <i class="fa-solid fa-ellipsis-vertical"></i>
                                                 </button>
                                                 <ul class="dropdown-menu">
-                                                   
+
                                                     <li><a class="dropdown-item"
                                                             href="{{ route('user.survey.details', $item->id) }}">@lang('View')</a>
                                                     </li>
 
-                                                    <li><a class="dropdown-item"
+                                                    <li>
+                                                        <a class="dropdown-item"
                                                             href="{{ route('user.survey.answer.user.list', $item->id) }}">@lang('Submission List')</a>
                                                     </li>
-                                                     @if (!in_array($item->status, [Status::SURVEY_INITIAL, Status::SURVEY_REJECTED]))
+                                                    <li>
+                                                        <a class="dropdown-item copyLinkBtn" href="javascript:void(0)"
+                                                            data-url="{{ route('user.survey.details', $item->id) }}">
+                                                            @lang('Copy Link')
+                                                        </a>
+                                                    </li>
+                                                    @if (!in_array($item->status, [Status::SURVEY_INITIAL, Status::SURVEY_REJECTED]))
                                                         <li>
-                                                            <a class="dropdown-item confirmationBtn" href="javascript:void(0)"
-                                                                title="@lang($item->status ? 'Disable' : 'Enable')"
+                                                            <a class="dropdown-item confirmationBtn"
+                                                                href="javascript:void(0)" title="@lang($item->status ? 'Disable' : 'Enable')"
                                                                 data-question="@lang('Are you sure to change this survey status?')"
                                                                 data-action="{{ route('user.survey.status', $item->id) }}">@lang('Status')
                                                             </a>
@@ -93,8 +100,6 @@
                                                     @endif
                                                 </ul>
                                             </div>
-
-
                                         </td>
                                     </tr>
                                 @empty
@@ -112,3 +117,19 @@
     </div>
     <x-confirmation-modal></x-confirmation-modal>
 @endsection
+
+@push('script')
+    <script>
+        $(document).on('click', '.copyLinkBtn', function() {
+            let link = $(this).data('url'); 
+
+            navigator.clipboard.writeText(link)
+                .then(() => {
+                    notify('success','Link copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+        });
+    </script>
+@endpush
