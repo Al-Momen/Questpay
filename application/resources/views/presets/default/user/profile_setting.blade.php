@@ -72,7 +72,7 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6">
                                             <div class="form-floating">
-                                                <select class="form-select" name="country" required id="gateway">
+                                                <select class="form-select support-readonly" name="country" required id="gateway">
                                                     @foreach ($countries as $key => $country)
                                                         <option data-mobile_code="{{ $country->dial_code }}"
                                                             value="{{ $country->country }}"
@@ -81,7 +81,7 @@
                                                             {{ __($country->country) }}</option>
                                                     @endforeach
                                                 </select>
-                                                <label for="country">@lang('Country')</label>
+                                                <label for="country" class="label-readonly">@lang('Country')</label>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6">
@@ -108,21 +108,21 @@
                                         <div class="col-lg-6 col-md-6">
                                             <div class="form-floating">
                                                 <input type="text" class="form-control" id="state"
-                                                    placeholder="@lang('State')" value="{{ $user->address?->state }}">
+                                                    placeholder="@lang('State')" name="state" value="{{ $user->address?->state }}">
                                                 <label for="state">@lang('State')</label>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6">
                                             <div class="form-floating">
                                                 <input type="text" class="form-control" id="zipCode"
-                                                    placeholder="@lang('Zip Code')" value="{{ $user->address?->zip }}">
+                                                    placeholder="@lang('Zip Code')" name="zip" value="{{ $user->address?->zip }}">
                                                 <label for="zipCode">@lang('Zip Code')</label>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6">
                                             <div class="form-floating">
                                                 <input type="text" class="form-control" id="city"
-                                                    placeholder="@lang('City')" value="{{ $user->address?->city }}">
+                                                    placeholder="@lang('City')" name="city" value="{{ $user->address?->city }}">
                                                 <label for="city">@lang('City')</label>
                                             </div>
                                         </div>
@@ -133,7 +133,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>

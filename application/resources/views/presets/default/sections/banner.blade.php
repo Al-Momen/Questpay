@@ -43,7 +43,7 @@
                         <p class="hero-desc sub-animation">{{ __($bannerSectionContent->data_values->sub_heading) }}
                         </p>
                         <a class="hero-button btn btn--base"
-                            href="{{route('survey')}}">{{ __($bannerSectionContent->data_values->button_text) }}</a>
+                            href="{{route('user.survey.all.survey')}}">{{ __($bannerSectionContent->data_values->button_text) }}</a>
                     </div>
                 </div>
             </div>

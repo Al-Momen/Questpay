@@ -12,6 +12,8 @@
             <ul class=" dashboard-menu__items d-flex flex-wrap">
                 <li><a href="{{ route('user.home') }}"
                         class="{{ Route::is('user.home') ? 'active' : '' }}"></span>@lang('Dashboard')</a></li>
+                <li><a href="{{ route('user.survey.all.survey') }}"
+                        class="{{ Route::is('user.survey.all.survey') || Route::is('user.survey.details') ? 'active' : '' }} ? 'active' : '' }}">@lang('All Survey')</a></li>
                 <li><a href="{{ route('user.survey.index') }}"
                         class="{{ Route::is('user.survey.index') ? 'active' : '' }}">@lang('Survey List')</a></li>
                 <li><a href="{{ route('user.survey.submission') }}"

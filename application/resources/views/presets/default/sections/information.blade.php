@@ -13,7 +13,7 @@
                     <div class="cta-content">
                         <h2 class="cta-left__title title-animation">{{__($informationSectionContent->data_values->left_heading)}}</h2>
                         <p class="cta-left__desc sub-animation">{{__($informationSectionContent->data_values->left_subheading)}}</p>
-                        <a class="hero-button btn btn--base" href="{{route('survey')}}">{{__($informationSectionContent->data_values->left_button_text)}}</a>
+                        <a class="hero-button btn btn--base" href="{{route('user.survey.all.survey')}}">{{__($informationSectionContent->data_values->left_button_text)}}</a>
                     </div>
                 </div>
             </div>
@@ -24,7 +24,7 @@
                         <h2 class="cta-right__title title-animation">{{__($informationSectionContent->data_values->right_heading)}}
                         </h2>
                         <p class="cta-right__desc sub-animation">{{__($informationSectionContent->data_values->right_subheading)}}</p>
-                        <a class="hero-button btn btn--base" href="{{route('survey')}}">
+                        <a class="hero-button btn btn--base" href="{{route('user.survey.all.survey')}}">
                            {{__($informationSectionContent->data_values->right_button_text)}}
                         </a>
                     </div>

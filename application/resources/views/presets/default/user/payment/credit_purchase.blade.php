@@ -30,7 +30,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12 mb-4">
+                                        <div class="col-sm-12 mb-3">
                                             <div class="profile__form">
                                                 <div class="form-floating">
                                                     <input type="number" name="credit_purchase"

@@ -1,8 +1,8 @@
 @extends($activeTemplate . 'layouts.master')
 @section('content')
-    <div class="container">
-        <div class="profile-section">
-            <div class="container">
+    <div class="dashboard-section pt-120">
+        <div class="container">
+            <div class="dashboard-wrapper">
                 @include('Template::components.user.top_header')
                 <div class="profile-items">
                     <div class="text-end">

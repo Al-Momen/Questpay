@@ -38,7 +38,8 @@
                     <ul class="dropdown-menu">
                         @foreach ($languages as $language)
                             <li>
-                                <div class="language__item dropdown-item lang-change" data-lang="{{ $language->code }}" @if (Session::get('lang') === $language->code) selected @endif>
+                                <div class="language__item dropdown-item lang-change" data-lang="{{ $language->code }}"
+                                    @if (Session::get('lang') === $language->code) selected @endif>
                                     <img src="{{ getImage(getFilePath('language') . '/' . $language->image ?? '', getFileSize('language')) }}"
                                         alt="@lang('flag-image')">
                                     <p>{{ ucfirst($language->name) }}</p>
@@ -50,7 +51,7 @@
             </div>
             <div class="offcanvas__login">
                 @auth
-                    <a href="{{ route('user.home') }}" class="btn btn--base sign-in--btn">@lang('Dashboard')</a>
+
                     <a href="{{ route('user.logout') }}" class="btn btn--base sign-in--btn">@lang('Logout')</a>
                 @endauth
                 @guest
@@ -72,6 +73,11 @@
                         </li>
                     @endif
                 @endforeach
+                @auth
+                    <li class="{{ route('user.home') ? 'active' : null }}">
+                        <a href="{{ route('user.home') }}">@lang('Dashboard')</a>
+                    </li>
+                @endauth
             </ul>
         </div>
     </div>
@@ -120,7 +126,9 @@
                             <ul class="dropdown-menu">
                                 @foreach ($languages as $language)
                                     <li>
-                                        <div class="language__item dropdown-item lang-change" data-lang="{{ $language->code }}" @if (Session::get('lang') === $language->code) selected @endif>
+                                        <div class="language__item dropdown-item lang-change"
+                                            data-lang="{{ $language->code }}"
+                                            @if (Session::get('lang') === $language->code) selected @endif>
                                             <img src="{{ getImage(getFilePath('language') . '/' . $language->image ?? '', getFileSize('language')) }}"
                                                 alt="@lang('flag-image')">
                                             <p>{{ ucfirst($language->name) }}</p>

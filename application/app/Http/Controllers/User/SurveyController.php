@@ -16,6 +16,21 @@ use Illuminate\Support\Facades\Validator;
 
 class SurveyController extends Controller
 {
+    public function allSurvey(Request $request)
+    {
+        $pageTitle  = "All Survey";
+        $categoryIds = $request->input('category_id');
+        $surveys = Survey::with(['category', 'deposit'])
+            ->searchable(['title'])
+            ->where('status', Status::SURVEY_ENABLE)
+            ->when(!empty($categoryIds), function ($q) use ($categoryIds) {
+                $q->whereIn('category_id', $categoryIds);
+            })->orderBy('id', 'desc')
+            ->paginate(getPaginate());
+        $categories = Category::where('status', Status::CATEGORY_ENABLE)->get();
+        return view('UserTemplate::survey.all_survey', compact('pageTitle', 'surveys', 'categories'));
+    }
+
     public function index(Request $request)
     {
         $status = $request->get('status', 'all');
@@ -411,6 +426,6 @@ class SurveyController extends Controller
         $pageTitle  = "Survey Details";
         $survey     = Survey::with('category', 'deposit')->where('status', Status::SURVEY_ENABLE)->where('id', $id)->first();
         $categories = Category::where('status', Status::CATEGORY_ENABLE)->get();
-        return view('Template::survey_details', compact('pageTitle', 'survey', 'categories'));
+        return view('UserTemplate::survey.survey_details', compact('pageTitle', 'survey', 'categories'));
     }
 }

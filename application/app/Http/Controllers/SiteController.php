@@ -58,22 +58,7 @@ class SiteController extends Controller
         return view('Template::blog_details', compact('blog', 'pageTitle', 'latests'));
     }
 
-    public function survey(Request $request)
-    {
 
-        $pageTitle  = "Survey";
-        $categoryIds = $request->input('category_id');
-        $surveys = Survey::with(['category', 'deposit'])
-            ->searchable(['title'])
-            ->where('status', Status::SURVEY_ENABLE)
-            ->when(!empty($categoryIds), function ($q) use ($categoryIds) {
-                $q->whereIn('category_id', $categoryIds);
-            })->orderBy('id','desc')
-            ->paginate(getPaginate());
-        $sections   = Page::where('slug', 'survey')->first();
-        $categories = Category::where('status', Status::CATEGORY_ENABLE)->get();
-        return view('Template::survey', compact('pageTitle', 'sections', 'surveys', 'categories'));
-    }
 
 
     public function about()

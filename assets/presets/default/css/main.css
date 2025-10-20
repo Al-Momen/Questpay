@@ -7089,7 +7089,7 @@ input:checked + .slider:before {
   padding-left: 0px !important;
 }
 .dashboard-list__contents{
- padding: 60px;
+ padding: 16px;
  border: 1px solid hsl(var(--base) / 0.3);
  border-radius: 12px;
 }

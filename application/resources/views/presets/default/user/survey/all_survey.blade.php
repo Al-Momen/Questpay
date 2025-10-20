@@ -1,8 +1,9 @@
-@extends($activeTemplate . 'layouts.frontend')
+@extends($activeTemplate . 'layouts.master')
 @section('content')
-    <section class="about mt-120">
+    <div class="dashboard-section pt-120">
         <div class="container">
-            <div class="row g-4 justify-content-center">
+            <div class="dashboard-wrapper">
+                @include('Template::components.user.top_header')
                 <div class="deshboard-bottom mb-4">
                     <div class="filter__wrap">
                         <div class="survey-list__bottom-main d-flex justify-content-between flex-wrap">
@@ -70,7 +71,7 @@
                                 </div>
                             </form>
                         </div>
-                    </div> 
+                    </div>
                 </div>
                 <div class="deshboard-list">
                     <div class="row justify-content-center g-4">
@@ -128,8 +129,9 @@
                         @empty
                             <div class="col-lg-12 col-md-12">
                                 <div class=" text-center">
-                                    <div class="dashboard-list__contents"> 
-                                        <img class="no-data" src="{{ getImage(getFilePath('shape') . 'paper.png') }}" alt="@lang('no data')">                                       
+                                    <div class="dashboard-list__contents">
+                                        <img class="no-data" src="{{ getImage(getFilePath('shape') . 'paper.png') }}"
+                                            alt="@lang('no data')">
                                         <h3 class="dashboard-list__title fs--30 fw--700 ps-3">No Data</h3>
                                     </div>
                                 </div>
@@ -137,9 +139,10 @@
                         @endforelse
                     </div>
                 </div>
-                {{$surveys->links()}}
+                {{ $surveys->links() }}
             </div>
         </div>
+    </div>
     </section>
 @endsection
 
