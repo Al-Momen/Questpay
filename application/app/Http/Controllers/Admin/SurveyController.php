@@ -279,6 +279,7 @@ class SurveyController extends Controller
 
     public function answerDetails($id)
     {
+
         $pageTitle = 'Survey Answer List';
         $surveyAnswerDetail = SurveyAnswer::with('survey', 'user')->where('id', $id)->first();
         return view('Admin::survey.answer_detail', compact('pageTitle', 'surveyAnswerDetail'));

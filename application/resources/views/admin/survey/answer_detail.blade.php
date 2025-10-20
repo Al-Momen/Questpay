@@ -1,3 +1,4 @@
+
 @extends('admin.layouts.app')
 @section('panel')
     <div class="row">
@@ -37,7 +38,8 @@
                             <div class="row justify-content-end">
                                 <div class="col-12 text-end">
                                     <div class="d-flex flex-wrap justify-content-end gap-3 mb-2">
-                                        @if ($surveyAnswerDetail->survey->author_id == auth('admin')->id() && $surveyAnswerDetail->survey->author_type == Admin::class && $surveyAnswerDetail->status == Status::SURVEY_ANSWER_PENDING)
+                                     
+                                        @if ($surveyAnswerDetail->survey->author_id == auth('admin')->id() && $surveyAnswerDetail->survey->author_type == App\Models\Admin::class && $surveyAnswerDetail->status == Status::SURVEY_ANSWER_PENDING)
                                             <div>
                                                 <a href="javascript:void(0)" class="btn btn--primary confirmationBtn "
                                                     data-question="@lang('Are you sure to approved this answer?')"

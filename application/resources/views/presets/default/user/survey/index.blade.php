@@ -43,7 +43,13 @@
                             <tbody>
                                 @forelse($surveys as $item)
                                     <tr>
-                                        <td>#{{ $loop->iteration }}</td>
+                                      
+                                        <td>
+                                              @if ($item->pendingCount())
+                                                <div class="blob white pointer-dot"></div>
+                                            @endif 
+                                            #{{ $loop->iteration }}
+                                        </td>
                                         <td data-label="Image">
                                             <img class="rounded-3"
                                                 src="{{ getImage(getFilePath('survey') . '/' . $item->image) }}"
@@ -76,7 +82,7 @@
                                                 <ul class="dropdown-menu">
 
                                                     <li><a class="dropdown-item"
-                                                            href="{{ route('user.survey.details', $item->id) }}">@lang('View')</a>
+                                                            href="{{ route('user.survey.view', $item->id) }}">@lang('View')</a>
                                                     </li>
 
                                                     <li>
@@ -121,11 +127,11 @@
 @push('script')
     <script>
         $(document).on('click', '.copyLinkBtn', function() {
-            let link = $(this).data('url'); 
+            let link = $(this).data('url');
 
             navigator.clipboard.writeText(link)
                 .then(() => {
-                    notify('success','Link copied to clipboard!');
+                    notify('success', 'Link copied to clipboard!');
                 })
                 .catch(err => {
                     console.error('Failed to copy: ', err);

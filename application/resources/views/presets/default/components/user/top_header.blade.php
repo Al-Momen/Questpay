@@ -33,6 +33,9 @@
         <div class="profile-info d-flex gap--20">
             <div class="dropdown">
                 <button class="notification-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    @if ($userNotificationUnreadCount)
+                         <div class="blob white notification-dot"></div>
+                    @endif
                     <i class="fa-solid fa-bell"></i>
                 </button>
                 <div class="dropdown-menu p-2 notification__drop">

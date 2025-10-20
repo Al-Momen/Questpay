@@ -61,10 +61,7 @@
                                             @endif
                                         </div>
                                     @endforeach
-                                   
-                                        <button type="submit" class="btn btn--base w-100">@lang('Submit Answers')</button>
-                                    
-
+                                    <button type="submit" class="btn btn--base w-100">@lang('Submit Answers')</button>
                                 </form>
                             </div>
                         </div>

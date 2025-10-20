@@ -83,24 +83,24 @@
                             <li>
                                 <a class="footer-menu__links" href="{{ url('/') . '/policy/terms-of-service/42' }}">
                                     <span class="text--base me-2">
-                                                <i class="fa-solid fa-angle-right"></i>
-                                            </span>
+                                        <i class="fa-solid fa-angle-right"></i>
+                                    </span>
                                     @lang('Privacy Policy')
                                 </a>
                             </li>
                             <li>
                                 <a class="footer-menu__links" href="{{ url('/') . '/policy/terms-of-service/43' }}">
                                     <span class="text--base me-2">
-                                                <i class="fa-solid fa-angle-right"></i>
-                                            </span>
+                                        <i class="fa-solid fa-angle-right"></i>
+                                    </span>
                                     @lang('Terms And Conditions')
                                 </a>
                             </li>
                             <li>
                                 <a class="footer-menu__links" href="{{ url('/') . '/cookie-policy' }}">
                                     <span class="text--base me-2">
-                                                <i class="fa-solid fa-angle-right"></i>
-                                            </span>
+                                        <i class="fa-solid fa-angle-right"></i>
+                                    </span>
                                     @lang('Cookie Policy')
                                 </a>
                             </li>
@@ -114,11 +114,13 @@
                     <p class="footer-newslater__desc">{{ __($subscriptionSectionContent->data_values->heading) }}</p>
                     <div class="footer__newsletter position-relative">
                         <form action="{{ route('subscribe') }}" method="post">
-                        @csrf
-                        <input type="email" name="email" class="form-control input-newsletter" placeholder="@lang('Your email please')">
-                        <button class="text--base input-newsletter__button" type="submit">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
+                            @csrf
+                            <input type="email" name="email" class="form-control input-newsletter"
+                                placeholder="@lang('Your email please')">
+                            <button class="text--base input-newsletter__button" type="submit">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

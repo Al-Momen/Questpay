@@ -46,8 +46,13 @@
                             </thead>
                             <tbody id="items_table__body">
                                 @forelse($surveys as $item)
-                                    <tr>
-                                        <td>#{{ $loop->iteration }}</td>
+                                    <tr> 
+                                        <td>
+                                            @if ($item->pendingCount())
+                                                <div class="blob white pointer-dot"></div>
+                                            @endif 
+                                            #{{ $loop->iteration }} 
+                                        </td>
                                         <td data-label="Image">
                                             <img class="rounded-3"
                                                 src="{{ getImage(getFilePath('survey') . '/' . $item->image) }}"

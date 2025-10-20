@@ -77,6 +77,7 @@ Route::middleware('auth')->name('user.')->group(function () {
             // User Survey Management
             Route::prefix('survey')->controller('SurveyController')->name('survey.')->group(function () {
                 Route::get('all-survey', 'allSurvey')->name('all.survey');
+                Route::get('survey-view/{id}', 'view')->name('view');
                 Route::get('survey-details/{id}', 'surveyDetails')->name('details');
                 Route::get('index', 'index')->name('index');
                 Route::get('create', 'create')->name('create');

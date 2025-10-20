@@ -19,7 +19,8 @@
                         </form>
                     </div>
                 </div>
-                <div class="dashboard-table card mt-4">
+                <div class="dashboard-table card mt-4 mt-xl-4">
+                          <h3 class="dashboard-table__title fs--16 fw--700 mb--16">@lang('Notification List')</h3>
                     <div class="dashboard-table__items">
                         <table class="table table--responsive--md">
                             <thead>

@@ -3,7 +3,7 @@
     <!--==========================  privacy-policy Section Start  ==========================-->
     <div class="privacy-policy pt-120">
         <div class="privacy-policy__shape1"> </div>
-        <div class="privacy-policy__shape2"></div>
+        <div class="privacy-policy__shape2"> </div>
         <div class="container">
             <div class="privacy-policy__items">
                 <div class="privacy-policy__content">

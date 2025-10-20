@@ -7,11 +7,12 @@ use App\Models\Survey;
 use GuzzleHttp\Client;
 use App\Models\Category;
 use App\Constants\Status;
+use App\Models\SurveyAnswer;
 use Illuminate\Http\Request;
 use App\Rules\FileTypeValidate;
+use App\Models\UserNotification;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\SurveyAnswer;
 use Illuminate\Support\Facades\Validator;
 
 class SurveyController extends Controller
@@ -262,7 +263,7 @@ class SurveyController extends Controller
         ]);
     }
 
-    public function details($id)
+    public function view($id)
     {
         $survey = Survey::where('id', $id)->first();
         if (!$survey) {
@@ -270,6 +271,7 @@ class SurveyController extends Controller
             return back()->withNotify($notify);
         }
         $pageTitle = 'Survey Details';
+
         return view('UserTemplate::survey.details', compact('pageTitle', 'survey'));
     }
 
@@ -386,13 +388,26 @@ class SurveyController extends Controller
             $surveyAnswer->user->balance += $surveyAnswer->survey->survey_money * $surveyAnswer->total_answer;
             $surveyAnswer->user->save();
 
+
             $surveyAnswer->survey->survey_people_answer += 1;
             $surveyAnswer->survey->save();
             $notify[] = ['success', 'Survey answer has been approved.'];
+
+            $userNotification            = new UserNotification();
+            $userNotification->user_id   = $surveyAnswer->user->id;
+            $userNotification->title     = 'Survey submission approved';
+            $userNotification->click_url = urlPath('user.survey.submission.details', $surveyAnswer->id);
+            $userNotification->save();
         } else {
             $surveyAnswer->status = Status::SURVEY_ANSWER_REJECTED;
             $surveyAnswer->save();
             $notify[] = ['success', 'Survey answer has been rejected.'];
+
+            $userNotification            = new UserNotification();
+            $userNotification->user_id   = $surveyAnswer->user->id;
+            $userNotification->title     = 'Survey submission rejected';
+            $userNotification->click_url = urlPath('user.survey.submission.details', $surveyAnswer->id);
+            $userNotification->save();
         }
 
         return back()->withNotify($notify);

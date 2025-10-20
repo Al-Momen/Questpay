@@ -10,7 +10,7 @@
                             <div class="form-floating">
                                 <div class="input-group">
                                     <input type="text" class="form-control" name="search" value="{{ request()->search }}"
-                                        placeholder="@lang('Search TRX')">
+                                        placeholder="@lang('Search Survey Name')">
                                     <span class="input-group-text">
                                         <i class="fa-solid fa-magnifying-glass"></i>
                                     </span>

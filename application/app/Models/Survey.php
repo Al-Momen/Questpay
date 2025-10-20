@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\Status;
 use Illuminate\Database\Eloquent\Model;
 
 class Survey extends Model
@@ -68,5 +69,12 @@ class Survey extends Model
             $html = '<span class="badge badge--danger">' . trans('Rejected') . '</span>';
         }
         return $html;
+    }
+
+     public function pendingCount()
+    {
+        return $this->survey_answers()
+            ->where('status', Status::SURVEY_ANSWER_PENDING)
+            ->count();
     }
 }

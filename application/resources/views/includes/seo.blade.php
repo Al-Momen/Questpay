@@ -40,10 +40,10 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="{{ __($socialTitle) }}">
     <meta property="og:description" content="{{ __($socialDescription) }}">
-    <meta property="og:image" content="{{ $image }}"/>
-    <meta property="og:image:type" content="image/{{ pathinfo($image, PATHINFO_EXTENSION) }}" />
-    <meta property="og:image:width" content="{{ $socialImageSize[0] }}" />
-    <meta property="og:image:height" content="{{ $socialImageSize[1] }}" />
+    <meta property="og:image" content="{{ $image }}">
+    <meta property="og:image:type" content="image/{{ pathinfo($image, PATHINFO_EXTENSION) }}">
+    <meta property="og:image:width" content="{{ $socialImageSize[0] }}">
+    <meta property="og:image:height" content="{{ $socialImageSize[1] }}">
     <meta property="og:url" content="{{ url()->current() }}">
 
     {{-- Twitter --}}
