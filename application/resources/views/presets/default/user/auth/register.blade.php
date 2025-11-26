@@ -125,7 +125,7 @@
                         @if ($general->agree)
                             <!-- Terms -->
                             <div class="form-check form--check">
-                                <input class="form-check-input"type="checkbox" name="agree" @checked(old('agree'))
+                                <input class="form-check-input" type="checkbox" name="agree" @checked(old('agree'))
                                     id="checkDefault" required>
                                 <label class="form-check-label" for="checkDefault">
                                     @lang('I agree with')

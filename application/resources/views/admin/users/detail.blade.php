@@ -7,9 +7,7 @@
                 <div class="user-profile--wrap">
                     <div class="user-profile--banner bg--img"
                         style="background-image: url({{ getImage('assets/images/general/user-banner.png') }})">
-
                     </div>
-
                     <div class="user-info--wrap">
                         <div class="row justify-content-around">
                             <div class="col-xxl-11 col-xl-12">

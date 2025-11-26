@@ -64,7 +64,7 @@
                                 <div class="form-group">
                                     <label for="email">@lang('Email') </label>
                                     <input class="form-control checkUser" type="email" name="email" id="email" required>
-                                                     <small class="text-danger emailExist"></small>
+                                    <small class="text-danger emailExist"></small>
                                 </div>
                             </div>
 

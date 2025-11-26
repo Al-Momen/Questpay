@@ -72,10 +72,7 @@ trait FileInfo
             'path'      => 'assets/images/language',
             'size'      => '50x50',
         ];
-        $data['language'] = [
-            'path'      => 'assets/images/language',
-            'size'      => '50x50',
-        ];
+
         $data['banner'] = [
             'path'      => 'assets/images/frontend/banner/',
         ];

@@ -1,6 +1,7 @@
 @php
     $credentials = $general->socialite_credentials;
 @endphp
+
 @extends($activeTemplate . 'layouts.frontend')
 @section('content')
     <!-- sign-up section start -->
@@ -111,7 +112,6 @@
             'use strict';
             $('.recap').each(function() {
                 if ($(this).children().length === 0) {
-           
                     $(this).addClass('d-none');
                 } else {
                     $(this).removeClass('d-none');

@@ -308,6 +308,7 @@ class SurveyController extends Controller
 
     public function answerSubmit(Request $request)
     {
+        // dd($request->all());
         $isAuthor = Survey::where('id', $request->survey_id)->first();
 
         if ($isAuthor->author_id == auth()->id() && $isAuthor->author_type == User::class) {

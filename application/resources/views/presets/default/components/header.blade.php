@@ -50,7 +50,6 @@
             </div>
             <div class="offcanvas__login">
                 @auth
-
                     <a href="{{ route('user.logout') }}" class="btn btn--base sign-in--btn">@lang('Logout')</a>
                 @endauth
                 @guest

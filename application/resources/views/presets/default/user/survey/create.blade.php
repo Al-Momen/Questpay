@@ -112,6 +112,7 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="col-lg-6">
                                 <div class="profile-items">
                                     <div class="row g-4 justify-content-center">

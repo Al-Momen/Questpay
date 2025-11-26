@@ -9,6 +9,7 @@
         ->first();
     $policyLinks = getContent('policy_pages.element', false, null, true);
     $subscriptionSectionContent = getContent('subscribe.content', true);
+
 @endphp
 
 <!--================================= footer section start =================================-->

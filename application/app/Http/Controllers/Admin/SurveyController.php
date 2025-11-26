@@ -232,6 +232,7 @@ class SurveyController extends Controller
 
     public function details($id)
     {
+      
         $survey = Survey::where('id', $id)->first();
         if (!$survey) {
             $notify[] = ['error', 'Survey Not Found'];

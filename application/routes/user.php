@@ -68,7 +68,6 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::post('kyc-submit', 'kycSubmit')->name('kyc.submit');
 
                 Route::get('attachment-download/{fil_hash}', 'attachmentDownload')->name('attachment.download');
-
                 Route::get('user-notification/{id}', 'notification')->name('read.notification');
                 Route::get('user-notification-all', 'notificationAll')->name('notification.all');
             });
@@ -92,7 +91,6 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('answer-details/{id}', 'answerDetails')->name('answer.detail');
                 Route::post('answer-status/{status}/{id}', 'answerStatus')->name('answer.status');
             });
-
 
 
             //Profile setting

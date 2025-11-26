@@ -7,8 +7,8 @@
     <title> {{ $general->siteName(__($pageTitle)) }}</title>
     @include('includes.seo')
     <!-- Bootstrap CSS -->
-    <link href="{{ asset('assets/common/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/common/css/all.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/common/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/common/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/common/css/line-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset($activeTemplateTrue . 'css/swiper-bundle.min.css') }}">
     <link rel="stylesheet" href="{{ asset($activeTemplateTrue . 'css/custom.css') }}">

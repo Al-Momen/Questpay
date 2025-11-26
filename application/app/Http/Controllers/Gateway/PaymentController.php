@@ -322,7 +322,7 @@ class PaymentController extends Controller
 
         if ($deposit->status == Status::PAYMENT_PENDING || $deposit->status == Status::PAYMENT_INITIATE) {
             $deposit->status = Status::PAYMENT_SUCCESS;
-            $deposit->save();
+            // $deposit->save();
 
             $user = User::find($deposit->user_id);
 
@@ -333,9 +333,11 @@ class PaymentController extends Controller
                 $deposit->survey->status = Status::SURVEY_ENABLE;
                 $deposit->survey->save();
             } else {
+              
                 $user->balance += $deposit->amount;
-                $deposit->save();
+                $user->save();
             }
+       
 
             $type = $deposit->survey_id ? 'Survey Payment' : ($deposit->is_credit_purchase ? 'Credit Payment' : 'Deposit Payment');
             $transaction               = new Transaction();

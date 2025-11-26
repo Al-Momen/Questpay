@@ -57,7 +57,6 @@
                                 <input type="text" class="form-control" name="zip" id="zip" value="{{ old('zip') }}" placeholder="@lang('Zip')"
                                     >
                                 <label class="form-label" for="zip">@lang('Zip Code')</label>
-
                             </div>
                         </div>
 

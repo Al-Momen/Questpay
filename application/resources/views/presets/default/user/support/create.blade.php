@@ -4,9 +4,9 @@
         <div class="container">
             <div class="dashboard-wrapper">
                 @include('Template::components.user.top_header')
-                 <div class="row gy-3 gy-xl-4 justify-content-end">
+                <div class="row gy-3 gy-xl-4 justify-content-end">
                     <div class="col-lg-3 text-end">
-                       <a href="{{ route('ticket') }}" class="btn btn--md btn--base mb-3">@lang('My Support Ticket')</a>
+                        <a href="{{ route('ticket') }}" class="btn btn--md btn--base mb-3">@lang('My Support Ticket')</a>
                     </div>
                 </div>
                 <form action="{{ route('ticket.store') }}" method="post" enctype="multipart/form-data">
@@ -93,43 +93,43 @@
                 </form>
             </div>
         </div>
-        </div>
-    @endsection
+    </div>
+@endsection
 
-    @push('style')
-        <style>
-            .input-group-text:focus {
-                box-shadow: none !important;
-            }
+@push('style')
+    <style>
+        .input-group-text:focus {
+            box-shadow: none !important;
+        }
 
-            textarea.form-control {
-                height: 230px !important;
-            }
-        </style>
-    @endpush
+        textarea.form-control {
+            height: 230px !important;
+        }
+    </style>
+@endpush
 
-    @push('script')
-        <script>
-            (function($) {
-                "use strict";
-                var fileAdded = 0;
-                $('.addFile').on('click', function() {
-                    if (fileAdded >= 4) {
-                        notify('error', 'You\'ve added maximum number of file');
-                        return false;
-                    }
-                    fileAdded++;
-                    $("#fileUploadsContainer").append(`
+@push('script')
+    <script>
+        (function($) {
+            "use strict";
+            var fileAdded = 0;
+            $('.addFile').on('click', function() {
+                if (fileAdded >= 4) {
+                    notify('error', 'You\'ve added maximum number of file');
+                    return false;
+                }
+                fileAdded++;
+                $("#fileUploadsContainer").append(`
                     <div class="input-group my-3">
                         <input type="file" name="attachments[]" class="form-control form--control" required />
                         <button class="input-group-text btn--danger remove-btn"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                 `)
-                });
-                $(document).on('click', '.remove-btn', function() {
-                    fileAdded--;
-                    $(this).closest('.input-group').remove();
-                });
-            })(jQuery);
-        </script>
-    @endpush
+            });
+            $(document).on('click', '.remove-btn', function() {
+                fileAdded--;
+                $(this).closest('.input-group').remove();
+            });
+        })(jQuery);
+    </script>
+@endpush
